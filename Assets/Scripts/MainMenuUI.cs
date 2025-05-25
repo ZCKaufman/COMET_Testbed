@@ -2,14 +2,38 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Photon.Pun;
 using Photon.Realtime;
+using TMPro;
 
 public class MainMenuUI : MonoBehaviourPunCallbacks
 {
+    
     private string selectedRole;
+    public TMP_Dropdown roleDropdown;
+    public TextMeshProUGUI passwordErrorText;
+    public TMP_InputField passwordInput;
+
 
     void Start()
     {
         PhotonNetwork.ConnectUsingSettings(); // Connects to Photon automatically
+    }
+
+    public void OnRoleSelected()
+    {
+        int selectedIndex = roleDropdown.value;
+
+        switch (selectedIndex)
+        {
+            case 0:
+                JoinAsEVA();
+                break;
+            case 1:
+                JoinAsIVA();
+                break;
+            default:
+                Debug.LogError("Invalid role selected.");
+                break;
+        }
     }
 
     public void JoinAsEVA()
@@ -24,16 +48,54 @@ public class MainMenuUI : MonoBehaviourPunCallbacks
         JoinRoom();
     }
 
+
     private void JoinRoom()
+{
+    string enteredPassword = passwordInput.text.ToLower();
+    string requiredPassword = selectedRole.ToLower();       // "eva" or "iva"
+
+    if (enteredPassword != requiredPassword)
     {
-        RoomOptions options = new RoomOptions { MaxPlayers = 2 };
-        PhotonNetwork.JoinOrCreateRoom("MoonMissionRoom", options, TypedLobby.Default);
+        passwordErrorText.text = "Incorrect password for " + selectedRole;
+        return;
     }
+    passwordErrorText.text = "";
+
+    RoomOptions options = new RoomOptions { MaxPlayers = 4 };
+
+    options.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable
+    {
+        { "EVA_Count", 0 },
+        { "IVA_Count", 0 }
+    };
+
+    options.CustomRoomPropertiesForLobby = new string[] { "EVA_Count", "IVA_Count" };
+
+    PhotonNetwork.JoinOrCreateRoom("MoonMissionRoom", options, TypedLobby.Default);
+}
 
     public override void OnJoinedRoom()
     {
-        PhotonNetwork.LocalPlayer.NickName = selectedRole;
-        PhotonNetwork.LoadLevel("Mission"); // This will sync across clients
+        ExitGames.Client.Photon.Hashtable roomProps = PhotonNetwork.CurrentRoom.CustomProperties;
+
+        // Determine current count for the selected role
+        string countKey = selectedRole + "_Count";
+        int currentCount = roomProps.ContainsKey(countKey) ? (int)roomProps[countKey] : 0;
+
+        // Set local player nickname and GameManager values
+        PhotonNetwork.LocalPlayer.NickName = $"{selectedRole}:{currentCount}";
+
+        // Assign in GameManager (make sure GameManager uses .SetPlayerRole(role, id))
+        GlobalManager.Instance.SetPlayerRole(selectedRole, currentCount.ToString());
+
+        // Only the master client updates room properties to avoid race conditions
+        if (PhotonNetwork.IsMasterClient)
+        {
+            roomProps[countKey] = currentCount + 1;
+            PhotonNetwork.CurrentRoom.SetCustomProperties(roomProps);
+        }
+
+        PhotonNetwork.LoadLevel("Mission"); // sync scene load
     }
 
     public override void OnConnectedToMaster()
