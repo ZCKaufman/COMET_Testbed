@@ -83,7 +83,8 @@ public class MainMenuUI : MonoBehaviourPunCallbacks
         int currentCount = roomProps.ContainsKey(countKey) ? (int)roomProps[countKey] : 0;
 
         // Set local player nickname and GameManager values
-        PhotonNetwork.LocalPlayer.NickName = $"{selectedRole}:{currentCount}";
+        PhotonNetwork.LocalPlayer.NickName = $"{selectedRole}";
+
 
         // Assign in GameManager (make sure GameManager uses .SetPlayerRole(role, id))
         GlobalManager.Instance.SetPlayerRole(selectedRole, currentCount.ToString());
