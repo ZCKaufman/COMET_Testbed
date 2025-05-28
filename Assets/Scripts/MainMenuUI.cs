@@ -88,6 +88,12 @@ public class MainMenuUI : MonoBehaviourPunCallbacks
 
         // Assign in GameManager (make sure GameManager uses .SetPlayerRole(role, id))
         GlobalManager.Instance.SetPlayerRole(selectedRole, currentCount.ToString());
+        ExitGames.Client.Photon.Hashtable playerProps = new ExitGames.Client.Photon.Hashtable
+        {
+            { "Role", selectedRole },
+            { "ID", currentCount.ToString() }
+        };
+        PhotonNetwork.LocalPlayer.SetCustomProperties(playerProps);
 
         // Only the master client updates room properties to avoid race conditions
         if (PhotonNetwork.IsMasterClient)
