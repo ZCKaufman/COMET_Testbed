@@ -1,10 +1,12 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class ImageSelectorButton : MonoBehaviour
 {
     public Sprite imageToDisplay;
     public ImageSelectorGroup group;
+    public List<GameObject> objectsToToggle;
 
     private Button button;
     private Image image;
@@ -37,5 +39,15 @@ public class ImageSelectorButton : MonoBehaviour
 
         if (highlight != null)
             highlight.SetActive(selected);
+
+        // 👇 Show/hide linked objects
+        if (objectsToToggle != null)
+        {
+            foreach (var obj in objectsToToggle)
+            {
+                if (obj != null)
+                    obj.SetActive(selected);
+            }
+        }
     }
 }
