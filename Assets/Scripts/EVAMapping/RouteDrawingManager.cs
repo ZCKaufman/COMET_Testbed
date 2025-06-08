@@ -23,16 +23,13 @@ public class RouteDrawingManager : MonoBehaviour
 
     public void ToggleDrawingMode(string type)
     {
-        // If same button clicked again, turn off
         if (currentDrawType == type)
         {
-            //Debug.Log("Exiting drawing mode: " + type);
             currentDrawType = null;
             drawingPoints.Clear();
         }
         else
         {
-            //Debug.Log("Switched to drawing mode: " + type);
             currentDrawType = type;
             drawingPoints.Clear();
         }

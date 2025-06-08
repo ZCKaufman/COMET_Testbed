@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 using System.Collections.Generic;
+
 
 
 [System.Serializable]
@@ -28,6 +30,17 @@ public class POIManager : MonoBehaviour
 
     private void Start()
     {
+        StartCoroutine(InitializeAfterConfig());
+    }
+
+    private IEnumerator InitializeAfterConfig()
+    {
+        // wait until the config is ready 
+        while (ConfigLoader.LoadedConfig == null || ConfigLoader.LoadedConfig.EVAMapping == null)
+        {
+            yield return null;
+        }
+
         landmarkPrefabMap = new Dictionary<string, GameObject>();
         foreach (var entry in landmarkPrefabs)
         {
@@ -41,9 +54,9 @@ public class POIManager : MonoBehaviour
             }
         }
 
-
         ShowLandmarks();
     }
+
 
 
     public void ShowPOIs()

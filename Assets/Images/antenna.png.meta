@@ -247,7 +247,12 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      antenna_0: -9005306881375485936
+      antenna_1: 7760504187538344068
+      antenna_2: 6734761069392469507
+      antenna_3: -6039055915671446201
+      antenna_4: 7688849776395984271
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
