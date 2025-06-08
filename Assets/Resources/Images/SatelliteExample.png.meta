@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: d92d6bb652afb6442a0b1934c4d56c95
+guid: 067c4099a7432284fb5e62d128474b6d
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2442000729205117262
-    second: POI_Marker_0
+      213: -476827686056538400
+    second: MoonSampleSatellite_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: POI_Marker_0
+      name: MoonSampleSatellite_0
       rect:
         serializedVersion: 2
-        x: 71
-        y: 31
-        width: 370
-        height: 450
+        x: 0
+        y: 0
+        width: 1694
+        height: 875
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 2beeb7a66454c1ed0800000000000000
-      internalID: -2442000729205117262
+      spriteID: 0ee4781feb7f169f0800000000000000
+      internalID: -476827686056538400
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      POI_Marker_0: -2442000729205117262
+      MoonSampleSatellite_0: -476827686056538400
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

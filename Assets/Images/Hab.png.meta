@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: d92d6bb652afb6442a0b1934c4d56c95
+guid: 50a4da546156eb845bfc27acf1e01c29
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2442000729205117262
-    second: POI_Marker_0
+      213: -9066316777407959415
+    second: Hab_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: POI_Marker_0
+      name: Hab_0
       rect:
         serializedVersion: 2
-        x: 71
-        y: 31
-        width: 370
-        height: 450
+        x: 28
+        y: 11
+        width: 154
+        height: 175
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 2beeb7a66454c1ed0800000000000000
-      internalID: -2442000729205117262
+      spriteID: 98e2f652de8fd2280800000000000000
+      internalID: -9066316777407959415
       vertices: []
       indices: 
       edges: []
@@ -147,8 +147,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      POI_Marker_0: -2442000729205117262
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
