@@ -1,0 +1,41 @@
+{
+  "EVAMapping": {
+    "Maps": [
+      { "key": "Satellite", "path": "Images/SatelliteExample" },
+      { "key": "Contours", "path": "Images/ContoursExample" },
+      { "key": "Solar", "path": "Images/SolarExample" },
+      { "key": "Terrain", "path": "Images/TerrainExample" },
+      { "key": "POIs", "path": "Images/SatelliteExample" },
+      { "key": "Routes", "path": "Images/SatelliteExample" }
+    ],
+    "POIs": [
+      { "description": "Soil sample", "x": 0.25, "y": 0.75 },
+      { "description": "Crater exploration", "x": 0.6, "y": 0.4 },
+      { "description": "Power station", "x": 0.8, "y": 0.7 }
+    ],
+    "Landmarks": [
+      { "type": "hab", "description": "Hab", "x": 0.1, "y": 0.1 },
+      { "type": "antenna", "description": "Comm Tower", "x": 0.1, "y": 0.9 },
+      { "type": "greenhouse", "description": " Greenhouse", "x": 0.8, "y": 0.85 }
+    ],
+    "PredefinedRoutes": [
+      {
+        "type": "walk",
+        "points": [
+          { "x": 0.25, "y": 0.75 },
+          { "x": 0.25, "y": 0.85 }
+        ]
+      },
+      {
+        "type": "drive",
+        "points": [
+          { "x": 0.1, "y": 0.1 },
+          { "x": 0.1, "y": 0.9 },
+          { "x": 0.25, "y": 0.75 },
+          { "x": 0.8, "y": 0.85 },
+          { "x": 0.1, "y": 0.1 }
+        ]
+      }
+    ]
+  }
+}

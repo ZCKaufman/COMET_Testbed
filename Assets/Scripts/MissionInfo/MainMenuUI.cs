@@ -3,6 +3,7 @@ using UnityEngine.SceneManagement;
 using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
+using System.Collections;
 
 public class MainMenuUI : MonoBehaviourPunCallbacks
 {
@@ -15,8 +16,26 @@ public class MainMenuUI : MonoBehaviourPunCallbacks
 
     void Start()
     {
-        PhotonNetwork.ConnectUsingSettings(); // Connects to Photon automatically
+        PhotonNetwork.ConnectUsingSettings(); // connects to Photon
+        StartCoroutine(EnableUIWhenReady());
     }
+
+    IEnumerator EnableUIWhenReady()
+    {
+        // disable interaction until config is ready
+        roleDropdown.interactable = false;
+        passwordInput.interactable = false;
+        passwordErrorText.text = "Loading configuration...";
+
+        while (!ConfigLoader.IsLoaded)
+            yield return null;
+
+        roleDropdown.interactable = true;
+        passwordInput.interactable = true;
+        passwordErrorText.text = ""; 
+    }
+
+
 
     public void OnRoleSelected()
     {
