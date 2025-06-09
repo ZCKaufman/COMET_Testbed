@@ -6,9 +6,11 @@ using UnityEngine.Networking;
 public class ConfigLoader : MonoBehaviour
 {
     public static ConfigRoot LoadedConfig;
+    public static bool IsLoaded = false; 
 
     void Awake()
     {
+        DontDestroyOnLoad(gameObject);
         StartCoroutine(LoadConfig());
     }
 
@@ -29,6 +31,7 @@ public class ConfigLoader : MonoBehaviour
             string json = www.downloadHandler.text;
             Debug.Log("Loaded config.json (WebGL): " + json);
             LoadedConfig = JsonUtility.FromJson<ConfigRoot>(json);
+            IsLoaded = true;
         }
         yield break;
 #else
@@ -37,6 +40,7 @@ public class ConfigLoader : MonoBehaviour
             string json = File.ReadAllText(path);
             Debug.Log("Loaded config.json (local file): " + json);
             LoadedConfig = JsonUtility.FromJson<ConfigRoot>(json);
+            IsLoaded = true;
         }
         else
         {
