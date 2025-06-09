@@ -1,0 +1,24 @@
+{
+  "MissionInfo": {
+    "MissionDescription": "Explore the southern rim of Shackleton crater to collect lunar samples and conduct surface analysis.",
+    "Alerts": "Severe slope detected near checkpoint 3. Use caution.",
+    "Roles": {
+      "EVA": {
+        "TaskInfo": "Prepare and deploy surface mobility unit, confirm safe path to science objective."
+      },
+      "IVA": {
+        "TaskInfo": "Monitor EVA telemetry, prepare sample analysis equipment."
+      },
+      "Science": {
+        "TaskInfo": "Validate sample targets and prepare collection containers."
+      },
+      "Engineering": {
+        "TaskInfo": "Verify power systems and suit integrity checks."
+      }
+    }
+  },
+  "EVAMapping": {
+    "RouteName": "Route A",
+    "StartPoint": "Landing Site Alpha"
+  }
+}
