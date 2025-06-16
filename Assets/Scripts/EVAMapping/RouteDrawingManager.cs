@@ -173,7 +173,7 @@ public class RouteDrawingManager : MonoBehaviour
         {
             text.text = $"[{routeType.ToUpper()}] From ({start.x:0.00}, {start.y:0.00}) " +
                         $"to ({end.x:0.00}, {end.y:0.00})";
-            text.color = Color.white;
+            //text.color = Color.white;
         }
 
         return entry;
