@@ -16,7 +16,7 @@ public class ConfigLoader : MonoBehaviour
 
     IEnumerator LoadConfig()
     {
-        string path = Path.Combine(Application.streamingAssetsPath, "config.json");
+        string path = Path.Combine(Application.streamingAssetsPath, "Mission001.json");
 
 #if UNITY_WEBGL && !UNITY_EDITOR
         UnityWebRequest www = UnityWebRequest.Get(path);

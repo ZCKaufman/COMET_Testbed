@@ -4,6 +4,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
 using System.Collections;
+using System.IO;
 
 public class MainMenuUI : MonoBehaviourPunCallbacks
 {
@@ -120,6 +121,8 @@ public class MainMenuUI : MonoBehaviourPunCallbacks
             roomProps[countKey] = currentCount + 1;
             PhotonNetwork.CurrentRoom.SetCustomProperties(roomProps);
         }
+
+        MissionLoader.Instance.LoadMission(Path.Combine(Application.streamingAssetsPath, "Mission001.json"));
 
         PhotonNetwork.LoadLevel("Mission"); // sync scene load
     }

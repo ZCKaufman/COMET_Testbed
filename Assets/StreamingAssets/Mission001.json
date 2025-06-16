@@ -1,4 +1,13 @@
 {
+  "MissionInfo": {
+    "All": {
+      "MissionInfo": "Your general mission info will be here. This will be the same for all teams.",
+      "Alerts": "This is an alert, likely related to environmental conditions on the moon during planned EVA time"
+    },
+    "EVA": {
+      "TaskInfo": "This is the information about your teams specific task during the mission. It will look different for every team logged in."
+    }
+  },
   "EVAMapping": {
     "Maps": [
       { "key": "Satellite", "path": "Images/SatelliteExample" },
