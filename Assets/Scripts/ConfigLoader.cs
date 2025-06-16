@@ -30,7 +30,7 @@ public class ConfigLoader : MonoBehaviour
         else
         {
             string json = www.downloadHandler.text;
-            ParseBothConfigs(json);
+            ParseConfigs(json);
         }
 #else
         if (File.Exists(path))
