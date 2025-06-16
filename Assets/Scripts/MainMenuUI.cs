@@ -122,8 +122,6 @@ public class MainMenuUI : MonoBehaviourPunCallbacks
             PhotonNetwork.CurrentRoom.SetCustomProperties(roomProps);
         }
 
-        MissionLoader.Instance.LoadMission(Path.Combine(Application.streamingAssetsPath, "Mission001.json"));
-
         PhotonNetwork.LoadLevel("Mission"); // sync scene load
     }
 

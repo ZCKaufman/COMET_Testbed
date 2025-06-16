@@ -5,7 +5,10 @@
       "Alerts": "This is an alert, likely related to environmental conditions on the moon during planned EVA time"
     },
     "EVA": {
-      "TaskInfo": "This is the information about your teams specific task during the mission. It will look different for every team logged in."
+      "TaskInfo": "This is the EVA task screen. This is the information about your teams specific task during the mission. It will look different for every team logged in."
+    },
+    "IVA": {
+      "TaskInfo": "This is the IVA task screen. This is the information about your teams specific task during the mission. It will look different for every team logged in."
     }
   },
   "EVAMapping": {
