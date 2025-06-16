@@ -16,7 +16,7 @@ public class MissionInfoPanelController : MonoBehaviour
             return;
         }
 
-        var missionInfo = ConfigLoader.LoadedConfig.MissionInfo;
+        var missionInfo = ConfigLoader.MissionConfig.MissionInfo;
         string role = PhotonNetwork.LocalPlayer.NickName;
 
         if (missionInfo == null)

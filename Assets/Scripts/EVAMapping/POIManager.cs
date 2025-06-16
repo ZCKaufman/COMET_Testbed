@@ -36,7 +36,7 @@ public class POIManager : MonoBehaviour
     private IEnumerator InitializeAfterConfig()
     {
         // wait until the config is ready 
-        while (ConfigLoader.LoadedConfig == null || ConfigLoader.LoadedConfig.EVAMapping == null)
+        while (ConfigLoader.EVAMapConfig == null || ConfigLoader.EVAMapConfig.EVAMapping == null)
         {
             yield return null;
         }
@@ -64,7 +64,7 @@ public class POIManager : MonoBehaviour
         ClearPOIs();
 
 
-        var config = ConfigLoader.LoadedConfig;
+        var config = ConfigLoader.EVAMapConfig;
         if (config?.EVAMapping?.POIs == null || poiPrefab == null || poiContainer == null)
         {
             Debug.LogError("Missing config, POIs, prefab, or container.");
@@ -97,7 +97,7 @@ public class POIManager : MonoBehaviour
 
     public void ShowLandmarks()
     {
-        var config = ConfigLoader.LoadedConfig;
+        var config = ConfigLoader.EVAMapConfig;
         if (config?.EVAMapping?.Landmarks == null || poiContainer == null)
         {
             Debug.LogError("Missing config, Landmarks, prefab, or container.");
@@ -136,7 +136,7 @@ public class POIManager : MonoBehaviour
         ClearRoutes();
 
 
-        var config = ConfigLoader.LoadedConfig;
+        var config = ConfigLoader.EVAMapConfig;
         if (config?.EVAMapping?.PredefinedRoutes == null || uiLinePrefab == null || poiContainer == null)
         {
             Debug.LogError("Missing config, prefab, or container.");

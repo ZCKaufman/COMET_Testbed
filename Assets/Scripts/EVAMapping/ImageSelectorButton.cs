@@ -29,14 +29,14 @@ public class ImageSelectorButton : MonoBehaviour
 
     private IEnumerator Start()
     {
-        Debug.Log("LoadedConfig is null? " + (ConfigLoader.LoadedConfig == null));
+        //Debug.Log("LoadedConfig is null? " + (ConfigLoader.EVAMapConfig == null));
 
-        while (ConfigLoader.LoadedConfig == null || ConfigLoader.LoadedConfig.EVAMapping == null)
+        while (ConfigLoader.EVAMapConfig == null || ConfigLoader.EVAMapConfig.EVAMapping == null)
         {
             yield return null;
         }
 
-        var config = ConfigLoader.LoadedConfig;
+        var config = ConfigLoader.EVAMapConfig;
 
         var match = config.EVAMapping.Maps.Find(entry => entry.key == imageKey);
         if (match == null)
@@ -45,7 +45,7 @@ public class ImageSelectorButton : MonoBehaviour
             yield break;
         }
 
-        Debug.Log($"Trying to load sprite from path: {match.path}");
+        //Debug.Log($"Trying to load sprite from path: {match.path}");
         imageToDisplay = Resources.Load<Sprite>(match.path);
 
         if (imageToDisplay == null)
