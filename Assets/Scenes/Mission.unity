@@ -1571,7 +1571,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   poiContainer: {fileID: 1990066293}
-  poiPrefab: {fileID: 6549326598241284136, guid: af73ff2d6251cf145963e48d7b1ae68d, type: 3}
+  poiPrefab: {fileID: 8380271222866083865, guid: 0c7990e71782e344b94d4b7d940e99a0, type: 3}
   uiLinePrefab: {fileID: 3610632319819205778, guid: b306b6ce3cc645b42a2c3912fe4ff208, type: 3}
   landmarkPrefabs:
   - type: hab

@@ -48,6 +48,7 @@ public class PredefinedRoute
 [Serializable]
 public class EVAMapping
 {
+    public float mapScale;
     public List<MapEntry> Maps;
     public List<POIEntry> POIs;
     public List<LandmarkEntry> Landmarks;

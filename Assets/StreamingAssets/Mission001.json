@@ -9,6 +9,7 @@
     }
   },
   "EVAMapping": {
+    "mapScale": 0.2,
     "Maps": [
       { "key": "Satellite", "path": "Images/SatelliteExample" },
       { "key": "Contours", "path": "Images/ContoursExample" },
