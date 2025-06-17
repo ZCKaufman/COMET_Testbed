@@ -105,7 +105,7 @@ public class RouteDrawingManager : MonoBehaviour
         DeleteOnClick del = go.AddComponent<DeleteOnClick>();
         del.manager = this;
 
-        GameObject scrollEntry = AddLineToScrollView(currentDrawType, start, end);
+        GameObject scrollEntry = AddLineToScrollView(currentDrawType, start, end, dist);
 
         LineInfo info = new LineInfo
         {
@@ -113,11 +113,13 @@ public class RouteDrawingManager : MonoBehaviour
             scrollEntry = scrollEntry,
             routeType = currentDrawType,
             start = start,
-            end = end
+            end = end,
+            distance = dist
         };
 
         userDrawnLineInfos.Add(info);
     }
+
 
     public void DeleteLine(GameObject line)
     {
@@ -134,6 +136,7 @@ public class RouteDrawingManager : MonoBehaviour
         }
 
         Destroy(line);
+        RefreshScrollEntries();
     }
 
 
@@ -164,22 +167,100 @@ public class RouteDrawingManager : MonoBehaviour
         return userDrawnLineInfos.FindAll(info => info.routeType == type);
     }
 
-    private GameObject AddLineToScrollView(string routeType, Vector2 start, Vector2 end)
+    private GameObject AddLineToScrollView(string routeType, Vector2 start, Vector2 end, float distance)
     {
+        var config = ConfigLoader.EVAMapConfig;
         GameObject entry = Instantiate(lineInfoTextPrefab, scrollViewContent);
-        TextMeshProUGUI text = entry.GetComponent<TextMeshProUGUI>();
 
-        if (text != null)
+        float scale = config.EVAMapping.mapScale;
+        float scaledDistance = distance * scale;
+        Vector2 scaledEnd = end * scale;
+
+        TMP_Text numberText = entry.transform.Find("NumberColumn/NumberText")?.GetComponent<TMP_Text>();
+        TMP_Text coordinatesText = entry.transform.Find("CoordinatesColumn/CoordinatesText")?.GetComponent<TMP_Text>();
+        TMP_Text distanceText = entry.transform.Find("DistanceColumn/DistanceText")?.GetComponent<TMP_Text>();
+        TMP_Text totalDistanceText = entry.transform.Find("TotalDistanceColumn/TotalDistanceText")?.GetComponent<TMP_Text>();
+
+        if (numberText != null)
+            numberText.text = $"{userDrawnLineInfos.Count + 1}";
+
+        if (coordinatesText != null)
+            coordinatesText.text = $"({scaledEnd.x:0.0}, {scaledEnd.y:0.0})";
+
+        if (distanceText != null)
+            distanceText.text = $"{scaledDistance:0.0} m";
+
+        if (totalDistanceText != null)
         {
-            text.text = $"[{routeType.ToUpper()}] From ({start.x:0.00}, {start.y:0.00}) " +
-                        $"to ({end.x:0.00}, {end.y:0.00})";
-            //text.color = Color.white;
+            float total = GetTotalDistance(routeType) + distance;
+            totalDistanceText.text = $"{total * scale:0.0} m";
         }
-
         return entry;
     }
 
+    private float GetTotalDistance(string routeType)
+    {
+        float total = 0f;
+        foreach (var info in userDrawnLineInfos)
+            if (info.routeType == routeType)
+                total += info.distance;
+        return total;
+    }
+    
+    private void RefreshScrollEntries()
+    {
+        foreach (var info in userDrawnLineInfos)
+        {
+            if (info.scrollEntry != null)
+                Destroy(info.scrollEntry);
+        }
 
+        float scale = ConfigLoader.EVAMapConfig.EVAMapping.mapScale;
+        Dictionary<string, float> runningTotals = new();
+
+        for (int i = 0; i < userDrawnLineInfos.Count; i++)
+        {
+            var info = userDrawnLineInfos[i];
+
+            if (!runningTotals.ContainsKey(info.routeType))
+                runningTotals[info.routeType] = 0f;
+
+            runningTotals[info.routeType] += info.distance;
+            float total = runningTotals[info.routeType];
+
+            GameObject newEntry = Instantiate(lineInfoTextPrefab, scrollViewContent);
+
+            TMP_Text numberText = newEntry.transform.Find("NumberColumn/NumberText")?.GetComponent<TMP_Text>();
+            TMP_Text coordinatesText = newEntry.transform.Find("CoordinatesColumn/CoordinatesText")?.GetComponent<TMP_Text>();
+            TMP_Text distanceText = newEntry.transform.Find("DistanceColumn/DistanceText")?.GetComponent<TMP_Text>();
+            TMP_Text totalDistanceText = newEntry.transform.Find("TotalDistanceColumn/TotalDistanceText")?.GetComponent<TMP_Text>();
+
+            if (numberText != null)
+                numberText.text = $"{i + 1}";
+
+            if (coordinatesText != null)
+            {
+                Vector2 scaledEnd = info.end * scale;
+                coordinatesText.text = $"({scaledEnd.x:0.0}, {scaledEnd.y:0.0})";
+            }
+
+            if (distanceText != null)
+                distanceText.text = $"{info.distance * scale:0.0} m";
+
+            if (totalDistanceText != null)
+                totalDistanceText.text = $"{total * scale:0.0} m";
+
+            userDrawnLineInfos[i] = new LineInfo
+            {
+                lineObject = info.lineObject,
+                scrollEntry = newEntry,
+                routeType = info.routeType,
+                start = info.start,
+                end = info.end,
+                distance = info.distance
+            };
+        }
+    }
 
 }
 public struct LineInfo
@@ -189,5 +270,7 @@ public struct LineInfo
     public string routeType;
     public Vector2 start;
     public Vector2 end;
+    public float distance;
 }
+
 
