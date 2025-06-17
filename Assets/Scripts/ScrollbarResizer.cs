@@ -1,46 +1,36 @@
 using UnityEngine;
-using UnityEngine.UI;
+using TMPro; // if using TextMeshPro
 
-public class ScrollbarResizer : MonoBehaviour
+public class ScrollBarResizer : MonoBehaviour
 {
-    public RectTransform targetToResize; // The Scroll View or Scrollbar background
-    public Button resizeToggleButton;
-
-    private float originalHeight;
+    public RectTransform targetContainer;
+    public TextMeshProUGUI buttonLabel;
     private bool isExpanded = false;
+    private Vector2 originalSize;
 
     void Start()
     {
-        if (targetToResize == null)
-        {
-            Debug.LogError("Target to resize not assigned.");
-            return;
-        }
+        if (targetContainer != null)
+            originalSize = targetContainer.sizeDelta;
 
-        // Store the original height
-        originalHeight = targetToResize.sizeDelta.y;
-
-        // Hook up the button
-        resizeToggleButton.onClick.AddListener(ToggleSize);
+        UpdateButtonLabel();
     }
 
-    void ToggleSize()
+    public void ToggleHeight()
     {
-        if (!isExpanded)
-        {
-            targetToResize.sizeDelta = new Vector2(
-                targetToResize.sizeDelta.x,
-                originalHeight * 10f
-            );
-        }
-        else
-        {
-            targetToResize.sizeDelta = new Vector2(
-                targetToResize.sizeDelta.x,
-                originalHeight
-            );
-        }
+        if (targetContainer == null) return;
+
+        float newHeight = isExpanded ? originalSize.y : originalSize.y * 5f;
+        targetContainer.sizeDelta = new Vector2(originalSize.x, newHeight);
 
         isExpanded = !isExpanded;
+
+        UpdateButtonLabel();
+    }
+
+    private void UpdateButtonLabel()
+    {
+        if (buttonLabel != null)
+            buttonLabel.text = isExpanded ? "Collapse" : "Expand";
     }
 }

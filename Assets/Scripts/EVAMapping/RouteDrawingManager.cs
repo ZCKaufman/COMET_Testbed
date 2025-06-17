@@ -50,8 +50,9 @@ public class RouteDrawingManager : MonoBehaviour
             Vector2 end = drawingPoints[drawingPoints.Count - 1];
 
             Color color = currentDrawType == "walk"
-                ? new Color(0.2f, 0.5f, 0.2f)
-                : new Color(0.6f, 0.1f, 0.1f);
+                ? new Color(0.2f, 0.4f, 0.8f)  // muted blue
+                : new Color(0.9f, 0.7f, 0.2f); // warm gold/yellow
+
 
             bool dashed = false;
             DrawLine(start, end, color, dashed);
