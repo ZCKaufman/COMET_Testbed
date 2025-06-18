@@ -5,8 +5,9 @@ using UnityEngine.Networking;
 
 public class ConfigLoader : MonoBehaviour
 {
-    public static ConfigRoot LoadedConfig;
-    public static bool IsLoaded = false; 
+    public static MissionViewConfigRoot MissionConfig;
+    public static EVAMappingConfigRoot EVAMapConfig;
+    public static bool IsLoaded = false;
 
     void Awake()
     {
@@ -29,24 +30,44 @@ public class ConfigLoader : MonoBehaviour
         else
         {
             string json = www.downloadHandler.text;
-            Debug.Log("Loaded config.json (WebGL): " + json);
-            LoadedConfig = JsonUtility.FromJson<ConfigRoot>(json);
-            IsLoaded = true;
+            ParseConfigs(json);
         }
-        yield break;
 #else
         if (File.Exists(path))
         {
             string json = File.ReadAllText(path);
-            Debug.Log("Loaded config.json (local file): " + json);
-            LoadedConfig = JsonUtility.FromJson<ConfigRoot>(json);
-            IsLoaded = true;
+            ParseConfigs(json);
         }
         else
         {
             Debug.LogError("Config file not found at: " + path);
         }
-        yield break;
 #endif
+        yield break;
+    }
+
+    void ParseConfigs(string json)
+    {
+        try
+        {
+            // deserialize whole object to a temporary structure
+            var fullJson = JsonUtility.FromJson<Wrapper>(json);
+
+            // populate the all separate configs
+            MissionConfig = new MissionViewConfigRoot { MissionInfo = fullJson.MissionInfo };
+            EVAMapConfig = new EVAMappingConfigRoot { EVAMapping = fullJson.EVAMapping };
+
+            IsLoaded = true;        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError("Failed to parse config: " + ex.Message);
+        }
+    }
+
+    [System.Serializable]
+    private class Wrapper
+    {
+        public MissionInfoSection MissionInfo;
+        public EVAMapping EVAMapping;
     }
 }

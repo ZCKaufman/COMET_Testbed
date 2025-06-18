@@ -10,29 +10,34 @@ public class MissionInfoPanelController : MonoBehaviour
 
     void Start()
     {
-        var mission = MissionLoader.Instance.CurrentMission;
-        string role = PhotonNetwork.LocalPlayer.NickName;
-
-        if (mission == null)
+        if (!ConfigLoader.IsLoaded)
         {
-            Debug.LogError("[MissionInfoPanel] No mission loaded.");
+            Debug.LogError("[MissionInfoPanel] Config not loaded yet.");
             return;
         }
 
-        // Mission Info
-        missionText.text = mission.MissionInfo.All.MissionInfo;
+        var missionInfo = ConfigLoader.MissionConfig.MissionInfo;
+        string role = PhotonNetwork.LocalPlayer.NickName;
 
-        // Role-specific Task Info
-        if (role == "EVA" && mission.MissionInfo.EVA != null)
-            taskText.text = mission.MissionInfo.EVA.TaskInfo;
-        else if (role == "IVA" && mission.MissionInfo.IVA != null)
-            taskText.text = mission.MissionInfo.IVA.TaskInfo;
-        else
-            taskText.text = "No task info available for this role.";
+        if (missionInfo == null)
+        {
+            Debug.LogError("[MissionInfoPanel] MissionInfo section is null.");
+            return;
+        }
 
-        // Alerts (optional)
-        alertText.text = string.IsNullOrEmpty(mission.MissionInfo.All.Alerts)
+        missionText.text = missionInfo.All?.MissionInfo ?? "Mission info not available.";
+
+        alertText.text = string.IsNullOrEmpty(missionInfo.All?.Alerts)
             ? "No alerts at this time."
-            : mission.MissionInfo.All.Alerts;
+            : missionInfo.All.Alerts;
+
+        if (role == "EVA" && missionInfo.EVA != null)
+        {
+            taskText.text = missionInfo.EVA.TaskInfo;
+        }
+        else
+        {
+            taskText.text = "No task info available for this role.";
+        }
     }
 }

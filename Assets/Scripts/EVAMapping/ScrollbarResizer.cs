@@ -1,5 +1,5 @@
 using UnityEngine;
-using TMPro;
+using TMPro; // if using TextMeshPro
 
 public class ScrollBarResizer : MonoBehaviour
 {
