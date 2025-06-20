@@ -11,5 +11,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/EVA_Mission.unity
     guid: 0c9654fc9b6684121bdd9e321cf96894
+  - enabled: 1
+    path: Assets/Scenes/IVA_Mission.unity
+    guid: 7cf2547bd41164a52a72700070ea70d9
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0
