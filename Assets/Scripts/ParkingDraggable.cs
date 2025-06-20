@@ -1,9 +1,8 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 using System.Collections.Generic;
 
-public class POIDraggable : MonoBehaviour, IPointerClickHandler
+public class ParkingDraggable : MonoBehaviour, IPointerClickHandler
 {
     public RectTransform dragTargetPrefab; 
     public Canvas canvas;                
@@ -12,13 +11,12 @@ public class POIDraggable : MonoBehaviour, IPointerClickHandler
     private RectTransform clone;
     private bool dragging = false;
 
-    private List<GameObject> placedPOIs = new List<GameObject>();
+    private List<GameObject> placedParkings = new List<GameObject>();
 
     void Update()
     {
         if (dragging && clone != null)
         {
-            // Follow mouse with the ghost clone
             Vector2 mousePos;
             RectTransformUtility.ScreenPointToLocalPointInRectangle(
                 canvas.transform as RectTransform,
@@ -27,11 +25,27 @@ public class POIDraggable : MonoBehaviour, IPointerClickHandler
                 out mousePos
             );
             clone.anchoredPosition = mousePos;
+
+            // scroll wheel
+            float scroll = Input.mouseScrollDelta.y;
+            if (Mathf.Abs(scroll) > 0.01f)
+            {
+                clone.Rotate(0f, 0f, scroll * 10f);
+            }
+
+            // with R/E key
+            if (Input.GetKey(KeyCode.R))
+            {
+                clone.Rotate(0f, 0f, 1.5f);
+            }
+            else if (Input.GetKey(KeyCode.E))
+            {
+                clone.Rotate(0f, 0f, -1.5f);
+            }
         }
 
         if (dragging && Input.GetMouseButtonDown(0))
         {
-            // Check if the mouse is over the map
             Vector2 localPoint;
             bool insideMap = RectTransformUtility.ScreenPointToLocalPointInRectangle(
                 mapImageRect,
@@ -42,34 +56,18 @@ public class POIDraggable : MonoBehaviour, IPointerClickHandler
 
             if (insideMap && mapImageRect.rect.Contains(localPoint))
             {
-                // Convert local UI point to world position
-                Vector3 worldPos = canvas.transform.TransformPoint(clone.anchoredPosition);
+                GameObject placed = clone.gameObject;
 
-                // Destroy ghost clone
-                Destroy(clone.gameObject);
-                clone = null;
+                DeleteOnParkingClick deleteScript = placed.AddComponent<DeleteOnParkingClick>();
+                deleteScript.routeManager = Object.FindFirstObjectByType<RouteDrawingManager>();
+                deleteScript.parkingDraggable = this;
+
+                placedParkings.Add(placed);
+
                 dragging = false;
-
-                GameObject networkedPOI = Photon.Pun.PhotonNetwork.Instantiate(
-                    "Prefabs/POI_Marker",
-                    Vector3.zero,
-                    Quaternion.identity
-                );
-
-                networkedPOI.transform.SetParent(canvas.transform, worldPositionStays: false);
-
-                RectTransform rt = networkedPOI.GetComponent<RectTransform>();
-                Vector2 anchoredPos;
-                RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                    canvas.transform as RectTransform,
-                    Input.mousePosition,
-                    canvas.worldCamera,
-                    out anchoredPos
-                );
-                rt.anchoredPosition = anchoredPos;
-
-                placedPOIs.Add(networkedPOI);
+                clone = null;
             }
+
             else
             {
                 Destroy(clone.gameObject);
@@ -78,11 +76,10 @@ public class POIDraggable : MonoBehaviour, IPointerClickHandler
             }
         }
     }
-
-    public void UnregisterPOI(GameObject poi)
+    public void UnregisterParking(GameObject parking)
     {
-        if (placedPOIs.Contains(poi))
-            placedPOIs.Remove(poi);
+        if (placedParkings.Contains(parking))
+            placedParkings.Remove(parking);
     }
 
 
@@ -100,15 +97,15 @@ public class POIDraggable : MonoBehaviour, IPointerClickHandler
         dragging = true;
     }
 
-    public void ClearAllPOIs()
+    public void ClearAllParkings()
     {
-        foreach (GameObject poi in placedPOIs)
+        foreach (GameObject parking in placedParkings)
         {
-            if (poi != null)
-                Destroy(poi);
+            if (parking != null)
+                Destroy(parking);
         }
 
-        placedPOIs.Clear();
+        placedParkings.Clear();
     }
 }
 

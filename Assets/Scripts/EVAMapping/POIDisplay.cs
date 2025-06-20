@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 
 public class POIDisplay : MonoBehaviour, IPointerClickHandler
 {
-    public GameObject descriptionContainer; // assign "Description" GameObject
+    public GameObject descriptionContainer;
     public TMP_Text descriptionText;
     private bool isVisible = false;
 
@@ -14,7 +14,6 @@ public class POIDisplay : MonoBehaviour, IPointerClickHandler
         {
             descriptionText.text = description;
 
-            // Scroll back to top when setting new text
             var scrollRect = descriptionText.GetComponentInParent<UnityEngine.UI.ScrollRect>();
             if (scrollRect != null)
                 scrollRect.verticalNormalizedPosition = 1f;
