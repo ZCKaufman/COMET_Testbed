@@ -119,18 +119,19 @@ public class EVATaskPanelController : MonoBehaviour
 
     void ClearAll()
     {
-        string timestamp = System.DateTime.Now.ToString("HH:mm:ss");
-        
-        string ev1Text = $"--- Submitted at {timestamp} ---\n";
-        string ev2Text = $"--- Submitted at {timestamp} ---\n";
+        string title = taskListTitleInput.text.Trim();
+        if (string.IsNullOrWhiteSpace(title))
+        {
+            title = "Untitled Task List";
+        }
 
-        ev1Text += taskListTitleInput.text + "\n";
-        ev2Text += taskListTitleInput.text + "\n";
+        string ev1Body = title + "\n";
+        string ev2Body = title + "\n";
 
         foreach (var task in ev1Tasks)
         {
             if (!string.IsNullOrWhiteSpace(task.text))
-                ev1Text += "- " + task.text + "\n";
+                ev1Body += "- " + task.text.Trim() + "\n";
 
             Destroy(task.transform.parent.gameObject);
         }
@@ -138,22 +139,22 @@ public class EVATaskPanelController : MonoBehaviour
         foreach (var task in ev2Tasks)
         {
             if (!string.IsNullOrWhiteSpace(task.text))
-                ev2Text += "- " + task.text + "\n";
+                ev2Body += "- " + task.text.Trim() + "\n";
 
             Destroy(task.transform.parent.gameObject);
-}
-
+        }
 
         taskListTitleInput.text = "";
         ev1Tasks.Clear();
         ev2Tasks.Clear();
 
-        // Append to Mission Info tab
+        // Send to Mission Info tab
         if (missionInfoController != null)
         {
-            missionInfoController.SetTaskLists(ev1Text, ev2Text);
+            missionInfoController.SetTaskLists(title, ev1Body, ev2Body);
         }
 
+        // Add back one blank task to each list
         AddTask(ev1Container, ev1Tasks);
         AddTask(ev2Container, ev2Tasks);
     }

@@ -1,53 +1,58 @@
+using System.Collections.Generic;
+using System.Text;
 using TMPro;
 using UnityEngine;
-using System.Collections;
 
 public class MissionInfoTabController : MonoBehaviour
 {
     [SerializeField] private TMP_Text missionDescriptionText;
-    [SerializeField] private TMP_Text ev1TasksText;
-    [SerializeField] private TMP_Text ev2TasksText;
+    [SerializeField] private TMP_Text ev1TaskText;
+    [SerializeField] private TMP_Text ev2TaskText;
 
-    private bool hasSubmittedEV1 = false;
-    private bool hasSubmittedEV2 = false;
+    private Dictionary<string, string> ev1TaskLists = new();
+    private Dictionary<string, string> ev2TaskLists = new();
+    private HashSet<string> taskTitles = new();         // use this to ensure sync
+    private List<string> listOrder = new();             // maintains submission order
 
-    void Start()
+    public void SetMissionDescription(string text)
     {
-        StartCoroutine(WaitForMissionLoad());
+        missionDescriptionText.text = text;
     }
 
-    IEnumerator WaitForMissionLoad()
+    public void SetTaskLists(string title, string ev1List, string ev2List)
     {
-        while (!ConfigLoader.IsLoaded)
-            yield return null;
+        title = title.Trim();
 
-        if (ConfigLoader.MissionConfig != null && ConfigLoader.MissionConfig.MissionInfo != null)
+        if (string.IsNullOrEmpty(title))
+            title = "Untitled Task List";
+
+        // If it's a new title, add it to the end of the order list
+        if (!taskTitles.Contains(title))
         {
-            string missionDesc = ConfigLoader.MissionConfig.MissionInfo.All.MissionInfo;
-            missionDescriptionText.text = missionDesc;
+            taskTitles.Add(title);
+            listOrder.Add(title);  // ✅ Add to the bottom
         }
+
+        // Replace content, but do NOT move it in the listOrder
+        ev1TaskLists[title] = ev1List.Trim();
+        ev2TaskLists[title] = ev2List.Trim();
+
+        // Rebuild UI text
+        ev1TaskText.text = GenerateText(ev1TaskLists);
+        ev2TaskText.text = GenerateText(ev2TaskLists);
     }
 
-    public void SetTaskLists(string ev1Text, string ev2Text)
+    private string GenerateText(Dictionary<string, string> taskDict)
     {
-        if (!hasSubmittedEV1)
+        StringBuilder sb = new();
+        foreach (string title in listOrder)
         {
-            ev1TasksText.text = ev1Text;
-            hasSubmittedEV1 = true;
+            if (taskDict.TryGetValue(title, out string taskBlock))
+            {
+                sb.AppendLine(taskBlock);
+                sb.AppendLine(); // extra spacing between lists
+            }
         }
-        else
-        {
-            ev1TasksText.text += "\n" + ev1Text;
-        }
-
-        if (!hasSubmittedEV2)
-        {
-            ev2TasksText.text = ev2Text;
-            hasSubmittedEV2 = true;
-        }
-        else
-        {
-            ev2TasksText.text += "\n" + ev2Text;
-        }
+        return sb.ToString().Trim();
     }
 }
