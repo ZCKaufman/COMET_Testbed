@@ -4842,9 +4842,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c908824e4f0024018b4dbbfc7ba6537c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  missionText: {fileID: 1226278447}
-  taskText: {fileID: 422734644}
-  alertText: {fileID: 1951101371}
+  missionDescriptionText: {fileID: 0}
+  ev1TasksText: {fileID: 0}
+  ev2TasksText: {fileID: 0}
 --- !u!1 &399298919
 GameObject:
   m_ObjectHideFlags: 0
@@ -5342,7 +5342,7 @@ GameObject:
   - component: {fileID: 422734645}
   - component: {fileID: 422734644}
   m_Layer: 5
-  m_Name: TaskText
+  m_Name: EV1TaskText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5368,7 +5368,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Text
+  m_text: No task list loaded. To create a task list for EV1, please go to the EVA
+    Task List tab. After submitting a checklist for EV1, it will appear here.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -5560,10 +5561,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   taskItemPrefab: {fileID: 833638661872586042, guid: 73732cd00b1944831a9021e9922b49ea, type: 3}
-  taskListTitleInput: {fileID: 942193657}
-  submitButton: {fileID: 551090798}
   ev1Container: {fileID: 910392454}
   ev2Container: {fileID: 1606348735}
+  taskListTitleInput: {fileID: 942193657}
+  submitButton: {fileID: 551090798}
+  missionInfoController: {fileID: 1460382324}
 --- !u!114 &430508338
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7121,7 +7123,7 @@ GameObject:
   - component: {fileID: 538269553}
   - component: {fileID: 538269552}
   m_Layer: 5
-  m_Name: TaskDescriptionText
+  m_Name: EV1TaskList
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14132,7 +14134,7 @@ GameObject:
   - component: {fileID: 1170933852}
   - component: {fileID: 1170933851}
   m_Layer: 5
-  m_Name: AlertText
+  m_Name: EV2TaskList
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -16166,9 +16168,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c908824e4f0024018b4dbbfc7ba6537c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  missionText: {fileID: 1226278447}
-  taskText: {fileID: 422734644}
-  alertText: {fileID: 1951101371}
+  missionDescriptionText: {fileID: 1226278447}
+  ev1TasksText: {fileID: 422734644}
+  ev2TasksText: {fileID: 1951101371}
 --- !u!114 &1460382325
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21150,7 +21152,7 @@ GameObject:
   - component: {fileID: 1951101372}
   - component: {fileID: 1951101371}
   m_Layer: 5
-  m_Name: AlertText
+  m_Name: EV2TaskText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -21176,7 +21178,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Text
+  m_text: No task list loaded. To create a task list for EV2, please go to the EVA
+    Task List tab. After submitting a checklist for EV2, it will appear here.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
