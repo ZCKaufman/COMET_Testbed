@@ -9,6 +9,7 @@ public class RouteDrawingButtonManager : MonoBehaviour
     public Button driveButton;
     public Button deleteButton;
     public Button deleteAllButton;
+    public Button ParkingButton;
 
 
     private string activeMode = null; // "walk", "drive", or "delete"
@@ -67,7 +68,7 @@ public class RouteDrawingButtonManager : MonoBehaviour
 
     private void UpdateButtonVisuals()
     {
-        Color activeColor = new Color(0.3f, 0.7f, 0.3f);
+        Color activeColor = new Color(0.7f, 0.8f, 1f);
         Color inactiveColor = Color.white;
 
 

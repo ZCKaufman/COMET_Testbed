@@ -1,9 +1,8 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 using System.Collections.Generic;
 
-public class POIDraggable : MonoBehaviour, IPointerClickHandler
+public class ParkingDraggable : MonoBehaviour, IPointerClickHandler
 {
     public RectTransform dragTargetPrefab; 
     public Canvas canvas;                
@@ -12,7 +11,7 @@ public class POIDraggable : MonoBehaviour, IPointerClickHandler
     private RectTransform clone;
     private bool dragging = false;
 
-    private List<GameObject> placedPOIs = new List<GameObject>();
+    private List<GameObject> placedParkings = new List<GameObject>();
 
     void Update()
     {
@@ -26,6 +25,23 @@ public class POIDraggable : MonoBehaviour, IPointerClickHandler
                 out mousePos
             );
             clone.anchoredPosition = mousePos;
+
+            // scroll wheel
+            float scroll = Input.mouseScrollDelta.y;
+            if (Mathf.Abs(scroll) > 0.01f)
+            {
+                clone.Rotate(0f, 0f, scroll * 10f);
+            }
+
+            // with R/E key
+            if (Input.GetKey(KeyCode.R))
+            {
+                clone.Rotate(0f, 0f, 1.5f);
+            }
+            else if (Input.GetKey(KeyCode.E))
+            {
+                clone.Rotate(0f, 0f, -1.5f);
+            }
         }
 
         if (dragging && Input.GetMouseButtonDown(0))
@@ -42,11 +58,11 @@ public class POIDraggable : MonoBehaviour, IPointerClickHandler
             {
                 GameObject placed = clone.gameObject;
 
-                DeleteOnPOIClick deleteScript = placed.AddComponent<DeleteOnPOIClick>();
+                DeleteOnParkingClick deleteScript = placed.AddComponent<DeleteOnParkingClick>();
                 deleteScript.routeManager = Object.FindFirstObjectByType<RouteDrawingManager>();
-                deleteScript.poiDraggable = this;
+                deleteScript.parkingDraggable = this;
 
-                placedPOIs.Add(placed);
+                placedParkings.Add(placed);
 
                 dragging = false;
                 clone = null;
@@ -60,10 +76,10 @@ public class POIDraggable : MonoBehaviour, IPointerClickHandler
             }
         }
     }
-    public void UnregisterPOI(GameObject poi)
+    public void UnregisterParking(GameObject parking)
     {
-        if (placedPOIs.Contains(poi))
-            placedPOIs.Remove(poi);
+        if (placedParkings.Contains(parking))
+            placedParkings.Remove(parking);
     }
 
 
@@ -81,15 +97,15 @@ public class POIDraggable : MonoBehaviour, IPointerClickHandler
         dragging = true;
     }
 
-    public void ClearAllPOIs()
+    public void ClearAllParkings()
     {
-        foreach (GameObject poi in placedPOIs)
+        foreach (GameObject parking in placedParkings)
         {
-            if (poi != null)
-                Destroy(poi);
+            if (parking != null)
+                Destroy(parking);
         }
 
-        placedPOIs.Clear();
+        placedParkings.Clear();
     }
 }
 

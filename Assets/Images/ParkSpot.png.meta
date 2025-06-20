@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: b6a8d2e64a1362e46bc75c37212fdc12
+guid: 4140dc7e17893c644a95c4e2b68776a3
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 8107155664838830064
-    second: trash3_0
+      213: 6097740682212269918
+    second: ParkSpot_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: trash3_0
+      name: ParkSpot_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 656
-        height: 656
+        x: 51
+        y: 19
+        width: 98
+        height: 162
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 0f7a385af17628070800000000000000
-      internalID: 8107155664838830064
+      spriteID: e5fd5bfd7d68f9450800000000000000
+      internalID: 6097740682212269918
       vertices: []
       indices: 
       edges: []
