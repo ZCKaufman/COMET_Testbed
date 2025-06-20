@@ -4842,9 +4842,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c908824e4f0024018b4dbbfc7ba6537c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  missionDescriptionText: {fileID: 0}
-  ev1TasksText: {fileID: 0}
-  ev2TasksText: {fileID: 0}
+  missionDescriptionText: {fileID: 1226278447}
+  ev1TasksText: {fileID: 422734644}
+  ev2TasksText: {fileID: 1951101371}
 --- !u!1 &399298919
 GameObject:
   m_ObjectHideFlags: 0

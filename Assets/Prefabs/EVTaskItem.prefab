@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1109252242208093807}
   - component: {fileID: 136978546447774488}
   - component: {fileID: 849870648000047809}
+  - component: {fileID: 8044047867694372165}
   m_Layer: 5
   m_Name: EVTaskItem
   m_TagString: Untagged
@@ -85,6 +86,19 @@ MonoBehaviour:
   m_FlexibleWidth: 1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &8044047867694372165
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 833638661872586042}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3a102dbb3903464a9a44f807be76407, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputField: {fileID: 0}
 --- !u!1 &1095564236442152997
 GameObject:
   m_ObjectHideFlags: 0

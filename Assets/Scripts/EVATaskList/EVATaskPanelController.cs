@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class EVATaskPanelController : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class EVATaskPanelController : MonoBehaviour
 
     private List<TMP_InputField> ev1Tasks = new List<TMP_InputField>();
     private List<TMP_InputField> ev2Tasks = new List<TMP_InputField>();
+    
 
     void Start()
     {
@@ -30,59 +32,25 @@ public class EVATaskPanelController : MonoBehaviour
         int taskNumber = taskList.Count + 1;
 
         GameObject taskItem = Instantiate(taskItemPrefab, container);
-        TMP_Text numberLabel = taskItem.transform.Find("NumberLabel")?.GetComponent<TMP_Text>();
-        TMP_InputField inputField = taskItem.transform.Find("TaskInputField")?.GetComponent<TMP_InputField>();
+        TMP_Text numLabel   = taskItem.transform.Find("NumberLabel") ?.GetComponent<TMP_Text>();
+        TMP_InputField fld  = taskItem.transform.Find("TaskInputField")?.GetComponent<TMP_InputField>();
+        TaskInputFieldMonitor mon = taskItem.AddComponent<TaskInputFieldMonitor>();
 
-        if (numberLabel != null)
-            numberLabel.text = taskNumber + ".";
+        if (numLabel != null) numLabel.text = taskNumber + ".";
+        if (fld == null) return;
 
-        if (inputField != null)
-        {
-            inputField.lineType = TMP_InputField.LineType.SingleLine;
+        fld.lineType = TMP_InputField.LineType.SingleLine;
 
-            // Add to list
-            taskList.Add(inputField);
+        // ——  Add NEW task after this one every time Enter is pressed ——
+        fld.onSubmit.RemoveAllListeners();
+        fld.onSubmit.AddListener(_ => InsertTaskAfter(fld, container));
 
-            // Enter key = add new task
-            inputField.onSubmit.AddListener((input) =>
-            {
-                if (!string.IsNullOrWhiteSpace(input) && inputField == taskList[taskList.Count - 1])
-                {
-                    AddTask(container, taskList);
-                }
-            });
-
-            // Delete key = remove task if empty
-            inputField.onSelect.AddListener((_) =>
-            {
-                inputField.onValueChanged.AddListener((text) =>
-                {
-                    inputField.onValidateInput = (string _, int __, char c) =>
-                    {
-                        if (c == '\b' || c == (char)127) // Backspace or Delete
-                        {
-                            if (string.IsNullOrWhiteSpace(inputField.text) &&
-                                taskList.Count > 1)
-                            {
-                                int index = taskList.IndexOf(inputField);
-                                if (index != -1)
-                                {
-                                    // Remove and destroy
-                                    taskList.RemoveAt(index);
-                                    Destroy(taskItem);
-
-                                    // Renumber remaining items
-                                    RenumberTasks(container, taskList);
-                                }
-                                return '\0'; // ignore character input
-                            }
-                        }
-                        return c;
-                    };
-                });
-            });
-        }
+        taskList.Add(fld);
+        mon.inputField = fld;
+        mon.Initialize(this, container);
     }
+
+
 
     void RenumberTasks(Transform container, List<TMP_InputField> taskList)
     {
@@ -96,6 +64,58 @@ public class EVATaskPanelController : MonoBehaviour
         }
     }
 
+    public void InsertTaskAfter(TMP_InputField currentField, Transform container)
+{
+    List<TMP_InputField> list = container == ev1Container ? ev1Tasks : ev2Tasks;
+    int idx = list.IndexOf(currentField);
+    if (idx == -1) return;
+
+    GameObject taskItem = Instantiate(taskItemPrefab, container);
+    TMP_Text numLabel   = taskItem.transform.Find("NumberLabel") ?.GetComponent<TMP_Text>();
+    TMP_InputField newFld = taskItem.transform.Find("TaskInputField")?.GetComponent<TMP_InputField>();
+    TaskInputFieldMonitor mon = taskItem.AddComponent<TaskInputFieldMonitor>();
+
+    if (numLabel != null) numLabel.text = (idx + 2) + ".";
+    if (newFld != null)
+    {
+        newFld.lineType = TMP_InputField.LineType.SingleLine;
+        newFld.onSubmit.AddListener(_ => InsertTaskAfter(newFld, container));
+        list.Insert(idx + 1, newFld);
+        mon.inputField = newFld;
+        mon.Initialize(this, container);
+        StartCoroutine(FocusNextFrame(newFld));
+    }
+
+    taskItem.transform.SetParent(container, false);
+    taskItem.transform.SetSiblingIndex(idx + 1);
+
+    RenumberTasks(container, list);
+}
+
+
+    private IEnumerator FocusNextFrame(TMP_InputField field)
+    {
+        yield return null;
+        field.Select();
+        field.ActivateInputField();
+    }
+
+    public void TryDeleteTask(TMP_InputField inputField, Transform container)
+    {
+        List<TMP_InputField> taskList = container == ev1Container ? ev1Tasks : ev2Tasks;
+
+        if (taskList.Count <= 1) return;
+
+        int index = taskList.IndexOf(inputField);
+        if (index != -1)
+        {
+            TMP_InputField toDelete = taskList[index];
+            taskList.RemoveAt(index);
+            Destroy(toDelete.transform.parent.gameObject);
+
+            RenumberTasks(container, taskList);
+        }
+    }
 
     void ClearAll()
     {
