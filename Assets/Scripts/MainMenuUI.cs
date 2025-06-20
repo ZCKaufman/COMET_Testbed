@@ -98,15 +98,11 @@ public class MainMenuUI : MonoBehaviourPunCallbacks
     {
         ExitGames.Client.Photon.Hashtable roomProps = PhotonNetwork.CurrentRoom.CustomProperties;
 
-        // Determine current count for the selected role
         string countKey = selectedRole + "_Count";
         int currentCount = roomProps.ContainsKey(countKey) ? (int)roomProps[countKey] : 0;
 
-        // Set local player nickname and GameManager values
         PhotonNetwork.LocalPlayer.NickName = $"{selectedRole}";
 
-
-        // Assign in GameManager (make sure GameManager uses .SetPlayerRole(role, id))
         GlobalManager.Instance.SetPlayerRole(selectedRole, currentCount.ToString());
         ExitGames.Client.Photon.Hashtable playerProps = new ExitGames.Client.Photon.Hashtable
         {
@@ -115,15 +111,20 @@ public class MainMenuUI : MonoBehaviourPunCallbacks
         };
         PhotonNetwork.LocalPlayer.SetCustomProperties(playerProps);
 
-        // Only the master client updates room properties to avoid race conditions
         if (PhotonNetwork.IsMasterClient)
         {
             roomProps[countKey] = currentCount + 1;
             PhotonNetwork.CurrentRoom.SetCustomProperties(roomProps);
         }
 
-        PhotonNetwork.LoadLevel("Mission"); // sync scene load
+        if (selectedRole == "EVA")
+            PhotonNetwork.LoadLevel("EVA_Mission");
+        else if (selectedRole == "IVA")
+            PhotonNetwork.LoadLevel("IVA_Mission");
+        else
+            Debug.LogError("Unknown role; no scene to load.");
     }
+
 
     public override void OnConnectedToMaster()
     {
