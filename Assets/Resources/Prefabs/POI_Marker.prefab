@@ -827,8 +827,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 563d592d4c2e11947b8fb3b078d6f159, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  routeManager: {fileID: 0}
-  poiDraggable: {fileID: 0}
 --- !u!1 &8454299141753136298
 GameObject:
   m_ObjectHideFlags: 0

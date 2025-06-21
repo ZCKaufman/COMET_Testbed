@@ -41,40 +41,34 @@ public class POIDraggable : MonoBehaviour, IPointerClickHandler
 
             if (insideMap && mapImageRect.rect.Contains(localPoint))
             {
-                // STEP 1: Spawn the POI
                 GameObject placed = Photon.Pun.PhotonNetwork.Instantiate(
                     "Prefabs/POI_Marker",
                     Vector3.zero,
                     Quaternion.identity
                 );
 
-                PhotonView deleteView = placed.GetComponent<PhotonView>();
-                deleteView.RPC("RPC_Init", RpcTarget.AllBuffered, GetComponent<PhotonView>().ViewID);
-
-
-                // STEP 2: Parent it immediately to the correct UI panel (before positioning)
                 RectTransform placedRect = placed.GetComponent<RectTransform>();
-                placedRect.SetParent(GameObject.Find("EVAMapPanel")?.transform, worldPositionStays: false);
-                //Debug.Log("POI anchored at: " + placedRect.anchoredPosition + ", parent: " + placedRect.parent.name);
 
+                // Parent under EVAMapPanel before positioning
+                RectTransform parentPanel = GameObject.Find("EVAMapPanel")?.transform as RectTransform;
+                placedRect.SetParent(parentPanel, worldPositionStays: false);
 
-                // STEP 3: Set correct UI-local position
+                // Get mouse pos relative to EVAMapPanel
                 Vector2 dropPos;
                 RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                    GameObject.Find("EVAMapPanel")?.transform as RectTransform,
+                    parentPanel,
                     Input.mousePosition,
                     canvas.worldCamera,
                     out dropPos
                 );
                 placedRect.anchoredPosition = dropPos;
-                
-                // STEP 4: Clean up ghost clone
+
+                // Clean up
                 Destroy(clone.gameObject);
                 clone = null;
                 dragging = false;
 
                 placedPOIs.Add(placed);
-
             }
 
 
