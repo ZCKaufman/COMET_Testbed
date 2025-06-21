@@ -36,11 +36,11 @@ public class ParkingDraggable : MonoBehaviour, IPointerClickHandler
             // with R/E key
             if (Input.GetKey(KeyCode.R))
             {
-                clone.Rotate(0f, 0f, 1.5f);
+                clone.Rotate(0f, 0f, 0.5f);
             }
             else if (Input.GetKey(KeyCode.E))
             {
-                clone.Rotate(0f, 0f, -1.5f);
+                clone.Rotate(0f, 0f, -0.5f);
             }
         }
 
@@ -57,6 +57,11 @@ public class ParkingDraggable : MonoBehaviour, IPointerClickHandler
             if (insideMap && mapImageRect.rect.Contains(localPoint))
             {
                 GameObject placed = clone.gameObject;
+                Transform mapCanvas = GameObject.Find("EVAMapPanel")?.transform;
+                if (mapCanvas != null)
+                    placed.transform.SetParent(mapCanvas, worldPositionStays: true);
+                else
+                    Debug.LogWarning("MapCanvas not found!");
 
                 DeleteOnParkingClick deleteScript = placed.AddComponent<DeleteOnParkingClick>();
                 deleteScript.routeManager = Object.FindFirstObjectByType<RouteDrawingManager>();
@@ -93,7 +98,6 @@ public class ParkingDraggable : MonoBehaviour, IPointerClickHandler
         clone.transform.SetAsLastSibling();
         clone.sizeDelta = dragTargetPrefab.sizeDelta;
         clone.pivot = dragTargetPrefab.pivot;
-
         dragging = true;
     }
 

@@ -1,10 +1,9 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
 using System.Collections;
-using System.IO;
+using Photon.Pun.UtilityScripts;
 
 public class MainMenuUI : MonoBehaviourPunCallbacks
 {
@@ -17,6 +16,7 @@ public class MainMenuUI : MonoBehaviourPunCallbacks
 
     void Start()
     {
+        Photon.Pun.PhotonNetwork.PhotonServerSettings.AppSettings.FixedRegion = "asia";
         PhotonNetwork.ConnectUsingSettings(); // connects to Photon
         StartCoroutine(EnableUIWhenReady());
     }
@@ -118,7 +118,10 @@ public class MainMenuUI : MonoBehaviourPunCallbacks
         }
 
         if (selectedRole == "EVA")
+        {
+            PhotonNetwork.RemoveBufferedRPCs();
             PhotonNetwork.LoadLevel("EVA_Mission");
+        }
         else if (selectedRole == "IVA")
             PhotonNetwork.LoadLevel("IVA_Mission");
         else
