@@ -45,6 +45,7 @@ MonoBehaviour:
   - RPC_DestroySelf
   - RPC_SpawnPOI
   - RPC_Init
+  - PlacePOIAtNormalizedPosition
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

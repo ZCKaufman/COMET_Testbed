@@ -2256,6 +2256,7 @@ GameObject:
   - component: {fileID: 151501570}
   - component: {fileID: 151501569}
   - component: {fileID: 151501568}
+  - component: {fileID: 151501571}
   m_Layer: 5
   m_Name: ClickCatcher
   m_TagString: Untagged
@@ -2334,6 +2335,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 151501566}
   m_CullTransparentMesh: 1
+--- !u!114 &151501571
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 151501566}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10e31cd36eb7d934e9d08e37e8beac96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &159151653
 GameObject:
   m_ObjectHideFlags: 0
