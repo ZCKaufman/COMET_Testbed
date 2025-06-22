@@ -1,14 +1,19 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.Networking;
 
 public class ConfigLoader : MonoBehaviour
 {
+    /* ---------- public static configs ---------- */
     public static MissionViewConfigRoot MissionConfig;
-    public static EVAMappingConfigRoot EVAMapConfig;
+    public static EVAMappingConfigRoot  EVAMapConfig;
+    public static IVASampleTaskRoot     IVASampleTasks;
+
     public static bool IsLoaded = false;
 
+    /* ---------- load at startup ---------- */
     void Awake()
     {
         DontDestroyOnLoad(gameObject);
@@ -19,20 +24,15 @@ public class ConfigLoader : MonoBehaviour
     {
         string path = Path.Combine(Application.streamingAssetsPath, "Mission001.json");
 
-#if UNITY_WEBGL && !UNITY_EDITOR
+    #if UNITY_WEBGL && !UNITY_EDITOR
         UnityWebRequest www = UnityWebRequest.Get(path);
         yield return www.SendWebRequest();
 
         if (www.result != UnityWebRequest.Result.Success)
-        {
-            Debug.LogError("Failed to load config.json from StreamingAssets (WebGL): " + www.error);
-        }
+            Debug.LogError("JSON load error (WebGL): " + www.error);
         else
-        {
-            string json = www.downloadHandler.text;
-            ParseConfigs(json);
-        }
-#else
+            ParseConfigs(www.downloadHandler.text);
+    #else
         if (File.Exists(path))
         {
             string json = File.ReadAllText(path);
@@ -40,34 +40,41 @@ public class ConfigLoader : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Config file not found at: " + path);
+            Debug.LogError("JSON file not found: " + path);
         }
-#endif
+    #endif
+
+        /* ---- make sure coroutine always yields once before exiting ---- */
         yield break;
+    }
+
+    /* ---------- parse JSON ---------- */
+    [System.Serializable] private class Wrapper
+    {
+        public MissionInfoSection MissionInfo;
+        public EVAMapping         EVAMapping;
+        public IVATaskArray       EVATaskPlanning;
     }
 
     void ParseConfigs(string json)
     {
         try
         {
-            // deserialize whole object to a temporary structure
-            var fullJson = JsonUtility.FromJson<Wrapper>(json);
+            var full = JsonUtility.FromJson<Wrapper>(json);
 
-            // populate the all separate configs
-            MissionConfig = new MissionViewConfigRoot { MissionInfo = fullJson.MissionInfo };
-            EVAMapConfig = new EVAMappingConfigRoot { EVAMapping = fullJson.EVAMapping };
+            MissionConfig = new MissionViewConfigRoot { MissionInfo = full.MissionInfo };
+            EVAMapConfig  = new EVAMappingConfigRoot  { EVAMapping  = full.EVAMapping  };
 
-            IsLoaded = true;        }
+            // build IVA sample lookup
+            IVASampleTasks = new IVASampleTaskRoot();
+            foreach (var entry in full.EVATaskPlanning.IVA)
+                IVASampleTasks.Samples[entry.Name] = entry;
+
+            IsLoaded = true;
+        }
         catch (System.Exception ex)
         {
-            Debug.LogError("Failed to parse config: " + ex.Message);
+            Debug.LogError("Config parse error: " + ex.Message);
         }
-    }
-
-    [System.Serializable]
-    private class Wrapper
-    {
-        public MissionInfoSection MissionInfo;
-        public EVAMapping EVAMapping;
     }
 }

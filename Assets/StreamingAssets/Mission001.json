@@ -43,5 +43,25 @@
         ]
       }
     ]
+  },
+  "EVATaskPlanning": {
+    "IVA": [
+      {
+        "Name": "Crater Exploration",
+        "EV1": [ "Step 1", "Step 2" ],
+        "EV2": [ "Step 1", "Step 2" ]
+      },
+      {
+        "Name": "Lava Tube Exploration",
+        "EV1": [ "Sample rock", "Scan walls" ],
+        "EV2": [ "Deploy lidar", "Log gas readings" ]
+      },
+      {
+        "Name": "Solar Panel Repair",
+        "EV1": [ "Remove debris", "Replace panel" ],
+        "EV2": [ "Check inverter", "Test output" ]
+      }
+    ]
   }
+
 }
