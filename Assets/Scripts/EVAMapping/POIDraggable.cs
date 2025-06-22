@@ -14,6 +14,13 @@ public class POIDraggable : MonoBehaviour, IPointerClickHandler
 
     private List<GameObject> placedPOIs = new List<GameObject>();
 
+    private PhotonView photonView;
+
+    void Awake()
+    {
+        photonView = GetComponent<PhotonView>();
+    }
+
     void Update()
     {
         if (dragging && clone != null)
@@ -103,13 +110,26 @@ public class POIDraggable : MonoBehaviour, IPointerClickHandler
 
     public void ClearAllPOIs()
     {
-        foreach (GameObject poi in placedPOIs)
-        {
-            if (poi != null)
-                Destroy(poi);
-        }
-
-        placedPOIs.Clear();
+        photonView.RPC("RPC_ClearAllPOIs", RpcTarget.AllBuffered);
     }
 
+    [PunRPC]
+    void RPC_ClearAllPOIs()
+    {
+        GameObject[] allPOIs = GameObject.FindGameObjectsWithTag("POI");
+        foreach (GameObject poi in allPOIs)
+        {
+            PhotonView view = poi.GetComponent<PhotonView>();
+            if (view != null && view.IsMine)
+            {
+                PhotonNetwork.Destroy(poi);
+            }
+            else if (view == null)
+            {
+                Destroy(poi);  // fallback for non-networked POIs
+            }
+        }
+
+        placedPOIs.Clear(); 
+    }
 }

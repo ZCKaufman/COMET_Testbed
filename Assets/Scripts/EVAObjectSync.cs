@@ -1,25 +1,26 @@
 using UnityEngine;
 using Photon.Pun;
 
-public class POISync : MonoBehaviourPun, IPunObservable
+public class EVAObjectSync : MonoBehaviourPun, IPunObservable
 {
     private RectTransform rectTransform;
+    private bool parented = false;
 
     void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
     }
 
-    void Start()
+    void Update()
     {
-        Transform parent = GameObject.Find("EVAMapPanel")?.transform;
-        if (parent != null)
+        if (!parented)
         {
-            rectTransform.SetParent(parent, worldPositionStays: false);
-        }
-        else
-        {
-            Debug.LogError("EVAMapPanel not found for POI parenting.");
+            Transform panel = GameObject.Find("EVAMapPanel")?.transform;
+            if (panel != null)
+            {
+                rectTransform.SetParent(panel, false);
+                parented = true;
+            }
         }
     }
 
