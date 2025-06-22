@@ -10813,6 +10813,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1452124882}
+        m_TargetAssemblyTypeName: ParkingDraggable, Assembly-CSharp
+        m_MethodName: ClearAllParkings
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &887187529
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15810,6 +15822,7 @@ GameObject:
   - component: {fileID: 1452124880}
   - component: {fileID: 1452124879}
   - component: {fileID: 1452124882}
+  - component: {fileID: 1452124883}
   m_Layer: 5
   m_Name: ParkingButton
   m_TagString: Untagged
@@ -15935,6 +15948,28 @@ MonoBehaviour:
   dragTargetPrefab: {fileID: 7148878688599332618, guid: 242ad2ff401cca14c9b9fa759659e970, type: 3}
   canvas: {fileID: 1402037571}
   mapImageRect: {fileID: 168526644}
+--- !u!114 &1452124883
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1452124877}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 2
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &1454070961
 GameObject:
   m_ObjectHideFlags: 0

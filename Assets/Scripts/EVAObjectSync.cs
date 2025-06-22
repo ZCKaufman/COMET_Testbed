@@ -29,12 +29,17 @@ public class EVAObjectSync : MonoBehaviourPun, IPunObservable
         if (stream.IsWriting)
         {
             stream.SendNext(rectTransform.anchoredPosition);
+            stream.SendNext(rectTransform.localEulerAngles.z);
         }
         else
         {
             if (!photonView.IsMine)
             {
                 rectTransform.anchoredPosition = (Vector2)stream.ReceiveNext();
+
+                float zRotation = (float)stream.ReceiveNext();
+                Vector3 angles = rectTransform.localEulerAngles;
+                rectTransform.localEulerAngles = new Vector3(angles.x, angles.y, zRotation);
             }
         }
     }

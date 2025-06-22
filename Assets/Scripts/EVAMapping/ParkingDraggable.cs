@@ -1,17 +1,24 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
+using Photon.Pun;
 
 public class ParkingDraggable : MonoBehaviour, IPointerClickHandler
 {
-    public RectTransform dragTargetPrefab; 
-    public Canvas canvas;                
-    public RectTransform mapImageRect;  
+    public RectTransform dragTargetPrefab;
+    public Canvas canvas;
+    public RectTransform mapImageRect;
 
     private RectTransform clone;
     private bool dragging = false;
 
     private List<GameObject> placedParkings = new List<GameObject>();
+    private PhotonView photonView;
+
+    void Awake()
+    {
+        photonView = GetComponent<PhotonView>();
+    }
 
     void Update()
     {
@@ -19,7 +26,7 @@ public class ParkingDraggable : MonoBehaviour, IPointerClickHandler
         {
             Vector2 mousePos;
             RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                canvas.transform as RectTransform,
+                clone.parent as RectTransform,
                 Input.mousePosition,
                 canvas.worldCamera,
                 out mousePos
@@ -33,7 +40,6 @@ public class ParkingDraggable : MonoBehaviour, IPointerClickHandler
                 clone.Rotate(0f, 0f, scroll * 10f);
             }
 
-            // with R/E key
             if (Input.GetKey(KeyCode.R))
             {
                 clone.Rotate(0f, 0f, 0.5f);
@@ -56,23 +62,32 @@ public class ParkingDraggable : MonoBehaviour, IPointerClickHandler
 
             if (insideMap && mapImageRect.rect.Contains(localPoint))
             {
-                GameObject placed = clone.gameObject;
-                Transform mapCanvas = GameObject.Find("EVAMapPanel")?.transform;
-                if (mapCanvas != null)
-                    placed.transform.SetParent(mapCanvas, worldPositionStays: true);
-                else
-                    Debug.LogWarning("MapCanvas not found!");
+                GameObject placed = PhotonNetwork.Instantiate(
+                    "Prefabs/ParkSpot",
+                    Vector3.zero,
+                    Quaternion.identity
+                );
 
-                DeleteOnParkingClick deleteScript = placed.AddComponent<DeleteOnParkingClick>();
-                deleteScript.routeManager = Object.FindFirstObjectByType<RouteDrawingManager>();
-                deleteScript.parkingDraggable = this;
+                RectTransform placedRect = placed.GetComponent<RectTransform>();
 
-                placedParkings.Add(placed);
+                RectTransform parentPanel = GameObject.Find("EVAMapPanel")?.transform as RectTransform;
+                placedRect.SetParent(parentPanel, worldPositionStays: false);
 
-                dragging = false;
+                Vector2 dropPos;
+                RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                    parentPanel,
+                    Input.mousePosition,
+                    canvas.worldCamera,
+                    out dropPos
+                );
+                placedRect.anchoredPosition = dropPos;
+                placedRect.rotation = clone.rotation;
+
+                Destroy(clone.gameObject);
                 clone = null;
+                dragging = false;
+                placedParkings.Add(placed);
             }
-
             else
             {
                 Destroy(clone.gameObject);
@@ -81,6 +96,7 @@ public class ParkingDraggable : MonoBehaviour, IPointerClickHandler
             }
         }
     }
+
     public void UnregisterParking(GameObject parking)
     {
         if (placedParkings.Contains(parking))
@@ -103,13 +119,27 @@ public class ParkingDraggable : MonoBehaviour, IPointerClickHandler
 
     public void ClearAllParkings()
     {
-        foreach (GameObject parking in placedParkings)
+        photonView.RPC("RPC_ClearAllParkings", RpcTarget.AllBuffered);
+    }
+    
+    [PunRPC]
+    void RPC_ClearAllParkings()
+    {
+        GameObject[] allParkings = GameObject.FindGameObjectsWithTag("Parking");
+        foreach (GameObject parking in allParkings)
         {
-            if (parking != null)
-                Destroy(parking);
+            PhotonView view = parking.GetComponent<PhotonView>();
+            if (view != null && view.IsMine)
+            {
+                PhotonNetwork.Destroy(parking);
+            }
+            else if (view == null)
+            {
+                Destroy(parking);  // fallback for non-networked POIs
+            }
         }
 
-        placedParkings.Clear();
+        placedParkings.Clear(); 
     }
 }
 
