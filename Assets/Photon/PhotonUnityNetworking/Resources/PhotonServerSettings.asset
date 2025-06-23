@@ -47,6 +47,9 @@ MonoBehaviour:
   - RPC_Init
   - PlacePOIAtNormalizedPosition
   - RPC_ClearAllParkings
+  - RPC_DeleteLineByViewID
+  - RPC_DeleteAllLines
+  - RPC_RequestGlobalLineDelete
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

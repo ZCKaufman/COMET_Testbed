@@ -6,6 +6,7 @@ TagManager:
   tags:
   - POI
   - Parking
+  - UserPath
   layers:
   - Default
   - TransparentFX

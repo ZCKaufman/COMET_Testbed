@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using TMPro;
+using Photon.Pun;
+using System.Linq;
 
 
 public class RouteDrawingManager : MonoBehaviour
@@ -12,12 +14,21 @@ public class RouteDrawingManager : MonoBehaviour
     private string currentDrawType = null;
     private List<Vector2> drawingPoints = new List<Vector2>();
     private bool isDeleteMode = false;
-    private List<LineInfo> userDrawnLineInfos = new List<LineInfo>();
     public Transform scrollViewContent;
+    private PhotonView photonView;
+
     public GameObject lineInfoTextPrefab;
+    private Dictionary<int, LineInfo> userDrawnLineInfos = new Dictionary<int, LineInfo>();
+
 
 
     public bool IsInDeleteMode() => isDeleteMode;
+
+    void Awake()
+    {
+        photonView = GetComponent<PhotonView>();
+    }
+
 
     public void ToggleDrawingMode(string type)
     {
@@ -84,77 +95,125 @@ public class RouteDrawingManager : MonoBehaviour
 
     private void CreateSegment(Vector2 start, Vector2 end, Color color)
     {
-        GameObject go = Instantiate(uiLinePrefab, poiContainer);
+        object[] instData = new object[]
+        {
+            start,
+            end,
+            color.r,
+            color.g,
+            color.b,
+            currentDrawType,
+            Vector2.Distance(start, end)
+        };
+
+        GameObject go = PhotonNetwork.Instantiate("Prefabs/UILine", Vector3.zero, Quaternion.identity, 0, instData);
         go.name = "UserDrawnLine";
 
-        Image img = go.GetComponent<Image>();
-        img.color = color;
-
+        // 🛠 Force into correct UI hierarchy
         RectTransform rt = go.GetComponent<RectTransform>();
-        Vector2 dir = (end - start).normalized;
-        float dist = Vector2.Distance(start, end);
+        Transform mapImage = GameObject.Find("MapImage")?.transform;
+        if (mapImage != null)
+        {
+            rt.SetParent(mapImage, false); // Important: false to preserve local scale
+            rt.anchorMin = rt.anchorMax = new Vector2(0, 0);
+            rt.pivot = new Vector2(0, 0.5f);
 
-        rt.sizeDelta = new Vector2(dist, 4f);
-        rt.anchorMin = rt.anchorMax = new Vector2(0, 0);
-        rt.pivot = new Vector2(0, 0.5f);
-        rt.anchoredPosition = start;
-        rt.localEulerAngles = new Vector3(0, 0, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
+            // Reapply position/rotation now that parent is set
+            Vector2 dir = (end - start).normalized;
+            float dist = Vector2.Distance(start, end);
+
+            rt.sizeDelta = new Vector2(dist, 4f);
+            rt.anchoredPosition = start;
+            rt.localEulerAngles = new Vector3(0, 0, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
+        }
+        else
+        {
+            Debug.LogError("MapImage not found");
+        }
 
         BoxCollider2D col = go.AddComponent<BoxCollider2D>();
         col.size = rt.sizeDelta;
 
-        DeleteOnClick del = go.AddComponent<DeleteOnClick>();
-        del.manager = this;
-
-        GameObject scrollEntry = AddLineToScrollView(currentDrawType, start, end, dist);
-
-        LineInfo info = new LineInfo
+        DeleteOnClick del = go.GetComponent<DeleteOnClick>();
+        if (del != null)
         {
-            lineObject = go,
-            scrollEntry = scrollEntry,
-            routeType = currentDrawType,
-            start = start,
-            end = end,
-            distance = dist
-        };
-
-        userDrawnLineInfos.Add(info);
+            del.manager = this;
+        }
     }
 
+    public void RegisterLine(int viewID, GameObject lineObj, GameObject scrollEntry, string routeType, Vector2 start, Vector2 end, float distance)
+    {
+        userDrawnLineInfos[viewID] = new LineInfo
+        {
+            lineObject = lineObj,
+            scrollEntry = scrollEntry,
+            routeType = routeType,
+            start = start,
+            end = end,
+            distance = distance
+        };
+    }
 
     public void DeleteLine(GameObject line)
     {
-        LineInfo? match = userDrawnLineInfos.Find(info => info.lineObject == line);
-
-        if (match.HasValue)
+        PhotonView pv = line.GetComponent<PhotonView>();
+        if (pv != null)
         {
-            LineInfo info = match.Value;
+            photonView.RPC(nameof(RPC_DeleteLineByViewID), RpcTarget.AllBuffered, pv.ViewID);
+        }
+    }
 
+    [PunRPC]
+    private void RPC_DeleteLineByViewID(int viewID)
+    {
+        if (userDrawnLineInfos.TryGetValue(viewID, out LineInfo info))
+        {
             if (info.scrollEntry != null)
                 Destroy(info.scrollEntry);
 
-            userDrawnLineInfos.Remove(info);
+            userDrawnLineInfos.Remove(viewID);
         }
 
-        Destroy(line);
-        RefreshScrollEntries();
-    }
+        GameObject target = PhotonView.Find(viewID)?.gameObject;
+        if (target != null)
+            Destroy(target);
 
+        RefreshScrollEntries(); 
+    }
 
     public void DeleteAllUserLines()
     {
-        foreach (var info in userDrawnLineInfos)
-        {
-            if (info.lineObject != null)
-                Destroy(info.lineObject);
+        photonView.RPC(nameof(RPC_RequestGlobalLineDelete), RpcTarget.AllBuffered);
+    }
 
-            if (info.scrollEntry != null)
-                Destroy(info.scrollEntry);
+    [PunRPC]
+    private void RPC_RequestGlobalLineDelete()
+    {
+        GameObject[] allLines = GameObject.FindGameObjectsWithTag("UserPath");
+
+        foreach (GameObject line in allLines)
+        {
+            if (line == null) continue;
+
+            PhotonView pv = line.GetComponent<PhotonView>();
+            if (pv != null && pv.IsMine)
+            {
+                PhotonNetwork.Destroy(line);
+            }
+            else if (pv != null)
+            {
+                Destroy(line);
+            }
+        }
+
+        foreach (var entry in userDrawnLineInfos.Values)
+        {
+            if (entry.scrollEntry != null)
+                Destroy(entry.scrollEntry);
         }
 
         userDrawnLineInfos.Clear();
     }
-
 
     public void ClearUserLines() => DeleteAllUserLines();
 
@@ -165,10 +224,12 @@ public class RouteDrawingManager : MonoBehaviour
     }
     public List<LineInfo> GetLinesByType(string type)
     {
-        return userDrawnLineInfos.FindAll(info => info.routeType == type);
+        return userDrawnLineInfos.Values
+            .Where(info => info.routeType == type)
+            .ToList();
     }
 
-    private GameObject AddLineToScrollView(string routeType, Vector2 start, Vector2 end, float distance)
+    public GameObject AddLineToScrollView(string routeType, Vector2 start, Vector2 end, float distance)
     {
         var config = ConfigLoader.EVAMapConfig;
         GameObject entry = Instantiate(lineInfoTextPrefab, scrollViewContent);
@@ -202,15 +263,18 @@ public class RouteDrawingManager : MonoBehaviour
     private float GetTotalDistance(string routeType)
     {
         float total = 0f;
-        foreach (var info in userDrawnLineInfos)
+        foreach (var info in userDrawnLineInfos.Values)
+        {
             if (info.routeType == routeType)
                 total += info.distance;
+        }
         return total;
     }
-    
+
+
     private void RefreshScrollEntries()
     {
-        foreach (var info in userDrawnLineInfos)
+        foreach (var info in userDrawnLineInfos.Values)
         {
             if (info.scrollEntry != null)
                 Destroy(info.scrollEntry);
@@ -218,10 +282,14 @@ public class RouteDrawingManager : MonoBehaviour
 
         float scale = ConfigLoader.EVAMapConfig.EVAMapping.mapScale;
         Dictionary<string, float> runningTotals = new();
+        int counter = 1;
 
-        for (int i = 0; i < userDrawnLineInfos.Count; i++)
+        Dictionary<int, LineInfo> updatedInfos = new();
+
+        foreach (var kvp in userDrawnLineInfos)
         {
-            var info = userDrawnLineInfos[i];
+            int viewID = kvp.Key;
+            LineInfo info = kvp.Value;
 
             if (!runningTotals.ContainsKey(info.routeType))
                 runningTotals[info.routeType] = 0f;
@@ -237,7 +305,7 @@ public class RouteDrawingManager : MonoBehaviour
             TMP_Text totalDistanceText = newEntry.transform.Find("TotalDistanceColumn/TotalDistanceText")?.GetComponent<TMP_Text>();
 
             if (numberText != null)
-                numberText.text = $"{i + 1}";
+                numberText.text = $"{counter++}";
 
             if (coordinatesText != null)
             {
@@ -251,7 +319,7 @@ public class RouteDrawingManager : MonoBehaviour
             if (totalDistanceText != null)
                 totalDistanceText.text = $"{total * scale:0.0} m";
 
-            userDrawnLineInfos[i] = new LineInfo
+            updatedInfos[viewID] = new LineInfo
             {
                 lineObject = info.lineObject,
                 scrollEntry = newEntry,
@@ -261,17 +329,18 @@ public class RouteDrawingManager : MonoBehaviour
                 distance = info.distance
             };
         }
+        userDrawnLineInfos = updatedInfos;
     }
 
-}
-public struct LineInfo
-{
-    public GameObject lineObject;
-    public GameObject scrollEntry;
-    public string routeType;
-    public Vector2 start;
-    public Vector2 end;
-    public float distance;
+    public struct LineInfo
+    {
+        public GameObject lineObject;
+        public GameObject scrollEntry;
+        public string routeType;
+        public Vector2 start;
+        public Vector2 end;
+        public float distance;
+    }
 }
 
 
