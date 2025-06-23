@@ -26,11 +26,10 @@ public class MissionInfoTabController : MonoBehaviour
         if (string.IsNullOrEmpty(title))
             title = "Untitled Task List";
 
-        // If it's a new title, add it to the end of the order list
         if (!taskTitles.Contains(title))
         {
             taskTitles.Add(title);
-            listOrder.Add(title);  // ✅ Add to the bottom
+            listOrder.Add(title); 
         }
 
         // Replace content, but do NOT move it in the listOrder
