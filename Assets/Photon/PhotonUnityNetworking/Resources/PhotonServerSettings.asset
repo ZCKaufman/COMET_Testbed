@@ -50,6 +50,9 @@ MonoBehaviour:
   - RPC_DeleteLineByViewID
   - RPC_DeleteAllLines
   - RPC_RequestGlobalLineDelete
+  - RPC_InsertTaskAfter
+  - RPC_InsertTaskAfterWithText
+  - RPC_UpdateTaskText
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using System.Text;
+using Photon.Pun;
+
 
 public class EVATaskPanelController : MonoBehaviour
 {
@@ -18,6 +20,15 @@ public class EVATaskPanelController : MonoBehaviour
 
     private List<TMP_InputField> ev1Tasks = new List<TMP_InputField>();
     private List<TMP_InputField> ev2Tasks = new List<TMP_InputField>();
+
+    private PhotonView photonView;
+    private bool suppressChange = false;
+
+
+    void Awake()
+    {
+        photonView = GetComponent<PhotonView>();
+    }
 
 
     void Start()
@@ -45,7 +56,14 @@ public class EVATaskPanelController : MonoBehaviour
 
         // ——  Add NEW task after this one every time Enter is pressed ——
         fld.onSubmit.RemoveAllListeners();
-        fld.onSubmit.AddListener(_ => InsertTaskAfter(fld, container));
+        fld.onSubmit.AddListener(_ => InsertTaskAfterNetworked(fld, container));
+         fld.onValueChanged.AddListener(value =>
+        {
+            if (suppressChange) return;
+            int fieldIndex = taskList.IndexOf(fld);
+            string containerName = container == ev1Container ? "EV1" : "EV2";
+            photonView.RPC("RPC_UpdateTaskText", RpcTarget.Others, containerName, fieldIndex, value);
+        });
 
         taskList.Add(fld);
         mon.inputField = fld;
@@ -54,53 +72,88 @@ public class EVATaskPanelController : MonoBehaviour
 
 
 
-    void RenumberTasks(Transform container, List<TMP_InputField> taskList)
+    private void RenumberTasks(Transform container, List<TMP_InputField> list)
     {
-        for (int i = 0; i < taskList.Count; i++)
+        for (int i = 0; i < list.Count; i++)
         {
-            TMP_Text numberLabel = taskList[i].transform.parent.Find("NumberLabel")?.GetComponent<TMP_Text>();
-            if (numberLabel != null)
-            {
-                numberLabel.text = (i + 1) + ".";
-            }
+            Transform tf = list[i].transform.parent;
+            TMP_Text label = tf.Find("NumberLabel")?.GetComponent<TMP_Text>();
+            if (label != null)
+                label.text = (i + 1) + ".";
         }
     }
 
-    public void InsertTaskAfter(TMP_InputField currentField, Transform container)
+     [PunRPC]
+    void RPC_InsertTaskAfterWithText(string containerName, int index, string text)
     {
+        Transform container = containerName == "EV1" ? ev1Container : ev2Container;
         List<TMP_InputField> list = container == ev1Container ? ev1Tasks : ev2Tasks;
-        int idx = list.IndexOf(currentField);
-        if (idx == -1) return;
 
         GameObject taskItem = Instantiate(taskItemPrefab, container);
         TMP_Text numLabel = taskItem.transform.Find("NumberLabel")?.GetComponent<TMP_Text>();
         TMP_InputField newFld = taskItem.transform.Find("TaskInputField")?.GetComponent<TMP_InputField>();
         TaskInputFieldMonitor mon = taskItem.AddComponent<TaskInputFieldMonitor>();
 
-        if (numLabel != null) numLabel.text = (idx + 2) + ".";
+        if (numLabel != null) numLabel.text = (index + 2) + ".";
+
         if (newFld != null)
         {
             newFld.lineType = TMP_InputField.LineType.SingleLine;
-            newFld.onSubmit.AddListener(_ => InsertTaskAfter(newFld, container));
-            list.Insert(idx + 1, newFld);
+            newFld.text = text;
+
+            newFld.onSubmit.AddListener(_ => InsertTaskAfterNetworked(newFld, container));
+
+            // Live update sync
+            newFld.onValueChanged.AddListener(value =>
+            {
+                if (suppressChange) return;
+                int fieldIndex = list.IndexOf(newFld);
+                photonView.RPC("RPC_UpdateTaskText", RpcTarget.Others, containerName, fieldIndex, value);
+            });
+
+            list.Insert(index + 1, newFld);
             mon.inputField = newFld;
             mon.Initialize(this, container);
             StartCoroutine(FocusNextFrame(newFld));
         }
 
         taskItem.transform.SetParent(container, false);
-        taskItem.transform.SetSiblingIndex(idx + 1);
+        taskItem.transform.SetSiblingIndex(index + 1);
 
         RenumberTasks(container, list);
     }
-
-
-    private IEnumerator FocusNextFrame(TMP_InputField field)
+    [PunRPC]
+    void RPC_UpdateTaskText(string containerName, int index, string newText)
     {
-        yield return null;
-        field.Select();
-        field.ActivateInputField();
+        List<TMP_InputField> list = containerName == "EV1" ? ev1Tasks : ev2Tasks;
+        if (index < 0 || index >= list.Count) return;
+
+        TMP_InputField targetField = list[index];
+        if (targetField != null)
+        {
+            suppressChange = true;
+            targetField.text = newText;
+            suppressChange = false;
+        }
     }
+
+    private IEnumerator<UnityEngine.WaitForEndOfFrame> FocusNextFrame(TMP_InputField input)
+    {
+        yield return new WaitForEndOfFrame();
+        input.Select();
+        input.ActivateInputField();
+    }
+    public void InsertTaskAfterNetworked(TMP_InputField currentField, Transform container)
+    {
+        int index = container == ev1Container ? ev1Tasks.IndexOf(currentField) : ev2Tasks.IndexOf(currentField);
+        if (index == -1) return;
+
+        string containerName = container == ev1Container ? "EV1" : "EV2";
+        string text = "";
+
+        photonView.RPC("RPC_InsertTaskAfterWithText", RpcTarget.All, containerName, index, text);
+    }
+
 
     public void TryDeleteTask(TMP_InputField inputField, Transform container)
     {
