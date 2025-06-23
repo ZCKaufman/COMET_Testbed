@@ -16,10 +16,10 @@ MonoBehaviour:
     AppIdRealtime: b5ec0f08-e216-4ad2-846c-ce44e6e8df9a
     AppIdFusion: 
     AppIdChat: 
-    AppIdVoice: 
+    AppIdVoice: e3dc9239-689e-48c0-b6a4-882247b16310
     AppVersion: 
     UseNameServer: 1
-    FixedRegion: asia
+    FixedRegion: 
     Server: 
     Port: 0
     ProxyServer: 
@@ -28,31 +28,27 @@ MonoBehaviour:
     AuthMode: 0
     EnableLobbyStatistics: 0
     NetworkLogging: 1
-  DevRegion: asia
+  DevRegion: 
   PunLogging: 0
   EnableSupportLogger: 0
   RunInBackground: 1
   StartInOfflineMode: 0
   RpcList:
+  - CantHearYou
+  - ChangeColour
   - ClickRpc
   - DestroyRpc
+  - HeresWhy
   - DestroySpaceship
   - Fire
   - RespawnSpaceship
-  - RPC_PingTeam
-  - SetAnchoredPosition
-  - RPC_ClearAllPOIs
-  - RPC_DestroySelf
-  - RPC_SpawnPOI
-  - RPC_Init
-  - PlacePOIAtNormalizedPosition
   - RPC_ClearAllParkings
+  - RPC_ClearAllPOIs
   - RPC_DeleteLineByViewID
-  - RPC_DeleteAllLines
-  - RPC_RequestGlobalLineDelete
-  - RPC_InsertTaskAfter
+  - RPC_DestroySelf
   - RPC_InsertTaskAfterWithText
+  - RPC_RequestGlobalLineDelete
   - RPC_UpdateTaskText
   DisableAutoOpenWizard: 1
   ShowSettings: 1
-  DevRegionSetOnce: 1
+  DevRegionSetOnce: 0
