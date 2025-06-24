@@ -285,11 +285,24 @@ public class EVATaskPanelController : MonoBehaviour
             return;
         }
 
-        photonView.RPC("RPC_ClearAllTasks", RpcTarget.All, "");
+        // Prepare body text to pass along with the RPC
+        string ev1Body = title + "\n";
+        string ev2Body = title + "\n";
+
+        foreach (var task in ev1Tasks)
+            if (!string.IsNullOrWhiteSpace(task.text))
+                ev1Body += "- " + task.text.Trim() + "\n";
+
+        foreach (var task in ev2Tasks)
+            if (!string.IsNullOrWhiteSpace(task.text))
+                ev2Body += "- " + task.text.Trim() + "\n";
+
+        //full body to everyone
+        photonView.RPC("RPC_ClearAllTasks", RpcTarget.All, "", ev1Body, ev2Body);
     }
 
     [PunRPC]
-    void RPC_ClearAllTasks(string title)
+    void RPC_ClearAllTasks(string title, string ev1Body, string ev2Body)
     {
         suppressChange = true;
 
@@ -303,12 +316,19 @@ public class EVATaskPanelController : MonoBehaviour
 
         taskListTitleInput.text = title;
 
+        // Set task lists on the mission tab controller
+        if (missionInfoController != null)
+        {
+            missionInfoController.SetTaskLists(title, ev1Body, ev2Body);
+        }
+
         AddTask(ev1Container, ev1Tasks);
         AddTask(ev2Container, ev2Tasks);
 
         suppressChange = false;
-        ShowWarning(""); 
+        ShowWarning("");
     }
+
 
     private void ShowWarning(string message)
     {
