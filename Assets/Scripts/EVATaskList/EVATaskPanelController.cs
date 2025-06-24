@@ -30,6 +30,13 @@ public class EVATaskPanelController : MonoBehaviour
         photonView = GetComponent<PhotonView>();
     }
 
+    void OnEnable()
+    {
+        if (photonView.IsMine)
+        {
+            photonView.RPC("RPC_RequestFullTaskSync", RpcTarget.MasterClient);
+        }
+    }
 
     void Start()
     {
@@ -38,6 +45,79 @@ public class EVATaskPanelController : MonoBehaviour
 
         if (submitButton != null)
             submitButton.onClick.AddListener(ClearAll);
+        
+        if (taskListTitleInput != null)
+        {
+            taskListTitleInput.onValueChanged.AddListener(OnTitleChanged);
+        }       
+    }
+    private void OnTitleChanged(string newText)
+    {
+        if (suppressChange) return;
+        photonView.RPC("RPC_UpdateTaskListTitle", RpcTarget.Others, newText);
+    }
+    [PunRPC]
+    void RPC_UpdateTaskListTitle(string newTitle)
+    {
+        if (taskListTitleInput == null) return;
+
+        suppressChange = true;
+        taskListTitleInput.text = newTitle;
+        suppressChange = false;
+    }
+    
+    [PunRPC]
+    void RPC_RequestFullTaskSync(PhotonMessageInfo info)
+    {
+        string[] ev1Texts = ev1Tasks.ConvertAll(field => field.text).ToArray();
+        string[] ev2Texts = ev2Tasks.ConvertAll(field => field.text).ToArray();
+
+        photonView.RPC("RPC_ReceiveFullTaskSync", info.Sender, ev1Texts, ev2Texts);
+    }
+
+    [PunRPC]
+    void RPC_ReceiveFullTaskSync(string[] ev1Texts, string[] ev2Texts)
+    {
+        suppressChange = true;
+
+        RebuildTaskList(ev1Container, ev1Tasks, ev1Texts);
+        RebuildTaskList(ev2Container, ev2Tasks, ev2Texts);
+
+        suppressChange = false;
+    }
+
+    void RebuildTaskList(Transform container, List<TMP_InputField> list, string[] texts)
+    {
+        foreach (Transform child in container)
+            Destroy(child.gameObject);
+        list.Clear();
+
+        for (int i = 0; i < texts.Length; i++)
+        {
+            GameObject taskItem = Instantiate(taskItemPrefab, container);
+            TMP_Text numLabel = taskItem.transform.Find("NumberLabel")?.GetComponent<TMP_Text>();
+            TMP_InputField fld = taskItem.transform.Find("TaskInputField")?.GetComponent<TMP_InputField>();
+            TaskInputFieldMonitor mon = taskItem.AddComponent<TaskInputFieldMonitor>();
+
+            if (numLabel != null) numLabel.text = (i + 1) + ".";
+            if (fld == null) continue;
+
+            fld.lineType = TMP_InputField.LineType.SingleLine;
+            fld.text = texts[i];
+
+            fld.onSubmit.AddListener(_ => InsertTaskAfterNetworked(fld, container));
+            fld.onValueChanged.AddListener(value =>
+            {
+                if (suppressChange) return;
+                int index = list.IndexOf(fld);
+                string containerName = container == ev1Container ? "EV1" : "EV2";
+                photonView.RPC("RPC_UpdateTaskText", RpcTarget.Others, containerName, index, value);
+            });
+
+            list.Add(fld);
+            mon.inputField = fld;
+            mon.Initialize(this, container);
+        }
     }
 
     void AddTask(Transform container, List<TMP_InputField> taskList)
@@ -69,8 +149,6 @@ public class EVATaskPanelController : MonoBehaviour
         mon.inputField = fld;
         mon.Initialize(this, container);
     }
-
-
 
     private void RenumberTasks(Transform container, List<TMP_InputField> list)
     {
@@ -114,7 +192,11 @@ public class EVATaskPanelController : MonoBehaviour
             list.Insert(index + 1, newFld);
             mon.inputField = newFld;
             mon.Initialize(this, container);
-            StartCoroutine(FocusNextFrame(newFld));
+            if (this.gameObject.activeInHierarchy)
+            {
+                StartCoroutine(FocusNextFrame(newFld));
+            }
+
         }
 
         taskItem.transform.SetParent(container, false);
