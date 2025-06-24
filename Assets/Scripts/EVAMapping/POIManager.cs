@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
+
 
 
 
@@ -57,12 +59,20 @@ public class POIManager : MonoBehaviour
         ShowLandmarks();
     }
 
-
-
     public void ShowPOIs()
     {
-        ClearPOIs();
+        // Check if the player is IVA
+        object role;
+        PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue("Role", out role);
+        string playerRole = role as string;
 
+        if (playerRole != "IVA")
+        {
+            Debug.Log("Only IVA users can view POIs.");
+            return;
+        }
+
+        ClearPOIs();
 
         var config = ConfigLoader.EVAMapConfig;
         if (config?.EVAMapping?.POIs == null || poiPrefab == null || poiContainer == null)
@@ -71,17 +81,14 @@ public class POIManager : MonoBehaviour
             return;
         }
 
-
         foreach (var poi in config.EVAMapping.POIs)
         {
             GameObject instance = Instantiate(poiPrefab, poiContainer);
             instance.name = poi.description;
 
-
             RectTransform rect = instance.GetComponent<RectTransform>();
             rect.anchorMin = rect.anchorMax = new Vector2(poi.x, poi.y);
             rect.anchoredPosition = Vector2.zero;
-
 
             POIDisplay display = instance.GetComponent<POIDisplay>();
             if (display != null)
@@ -89,11 +96,9 @@ public class POIManager : MonoBehaviour
                 display.SetDescription(poi.description);
             }
 
-
             spawnedPOIs.Add(instance);
         }
     }
-
 
     public void ShowLandmarks()
     {
@@ -130,11 +135,20 @@ public class POIManager : MonoBehaviour
         }
     }
 
-
     public void ShowRoutes()
     {
-        ClearRoutes();
+        // Check if the player is IVA
+        object role;
+        PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue("Role", out role);
+        string playerRole = role as string;
 
+        if (playerRole != "IVA")
+        {
+            Debug.Log("Only IVA users can view routes.");
+            return;
+        }
+
+        ClearRoutes();
 
         var config = ConfigLoader.EVAMapConfig;
         if (config?.EVAMapping?.PredefinedRoutes == null || uiLinePrefab == null || poiContainer == null)
@@ -143,7 +157,6 @@ public class POIManager : MonoBehaviour
             return;
         }
 
-
         foreach (var route in config.EVAMapping.PredefinedRoutes)
         {
             for (int i = 0; i < route.points.Count - 1; i++)
@@ -151,18 +164,15 @@ public class POIManager : MonoBehaviour
                 Vector2 start = GetAnchoredPosition(new Vector2(route.points[i].x, route.points[i].y));
                 Vector2 end = GetAnchoredPosition(new Vector2(route.points[i + 1].x, route.points[i + 1].y));
 
-
                 Color color = route.type == "walk"
                     ? new Color(0.2f, 0.5f, 0.2f)
                     : new Color(0.6f, 0.1f, 0.1f);
-
 
                 bool dashed = route.type == "walk";
                 DrawUILine(start, end, color, dashed);
             }
         }
     }
-
 
     private void DrawUILine(Vector2 start, Vector2 end, Color color, bool dashed = false)
     {

@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 
 public class ImageSelectorButton : MonoBehaviour
 {
@@ -60,12 +61,24 @@ public class ImageSelectorButton : MonoBehaviour
         {
             group.SelectButton(this);
 
+            object role;
+            PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue("Role", out role);
+            string playerRole = role as string;
+
             if (imageKey == "POIs" && poiManager != null)
-                poiManager.ShowPOIs();
+            {
+                if (playerRole == "IVA")
+                    poiManager.ShowPOIs();
+                else
+                    Debug.Log("Only IVA users can view POIs.");
+            }
             else if (poiManager != null)
+            {
                 poiManager.ClearPOIs();
+            }
         }
     }
+
 
     public void SetSelected(bool selected)
     {
