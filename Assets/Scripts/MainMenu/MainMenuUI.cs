@@ -50,6 +50,12 @@ public class MainMenuUI : MonoBehaviourPunCallbacks
             case 1:
                 JoinAsIVA();
                 break;
+            case 2:
+                JoinAsMCC();
+                break;
+            case 3:
+                JoinAsLLM();
+                break;
             default:
                 Debug.LogError("Invalid role selected.");
                 break;
@@ -67,32 +73,44 @@ public class MainMenuUI : MonoBehaviourPunCallbacks
         selectedRole = "IVA";
         JoinRoom();
     }
+    
+    public void JoinAsMCC()
+    {
+        selectedRole = "MCC";
+        JoinRoom();
+    }
+
+    public void JoinAsLLM()
+    {
+        selectedRole = "LLM";
+        JoinRoom();
+    }
 
 
     private void JoinRoom()
-{
-    string enteredPassword = passwordInput.text.ToLower();
-    string requiredPassword = selectedRole.ToLower();       // "eva" or "iva"
-
-    if (enteredPassword != requiredPassword)
     {
-        passwordErrorText.text = "Incorrect password for " + selectedRole;
-        return;
-    }
-    passwordErrorText.text = "";
+        string enteredPassword = passwordInput.text.ToLower();
+        string requiredPassword = selectedRole.ToLower();       // "eva" or "iva"
 
-    RoomOptions options = new RoomOptions { MaxPlayers = 4 };
+        if (enteredPassword != requiredPassword)
+        {
+            passwordErrorText.text = "Incorrect password for " + selectedRole;
+            return;
+        }
+        passwordErrorText.text = "";
 
-    options.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable
+        RoomOptions options = new RoomOptions { MaxPlayers = 4 };
+
+        options.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable
     {
         { "EVA_Count", 0 },
         { "IVA_Count", 0 }
     };
 
-    options.CustomRoomPropertiesForLobby = new string[] { "EVA_Count", "IVA_Count" };
+        options.CustomRoomPropertiesForLobby = new string[] { "EVA_Count", "IVA_Count" };
 
-    PhotonNetwork.JoinOrCreateRoom("MoonMissionRoom", options, TypedLobby.Default);
-}
+        PhotonNetwork.JoinOrCreateRoom("MoonMissionRoom", options, TypedLobby.Default);
+    }
 
     public override void OnJoinedRoom()
     {
@@ -123,6 +141,10 @@ public class MainMenuUI : MonoBehaviourPunCallbacks
             PhotonNetwork.LoadLevel("EVA_Mission");
         }
         else if (selectedRole == "IVA")
+            PhotonNetwork.LoadLevel("IVA_Mission");
+        else if (selectedRole == "MCC")
+            PhotonNetwork.LoadLevel("IVA_Mission");
+        else if (selectedRole == "LLM")
             PhotonNetwork.LoadLevel("IVA_Mission");
         else
             Debug.LogError("Unknown role; no scene to load.");
