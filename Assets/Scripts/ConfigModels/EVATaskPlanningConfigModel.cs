@@ -1,23 +1,20 @@
 using System;
 using System.Collections.Generic;
 
-/// ---------- models used ONLY for the IVA Sample-Task feature ----------
-
-[Serializable]
-public class IVATaskEntry         // 1 entry in the IVA array
-{
-    public string        Name;
-    public List<string>  EV1;
-    public List<string>  EV2;
-}
-
-[Serializable]
-public class IVATaskArray        // wrapper so JsonUtility can parse an array
+/// Array wrapper so JsonUtility can read EVATaskPlanning.IVA
+[Serializable] public class IVATaskArray
 {
     public List<IVATaskEntry> IVA;
 }
 
-/* Runtime lookup dictionary */
+/// One IVA-sample entry
+[Serializable] public class IVATaskEntry
+{
+    public string        Name;
+    public List<string>  EVA;   // single consolidated list
+}
+
+/// Runtime lookup dictionary
 public class IVASampleTaskRoot
 {
     public Dictionary<string, IVATaskEntry> Samples = new();
