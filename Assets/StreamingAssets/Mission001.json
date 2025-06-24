@@ -1,7 +1,7 @@
 {
   "MissionInfo": {
     "All": {
-      "MissionInfo": "Your general mission info will be here. This will be the same for all teams."
+      "MissionInfo": "The purpose of this EVA is to traverse to points of interest (POIs) provided to the IVA team. In this planning phase, EVA must plan an order of POIs to visit (EVA Mapping tab) and work directly with the IVA team to build a task list for visiting these sites (EVA Task List tab).   EVA: Your team will have exclusive access to the multiple map overlays (Satellite, Contours, Solar, and Terrain) to assist you in planning your task.  You will have access to a step-by-step blank task list for completing this EVA. Your IVA teammates have high level outlines of similar EVA task lists that NASA has created, and you may query them for guidance as you are building yours.   IVA: You will have exclusive access to locations with POIs to assist EVA in planning the task. You will have access to high level step-by-step task lists that NASA has created for completing similar EVAs. Your EVA teammates do not have access to this and may query you for guidance as they are building their task list. You are permitted to answer their questions with as much information as they need.  "
     }
   },
   "EVAMapping": {
@@ -48,18 +48,19 @@
     "IVA": [
       {
         "Name": "Crater Exploration",
-        "EV1": [ "Step 1", "Step 2" ],
-        "EV2": [ "Step 1", "Step 2" ]
+        "EVA": [ "Traverse to work site (2)", "Egress Rover (2)", "Context survey the work site (1)", "Collect equipment (1)", "Approach region of interest (2)", "Context survey region of interest (2)", "Contact spectrometer deployment (1)", "Image spectrometer deployment (1)", "Surface contact (1)", "Loose rock collection (1)", "Raking (1)", "Collect equipment (1)", "Trenching (1)", "Coring (2)", "Float sample collection (1)", "Rock chipping (1)", "Clean up (2)", "Science payload deployment (2)", "Clean up (2)", "Departure (2)" ]
       },
       {
         "Name": "Lava Tube Exploration",
-        "EV1": [ "Sample rock", "Scan walls" ],
-        "EV2": [ "Deploy lidar", "Log gas readings" ]
+        "EVA": [ "Traverse to work site (2)", "Egress Rover (2)", "Context survey the work site (1)", "Collect equipment (1)", "Offload lights (1)", "Approach region of interest (2)", "Deployment belaying equipment (2)", "Descend into lava tube (2)", "Set up communication relay (2)", "Set up free standing illumination (2)", "Contact spectrometer deployment (1)", "Context survey region of interest (1)", "Acquire geological sample (2)", "Weigh samples (2)", "Deployment seismic instrucments (2)", "Clean up (2)", "Ascend lava tube (2)", "Departure (2)"]
       },
       {
-        "Name": "Solar Panel Repair",
-        "EV1": [ "Remove debris", "Replace panel" ],
-        "EV2": [ "Check inverter", "Test output" ]
+        "Name": "Soil Sample",
+        "EVA": ["Traverse to work site (2)", "Egress Rover (2)", "Context survey the work site (1)", "Collect equipment (1)", "Approach region of interest (2)", "Trench (1)", "Float Sample (1)", "Scoop (1)", "Rake (1)", "Trench (1)", "Clean up (2)", "Departure (2)" ]
+      },
+      {
+        "Name": "Permanently Shadowed Region",
+        "EVA": [ "Traverse to work site (2)", "Egress Rover (2)", "Context survey the work site (1)", "Collect equipment (1)", "Locate specific zone inside crater (1)", "Preconfigure suit thermal settings (2)", "Approach shadowed region (2)", "Operate handheld instruments (2)", "Perform deep core sampling (2)", "Deploy ISRU environment (2)", "Insert samples into sealed container (2)", "Clean up (2)", "Departure (2)" ]
       }
     ]
   }
