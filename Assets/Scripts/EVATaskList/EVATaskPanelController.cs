@@ -65,7 +65,7 @@ public class EVATaskPanelController : MonoBehaviour
         taskListTitleInput.text = newTitle;
         suppressChange = false;
     }
-    
+
     [PunRPC]
     void RPC_RequestFullTaskSync(PhotonMessageInfo info)
     {
@@ -246,12 +246,24 @@ public class EVATaskPanelController : MonoBehaviour
         int index = taskList.IndexOf(inputField);
         if (index != -1)
         {
-            TMP_InputField toDelete = taskList[index];
-            taskList.RemoveAt(index);
-            Destroy(toDelete.transform.parent.gameObject);
-
-            RenumberTasks(container, taskList);
+            string containerName = container == ev1Container ? "EV1" : "EV2";
+            photonView.RPC("RPC_TryDeleteTaskAtIndex", RpcTarget.All, containerName, index);
         }
+    }
+
+    [PunRPC]
+    void RPC_TryDeleteTaskAtIndex(string containerName, int index)
+    {
+        List<TMP_InputField> taskList = containerName == "EV1" ? ev1Tasks : ev2Tasks;
+        Transform container = containerName == "EV1" ? ev1Container : ev2Container;
+
+        if (taskList.Count <= 1 || index < 0 || index >= taskList.Count) return;
+
+        TMP_InputField toDelete = taskList[index];
+        taskList.RemoveAt(index);
+        Destroy(toDelete.transform.parent.gameObject);
+
+        RenumberTasks(container, taskList);
     }
 
     void ClearAll()
@@ -264,31 +276,8 @@ public class EVATaskPanelController : MonoBehaviour
             return;
         }
 
-        StringBuilder ev1Body = new StringBuilder(title + "\n");
-        StringBuilder ev2Body = new StringBuilder(title + "\n");
-
-        bool hasEv1Content = false;
-        bool hasEv2Content = false;
-
-        foreach (var task in ev1Tasks)
-        {
-            string taskText = task.text.Trim();
-            if (!string.IsNullOrEmpty(taskText))
-            {
-                ev1Body.AppendLine("- " + taskText);
-                hasEv1Content = true;
-            }
-        }
-
-        foreach (var task in ev2Tasks)
-        {
-            string taskText = task.text.Trim();
-            if (!string.IsNullOrEmpty(taskText))
-            {
-                ev2Body.AppendLine("- " + taskText);
-                hasEv2Content = true;
-            }
-        }
+        bool hasEv1Content = ev1Tasks.Exists(t => !string.IsNullOrWhiteSpace(t.text));
+        bool hasEv2Content = ev2Tasks.Exists(t => !string.IsNullOrWhiteSpace(t.text));
 
         if (!hasEv1Content || !hasEv2Content)
         {
@@ -296,24 +285,31 @@ public class EVATaskPanelController : MonoBehaviour
             return;
         }
 
-        ShowWarning(""); // Clear warning if valid
+        photonView.RPC("RPC_ClearAllTasks", RpcTarget.All, "");
+    }
+
+    [PunRPC]
+    void RPC_ClearAllTasks(string title)
+    {
+        suppressChange = true;
 
         foreach (var task in ev1Tasks)
             Destroy(task.transform.parent.gameObject);
         foreach (var task in ev2Tasks)
             Destroy(task.transform.parent.gameObject);
 
-        taskListTitleInput.text = "";
         ev1Tasks.Clear();
         ev2Tasks.Clear();
 
-        if (missionInfoController != null)
-            missionInfoController.SetTaskLists(title, ev1Body.ToString(), ev2Body.ToString());
+        taskListTitleInput.text = title;
 
         AddTask(ev1Container, ev1Tasks);
         AddTask(ev2Container, ev2Tasks);
+
+        suppressChange = false;
+        ShowWarning(""); 
     }
-    
+
     private void ShowWarning(string message)
     {
         if (warningText != null)
