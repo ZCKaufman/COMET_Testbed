@@ -14,6 +14,22 @@ public class MissionInfoTabController : MonoBehaviour
     private HashSet<string> taskTitles = new();         // use this to ensure sync
     private List<string> listOrder = new();             // maintains submission order
 
+    public MissionViewConfigRoot config; 
+    void Awake()
+    {
+        var config = ConfigLoader.MissionConfig;
+
+        if (config?.MissionInfo?.All != null)
+        {
+            Debug.Log("Loaded mission info: " + config.MissionInfo.All.MissionInfo);
+            SetMissionDescription(config.MissionInfo.All.MissionInfo);
+        }
+        else
+        {
+            Debug.LogWarning("Mission config not set or incomplete.");
+        }
+    }
+
     public void SetMissionDescription(string text)
     {
         missionDescriptionText.text = text;

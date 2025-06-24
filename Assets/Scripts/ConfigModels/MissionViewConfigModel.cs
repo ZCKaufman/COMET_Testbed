@@ -8,27 +8,12 @@ using System.Collections.Generic;
 public class MissionInfoAll
 {
     public string MissionInfo;
-    public string Alerts;
-}
-
-[Serializable]
-public class MissionInfoEVA
-{
-    public string TaskInfo;
-}
-
-[Serializable]
-public class MissionInfoIVA
-{
-    public string TaskInfo;
 }
 
 [Serializable]
 public class MissionInfoSection
 {
     public MissionInfoAll All;
-    public MissionInfoEVA EVA;
-    public MissionInfoIVA IVA;
 }
 
 [Serializable]
