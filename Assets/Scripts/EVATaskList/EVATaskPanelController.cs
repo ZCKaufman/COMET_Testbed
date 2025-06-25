@@ -315,10 +315,11 @@ public class EVATaskPanelController : MonoBehaviour
         ev2Tasks.Clear();
 
         taskListTitleInput.text = title;
-
+        PhotonView.Find(997).RPC("RPC_GlobalTaskUpdate", RpcTarget.All, title, ev1Body, ev2Body);
         // Set task lists on the mission tab controller
         if (missionInfoController != null)
         {
+            
             missionInfoController.SetTaskLists(title, ev1Body, ev2Body);
         }
 
@@ -328,6 +329,7 @@ public class EVATaskPanelController : MonoBehaviour
         suppressChange = false;
         ShowWarning("");
     }
+
 
 
     private void ShowWarning(string message)

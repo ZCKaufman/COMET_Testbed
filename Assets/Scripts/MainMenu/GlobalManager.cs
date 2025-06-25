@@ -14,6 +14,14 @@ public class GlobalManager : MonoBehaviour
     public string PlayerName { get; private set; } // Player's name - not yet defined anywhere but can be
 
 
+    public string LatestTaskListTitle { get; private set; } = "";
+    public string LatestEv1Tasks { get; private set; } = "";
+    public string LatestEv2Tasks { get; private set; } = "";
+
+    public delegate void TaskListUpdated(string title, string ev1, string ev2);
+    public event TaskListUpdated OnTaskListUpdated;
+
+
     void Awake()
     {
         if (Instance == null)
@@ -33,6 +41,15 @@ public class GlobalManager : MonoBehaviour
         PlayerID = id;
 
         Debug.Log($"[GameManager] Assigned Role: {PlayerRole}, ID: {PlayerID}");
+    }
+
+    public void UpdateTaskList(string title, string ev1, string ev2)
+    {
+        Debug.Log("[RPC_GlobalTaskUpdate] Called with title: " + title +  ev1 + ev2);
+        LatestTaskListTitle = title;
+        LatestEv1Tasks = ev1;
+        LatestEv2Tasks = ev2;
+        OnTaskListUpdated?.Invoke(title, ev1, ev2);
     }
 
 
