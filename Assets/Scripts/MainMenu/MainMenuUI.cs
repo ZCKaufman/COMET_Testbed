@@ -99,7 +99,7 @@ public class MainMenuUI : MonoBehaviourPunCallbacks
         }
         passwordErrorText.text = "";
 
-        RoomOptions options = new RoomOptions { MaxPlayers = 4 };
+        RoomOptions options = new RoomOptions { MaxPlayers = 10 };
 
         options.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable
     {

@@ -547,7 +547,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   descriptionContainer: {fileID: 4317715615419434581}
-  descriptionText: {fileID: 0}
+  descriptionText: {fileID: 7815043570737537756}
 --- !u!114 &-1296287952183732275
 MonoBehaviour:
   m_ObjectHideFlags: 0

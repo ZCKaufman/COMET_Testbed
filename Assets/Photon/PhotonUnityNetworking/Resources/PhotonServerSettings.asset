@@ -19,7 +19,7 @@ MonoBehaviour:
     AppIdVoice: 
     AppVersion: 
     UseNameServer: 1
-    FixedRegion: 
+    FixedRegion: asia
     Server: 
     Port: 0
     ProxyServer: 
@@ -54,6 +54,7 @@ MonoBehaviour:
   - RPC_UpdateTaskListTitle
   - RPC_ClearAllTasks
   - RPC_TryDeleteTaskAtIndex
+  - RPC_ResetTaskInputs
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

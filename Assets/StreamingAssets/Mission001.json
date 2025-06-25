@@ -15,9 +15,10 @@
       { "key": "Routes", "path": "Images/SatelliteExample" }
     ],
     "POIs": [
-      { "description": "Soil sample", "x": 0.25, "y": 0.75 },
-      { "description": "Crater exploration", "x": 0.6, "y": 0.4 },
-      { "description": "Power station", "x": 0.8, "y": 0.7 }
+      { "description": "Soil Sample|Collect soil from trenches using scoops, rakes, and float sampling tools.", "x": 0.5, "y": 0.8 },
+      { "description": "Crater Exploration|Survey and analyze crater features using spectrometers and collect rock samples.","x": 0.88, "y": 0.46 },
+      { "description": "Lava Tube|Descend into lava tubes to deploy instruments, collect geological samples, and map interiors.", "x": 0.01, "y": 0.4 },
+      { "description": "Permanently Shadowed Region|Enter a dark crater zone to extract deep core samples and test ISRU systems.", "x": 0.52, "y": 0.48 }
     ],
     "Landmarks": [
       { "type": "hab", "description": "Hab", "x": 0.1, "y": 0.1 },
