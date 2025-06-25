@@ -10,14 +10,28 @@ public class ImageSelectorGroup : MonoBehaviour
     private ImageSelectorButton currentlySelected;
     public ImageSelectorButton defaultButton;
 
+    
+
 
     private void Start()
     {
         if (defaultButton != null)
         {
-            SelectButton(defaultButton);
+            // Delay selection until sprite is ready
+            if (defaultButton.IsSpriteReady)
+            {
+                SelectButton(defaultButton);
+            }
+            else
+            {
+                defaultButton.OnSpriteReady += () =>
+                {
+                    SelectButton(defaultButton);
+                };
+            }
         }
     }
+
 
 
     public void SelectButton(ImageSelectorButton selected)

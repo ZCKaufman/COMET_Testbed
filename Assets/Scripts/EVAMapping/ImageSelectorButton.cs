@@ -15,6 +15,9 @@ public class ImageSelectorButton : MonoBehaviour
     private GameObject highlight;
     private Sprite imageToDisplay;
     public POIManager poiManager;
+    public bool IsSpriteReady => imageToDisplay != null;
+    public System.Action OnSpriteReady;
+
 
     private void Awake()
     {
@@ -30,15 +33,10 @@ public class ImageSelectorButton : MonoBehaviour
 
     private IEnumerator Start()
     {
-        //Debug.Log("LoadedConfig is null? " + (ConfigLoader.EVAMapConfig == null));
-
         while (ConfigLoader.EVAMapConfig == null || ConfigLoader.EVAMapConfig.EVAMapping == null)
-        {
             yield return null;
-        }
 
         var config = ConfigLoader.EVAMapConfig;
-
         var match = config.EVAMapping.Maps.Find(entry => entry.key == imageKey);
         if (match == null)
         {
@@ -46,14 +44,16 @@ public class ImageSelectorButton : MonoBehaviour
             yield break;
         }
 
-        //Debug.Log($"Trying to load sprite from path: {match.path}");
         imageToDisplay = Resources.Load<Sprite>(match.path);
-
         if (imageToDisplay == null)
         {
             Debug.LogError($"Failed to load sprite at: {match.path}");
+            yield break;
         }
+
+        OnSpriteReady?.Invoke();
     }
+
 
     private void OnClick()
     {
