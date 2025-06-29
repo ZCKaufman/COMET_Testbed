@@ -315,11 +315,10 @@ public class EVATaskPanelController : MonoBehaviour
         ev2Tasks.Clear();
 
         taskListTitleInput.text = title;
-        PhotonView.Find(997).RPC("RPC_GlobalTaskUpdate", RpcTarget.All, title, ev1Body, ev2Body);
+
         // Set task lists on the mission tab controller
         if (missionInfoController != null)
         {
-            
             missionInfoController.SetTaskLists(title, ev1Body, ev2Body);
         }
 
@@ -330,6 +329,17 @@ public class EVATaskPanelController : MonoBehaviour
         ShowWarning("");
     }
 
+    public void FocusNextField(Transform container, TMP_InputField current)
+    {
+        var list = container == ev1Container ? ev1Tasks : ev2Tasks;
+        int index = list.IndexOf(current);
+
+        if (index != -1 && index + 1 < list.Count)
+        {
+            TMP_InputField next = list[index + 1];
+            StartCoroutine(FocusNextFrame(next));
+        }
+    }
 
 
     private void ShowWarning(string message)

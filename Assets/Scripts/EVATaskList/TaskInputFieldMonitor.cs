@@ -1,28 +1,33 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class TaskInputFieldMonitor : MonoBehaviour
 {
     public TMP_InputField inputField;
-    private EVATaskPanelController taskController;
+    private EVATaskPanelController parentController;
     private Transform container;
-    private bool wasEmptyLastFrame = false;
+    //private bool wasEmptyLastFrame = false;
 
     public void Initialize(EVATaskPanelController controller, Transform parentContainer)
     {
-        taskController = controller;
+        parentController = controller;
         container      = parentContainer;
     }
 
     void Update()
     {
-        if (inputField == null || !inputField.isFocused) return;
 
-        bool deleteKey = Input.GetKeyDown(KeyCode.Backspace) || Input.GetKeyDown(KeyCode.Delete);
+        if (inputField == null) return;
 
-        if (deleteKey && wasEmptyLastFrame && string.IsNullOrWhiteSpace(inputField.text))
-            taskController.TryDeleteTask(inputField, container);
+        if (inputField.isFocused && Input.GetKeyDown(KeyCode.Tab))
+        {
+            // Prevent default tab behavior
+            EventSystem.current.SetSelectedGameObject(null);
 
-        wasEmptyLastFrame = string.IsNullOrWhiteSpace(inputField.text);
+            // Ask the parent controller to move to the next task
+            parentController.FocusNextField(container, inputField);
+        }
     }
+
 }

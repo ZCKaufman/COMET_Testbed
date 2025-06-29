@@ -51,15 +51,22 @@ public class MissionInfoTabController : MonoBehaviour
         string ev1Entry = ev1List.Trim();
         string ev2Entry = ev2List.Trim();
 
-        if (ev1TaskLists.ContainsKey(title))
-            ev1TaskLists[title] = ev1Entry + "\n-------------\n" + ev1TaskLists[title];  // prepend
-        else
-            ev1TaskLists[title] = ev1Entry;
+        // For EV-1
+if (ev1TaskLists.ContainsKey(title))
+    ev1TaskLists[title] = ev1TaskLists[title]     // existing text first
+                       + "\n-------------\n"
+                       + ev1Entry;               // new entry last
+else
+    ev1TaskLists[title] = ev1Entry;
 
-        if (ev2TaskLists.ContainsKey(title))
-            ev2TaskLists[title] = ev2Entry + "\n-------------\n" + ev2TaskLists[title];  // prepend
-        else
-            ev2TaskLists[title] = ev2Entry;
+// For EV-2
+if (ev2TaskLists.ContainsKey(title))
+    ev2TaskLists[title] = ev2TaskLists[title]
+                       + "\n-------------\n"
+                       + ev2Entry;
+else
+    ev2TaskLists[title] = ev2Entry;
+
 
         ev1TaskText.text = GenerateText(ev1TaskLists);
         ev2TaskText.text = GenerateText(ev2TaskLists);
