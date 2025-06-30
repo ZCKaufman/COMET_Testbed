@@ -5465,7 +5465,6 @@ GameObject:
   - component: {fileID: 430508335}
   - component: {fileID: 430508338}
   - component: {fileID: 430508337}
-  - component: {fileID: 430508339}
   m_Layer: 5
   m_Name: EVATaskPanel
   m_TagString: Untagged
@@ -5554,7 +5553,6 @@ MonoBehaviour:
   submitButton: {fileID: 551090798}
   missionInfoController: {fileID: 1460382324}
   warningText: {fileID: 705386397}
-  syncView: {fileID: 0}
 --- !u!114 &430508338
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5581,28 +5579,6 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!114 &430508339
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 430508333}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents: []
-  sceneViewId: 2
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
 --- !u!1 &431278397
 GameObject:
   m_ObjectHideFlags: 0
@@ -11825,7 +11801,6 @@ GameObject:
   - component: {fileID: 942193659}
   - component: {fileID: 942193658}
   - component: {fileID: 942193657}
-  - component: {fileID: 942193660}
   m_Layer: 5
   m_Name: SubMissionTitleField
   m_TagString: Untagged
@@ -11992,28 +11967,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 942193655}
   m_CullTransparentMesh: 1
---- !u!114 &942193660
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 942193655}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents: []
-  sceneViewId: 4
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
 --- !u!1 &956112234
 GameObject:
   m_ObjectHideFlags: 0
@@ -14056,12 +14009,10 @@ MonoBehaviour:
   evaMappingButton: {fileID: 996112492}
   evaTasksButton: {fileID: 1468483502}
   ivaPlanningButton: {fileID: 650517635}
-  chatButton: {fileID: 0}
   missionInfoPanel: {fileID: 1460382320}
   evaMappingPanel: {fileID: 1103807549}
   evaTasksPanel: {fileID: 430508333}
   ivaPlanningPanel: {fileID: 1120273984}
-  chatPanel: {fileID: 2124224837}
 --- !u!4 &1136285941
 Transform:
   m_ObjectHideFlags: 0
@@ -16004,7 +15955,6 @@ GameObject:
   - component: {fileID: 1452124880}
   - component: {fileID: 1452124879}
   - component: {fileID: 1452124882}
-  - component: {fileID: 1452124883}
   m_Layer: 5
   m_Name: ParkingButton
   m_TagString: Untagged
@@ -16130,28 +16080,6 @@ MonoBehaviour:
   dragTargetPrefab: {fileID: 7148878688599332618, guid: 242ad2ff401cca14c9b9fa759659e970, type: 3}
   canvas: {fileID: 1402037571}
   mapImageRect: {fileID: 168526644}
---- !u!114 &1452124883
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1452124877}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents: []
-  sceneViewId: 5
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
 --- !u!1 &1454070961
 GameObject:
   m_ObjectHideFlags: 0
