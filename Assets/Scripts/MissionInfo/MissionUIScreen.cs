@@ -9,14 +9,12 @@ public class MissionUIManager : MonoBehaviourPunCallbacks
     [SerializeField] private Button evaMappingButton;
     [SerializeField] private Button evaTasksButton;
     [SerializeField] private Button ivaPlanningButton;
-    [SerializeField] private Button chatButton;
 
     [Header("Panels")]
     [SerializeField] private GameObject missionInfoPanel;
     [SerializeField] private GameObject evaMappingPanel;
     [SerializeField] private GameObject evaTasksPanel;
     [SerializeField] private GameObject ivaPlanningPanel;
-    [SerializeField] private GameObject chatPanel;
 
     private string userRole;
 
@@ -35,7 +33,6 @@ public class MissionUIManager : MonoBehaviourPunCallbacks
         evaMappingButton.onClick.AddListener(() => ShowPanel(evaMappingPanel));
         evaTasksButton.onClick.AddListener(() => ShowPanel(evaTasksPanel));
         ivaPlanningButton.onClick.AddListener(() => ShowPanel(ivaPlanningPanel));
-        chatButton.onClick.AddListener(() => ShowPanel(chatPanel));
     }
 
     void ShowPanel(GameObject panelToShow)
@@ -44,7 +41,6 @@ public class MissionUIManager : MonoBehaviourPunCallbacks
         evaMappingPanel.SetActive(false);
         evaTasksPanel.SetActive(false);
         ivaPlanningPanel.SetActive(false);
-        chatPanel.SetActive(false);
 
         if (panelToShow != null)
             panelToShow.SetActive(true);

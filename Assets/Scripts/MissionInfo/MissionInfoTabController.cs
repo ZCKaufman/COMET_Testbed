@@ -38,53 +38,40 @@ public class MissionInfoTabController : MonoBehaviour
     public void SetTaskLists(string title, string ev1List, string ev2List)
     {
         title = title.Trim();
-
         if (string.IsNullOrEmpty(title))
             title = "Untitled Task List";
 
         if (!taskTitles.Contains(title))
         {
             taskTitles.Add(title);
-            listOrder.Insert(0, title); // insert at beginning for newest-first
+            listOrder.Add(title); 
         }
 
-        string ev1Entry = ev1List.Trim();
-        string ev2Entry = ev2List.Trim();
-
-        // For EV-1
-if (ev1TaskLists.ContainsKey(title))
-    ev1TaskLists[title] = ev1TaskLists[title]     // existing text first
-                       + "\n-------------\n"
-                       + ev1Entry;               // new entry last
-else
-    ev1TaskLists[title] = ev1Entry;
-
-// For EV-2
-if (ev2TaskLists.ContainsKey(title))
-    ev2TaskLists[title] = ev2TaskLists[title]
-                       + "\n-------------\n"
-                       + ev2Entry;
-else
-    ev2TaskLists[title] = ev2Entry;
-
+        ev1TaskLists[title] = ev1List.Trim();
+        ev2TaskLists[title] = ev2List.Trim();
 
         ev1TaskText.text = GenerateText(ev1TaskLists);
         ev2TaskText.text = GenerateText(ev2TaskLists);
     }
-
-
-
+    
     private string GenerateText(Dictionary<string, string> taskDict)
     {
         StringBuilder sb = new();
+        bool first = true;
+
         foreach (string title in listOrder)
         {
             if (taskDict.TryGetValue(title, out string taskBlock))
             {
-                sb.AppendLine(taskBlock);
-                sb.AppendLine(); // extra spacing between lists
+                if (!first)
+                {
+                    sb.AppendLine("-------------");
+                }
+                sb.AppendLine(taskBlock.Trim());
+                first = false;
             }
         }
-        return sb.ToString().Trim();
+
+        return sb.ToString().TrimEnd();
     }
 }

@@ -51,6 +51,4 @@ public class GlobalManager : MonoBehaviour
         LatestEv2Tasks = ev2;
         OnTaskListUpdated?.Invoke(title, ev1, ev2);
     }
-
-
 }
