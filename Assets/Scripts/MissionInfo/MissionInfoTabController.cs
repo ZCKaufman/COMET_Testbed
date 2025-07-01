@@ -21,8 +21,8 @@ public class MissionInfoTabController : MonoBehaviour
 
         if (config?.MissionInfo?.All != null)
         {
-            Debug.Log("Loaded mission info: " + config.MissionInfo.All.MissionInfo);
-            SetMissionDescription(config.MissionInfo.All.MissionInfo);
+            Debug.Log("Loaded mission info: " + config.MissionInfo.All.MissionDescription);
+            SetMissionDescription(config.MissionInfo.All.MissionDescription);
         }
         else
         {

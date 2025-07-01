@@ -7,7 +7,7 @@ using System.Collections.Generic;
 [Serializable]
 public class MissionInfoAll
 {
-    public string MissionInfo;
+    public string MissionDescription;
 }
 
 [Serializable]
