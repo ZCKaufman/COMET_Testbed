@@ -7,20 +7,22 @@ public class GlobalManager : MonoBehaviour
     // player's role in the game
     public string PlayerRole { get; set; }
 
-    //player ID in EVA OR IVA
+    // player ID in EVA or IVA
     public string PlayerID { get; set; }
 
-    //optional- not yet used
-    public string PlayerName { get; private set; } // Player's name - not yet defined anywhere but can be
-
+    // optional - not yet used
+    public string PlayerName { get; private set; }
 
     public string LatestTaskListTitle { get; private set; } = "";
     public string LatestEv1Tasks { get; private set; } = "";
     public string LatestEv2Tasks { get; private set; } = "";
 
+    // mission selected by admin (default to Mission001.json)
+    public string SelectedMissionFile { get; private set; } = "Mission001.json";
+    
+
     public delegate void TaskListUpdated(string title, string ev1, string ev2);
     public event TaskListUpdated OnTaskListUpdated;
-
 
     void Awake()
     {
@@ -40,17 +42,21 @@ public class GlobalManager : MonoBehaviour
         PlayerRole = role;
         PlayerID = id;
 
-        Debug.Log($"[GameManager] Assigned Role: {PlayerRole}, ID: {PlayerID}");
+        Debug.Log($"[GlobalManager] Assigned Role: {PlayerRole}, ID: {PlayerID}");
     }
 
     public void UpdateTaskList(string title, string ev1, string ev2)
     {
-        Debug.Log("[RPC_GlobalTaskUpdate] Called with title: " + title +  ev1 + ev2);
+        Debug.Log("[GlobalManager] TaskList Updated with title: " + title);
         LatestTaskListTitle = title;
         LatestEv1Tasks = ev1;
         LatestEv2Tasks = ev2;
         OnTaskListUpdated?.Invoke(title, ev1, ev2);
     }
 
-
+    public void SetSelectedMission(string filename)
+    {
+        SelectedMissionFile = filename;
+        Debug.Log($"[GlobalManager] Mission file set to: {SelectedMissionFile}");
+    }
 }

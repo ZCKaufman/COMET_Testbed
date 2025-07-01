@@ -1,0 +1,69 @@
+{
+    "MissionInfo": {
+      "All": {
+    "MissionInfo": "This is Mission 002"
+      }
+    },
+    "EVAMapping": {
+      "mapScale": 0.2,
+      "Maps": [
+        { "key": "Satellite", "path": "Images/SatelliteExample" },
+        { "key": "Contours", "path": "Images/ContoursExample" },
+        { "key": "Solar", "path": "Images/SolarExample" },
+        { "key": "Terrain", "path": "Images/TerrainExample" },
+        { "key": "POIs", "path": "Images/SatelliteExample" },
+        { "key": "Routes", "path": "Images/SatelliteExample" }
+      ],
+      "POIs": [
+        { "description": "Soil Sample|Collect soil from trenches using scoops, rakes, and float sampling tools.", "x": 0.5, "y": 0.8 },
+        { "description": "Crater Exploration|Survey and analyze crater features using spectrometers and collect rock samples.","x": 0.88, "y": 0.46 },
+        { "description": "Lava Tube|Descend into lava tubes to deploy instruments, collect geological samples, and map interiors.", "x": 0.01, "y": 0.4 },
+        { "description": "Permanently Shadowed Region|Enter a dark crater zone to extract deep core samples and test ISRU systems.", "x": 0.52, "y": 0.48 }
+      ],
+      "Landmarks": [
+        { "type": "hab", "description": "Hab", "x": 0.1, "y": 0.1 },
+        { "type": "antenna", "description": "Comm Tower", "x": 0.1, "y": 0.9 },
+        { "type": "greenhouse", "description": " Greenhouse", "x": 0.8, "y": 0.85 }
+      ],
+      "PredefinedRoutes": [
+        {
+          "type": "walk",
+          "points": [
+            { "x": 0.25, "y": 0.75 },
+            { "x": 0.25, "y": 0.85 }
+          ]
+        },
+        {
+          "type": "drive",
+          "points": [
+            { "x": 0.1, "y": 0.1 },
+            { "x": 0.1, "y": 0.9 },
+            { "x": 0.25, "y": 0.75 },
+            { "x": 0.8, "y": 0.85 },
+            { "x": 0.1, "y": 0.1 }
+          ]
+        }
+      ]
+    },
+    "EVATaskPlanning": {
+      "IVA": [
+        {
+          "Name": "Crater Exploration",
+          "EVA": [ "Traverse to work site (2)", "Egress Rover (2)", "Context survey the work site (1)", "Collect equipment (1)", "Approach region of interest (2)", "Context survey region of interest (2)", "Contact spectrometer deployment (1)", "Image spectrometer deployment (1)", "Surface contact (1)", "Loose rock collection (1)", "Raking (1)", "Collect equipment (1)", "Trenching (1)", "Coring (2)", "Float sample collection (1)", "Rock chipping (1)", "Clean up (2)", "Science payload deployment (2)", "Clean up (2)", "Departure (2)" ]
+        },
+        {
+          "Name": "Lava Tube Exploration",
+          "EVA": [ "Traverse to work site (2)", "Egress Rover (2)", "Context survey the work site (1)", "Collect equipment (1)", "Offload lights (1)", "Approach region of interest (2)", "Deployment belaying equipment (2)", "Descend into lava tube (2)", "Set up communication relay (2)", "Set up free standing illumination (2)", "Contact spectrometer deployment (1)", "Context survey region of interest (1)", "Acquire geological sample (2)", "Weigh samples (2)", "Deployment seismic instrucments (2)", "Clean up (2)", "Ascend lava tube (2)", "Departure (2)"]
+        },
+        {
+          "Name": "Soil Sample",
+          "EVA": ["Traverse to work site (2)", "Egress Rover (2)", "Context survey the work site (1)", "Collect equipment (1)", "Approach region of interest (2)", "Trench (1)", "Float Sample (1)", "Scoop (1)", "Rake (1)", "Trench (1)", "Clean up (2)", "Departure (2)" ]
+        },
+        {
+          "Name": "Permanently Shadowed Region",
+          "EVA": [ "Traverse to work site (2)", "Egress Rover (2)", "Context survey the work site (1)", "Collect equipment (1)", "Locate specific zone inside crater (1)", "Preconfigure suit thermal settings (2)", "Approach shadowed region (2)", "Operate handheld instruments (2)", "Perform deep core sampling (2)", "Deploy ISRU environment (2)", "Insert samples into sealed container (2)", "Clean up (2)", "Departure (2)" ]
+        }
+      ]
+    }
+  
+  }

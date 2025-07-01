@@ -6,6 +6,7 @@ using System.Collections;
 using Photon.Pun.UtilityScripts;
 using UnityEngine.UI;
 
+
 public class MainMenuUI : MonoBehaviourPunCallbacks
 {
     private string selectedRole;
@@ -54,7 +55,7 @@ public class MainMenuUI : MonoBehaviourPunCallbacks
                 JoinAsMCC();
                 break;
             case 3:
-                JoinAsLLM();
+                JoinAsAdmin();
                 break;
             default:
                 Debug.LogError("Invalid role selected.");
@@ -84,7 +85,7 @@ public class MainMenuUI : MonoBehaviourPunCallbacks
                 JoinAsMCC();
                 break;
             case 4:
-                JoinAsLLM();
+                JoinAsAdmin();
                 break;
             default:
                 Debug.LogError("Invalid role selected.");
@@ -95,7 +96,6 @@ public class MainMenuUI : MonoBehaviourPunCallbacks
     public void JoinAsEVA() => AssignRoleAndJoin("EVA");
     public void JoinAsIVA() => AssignRoleAndJoin("IVA");
     public void JoinAsMCC() => AssignRoleAndJoin("MCC");
-    public void JoinAsLLM() => AssignRoleAndJoin("LLM");
 
     private void AssignRoleAndJoin(string role)
     {
@@ -127,6 +127,35 @@ public class MainMenuUI : MonoBehaviourPunCallbacks
         PhotonNetwork.JoinOrCreateRoom("MoonMissionRoom", options, TypedLobby.Default);
     }
 
+    private void JoinAsAdmin()
+    {
+        selectedRole = "ADMIN";
+        string enteredPassword = passwordInput.text;
+        string requiredPassword = "COMET_@dmin";
+
+        if (enteredPassword != requiredPassword)
+        {
+            passwordErrorText.text = "Incorrect password for " + selectedRole;
+            return;
+        }
+
+        passwordErrorText.text = "";
+
+        RoomOptions options = new RoomOptions { MaxPlayers = 10 };
+        options.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable
+        {
+            { "EVA_Count", 0 },
+            { "IVA_Count", 0 }
+        };
+        options.CustomRoomPropertiesForLobby = new string[] { "EVA_Count", "IVA_Count" };
+
+        PhotonNetwork.JoinOrCreateRoom("MoonMissionRoom", options, TypedLobby.Default);
+
+        GlobalManager.Instance.SetPlayerRole(selectedRole, "0");
+        UnityEngine.SceneManagement.SceneManager.LoadScene("AdminPanel");
+
+    }
+
     public override void OnJoinedRoom()
     {
         ExitGames.Client.Photon.Hashtable roomProps = PhotonNetwork.CurrentRoom.CustomProperties;
@@ -149,8 +178,20 @@ public class MainMenuUI : MonoBehaviourPunCallbacks
             PhotonNetwork.CurrentRoom.SetCustomProperties(roomProps);
         }
 
-        string targetScene = selectedRole == "EVA" ? "EVA_Mission" : "IVA_Mission";
-        PhotonNetwork.LoadLevel(targetScene);
+        if (selectedRole == "EVA")
+        {
+            PhotonNetwork.RemoveBufferedRPCs();
+            PhotonNetwork.LoadLevel("EVA_Mission");
+        }
+        else if (selectedRole == "IVA" || selectedRole == "MCC")
+        {
+            PhotonNetwork.LoadLevel("IVA_Mission");
+        }
+        else if (selectedRole == "ADMIN")
+        {
+            PhotonNetwork.LoadLevel("AdminPanel");
+        }
+
     }
 
     public override void OnConnectedToMaster()

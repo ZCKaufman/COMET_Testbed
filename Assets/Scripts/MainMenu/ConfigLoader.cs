@@ -6,33 +6,42 @@ using UnityEngine.Networking;
 
 public class ConfigLoader : MonoBehaviour
 {
-    /* ---------- public static configs ---------- */
     public static MissionViewConfigRoot MissionConfig;
     public static EVAMappingConfigRoot  EVAMapConfig;
     public static IVASampleTaskRoot     IVASampleTasks;
 
     public static bool IsLoaded = false;
 
-    /* ---------- load at startup ---------- */
     void Awake()
     {
         DontDestroyOnLoad(gameObject);
-        StartCoroutine(LoadConfig());
+        StartCoroutine(WaitForGlobalManagerAndLoadConfig());
     }
 
-    IEnumerator LoadConfig()
+    IEnumerator WaitForGlobalManagerAndLoadConfig()
     {
-        string path = Path.Combine(Application.streamingAssetsPath, "Mission001.json");
+        // Wait until GlobalManager is ready and has a valid file set
+        while (GlobalManager.Instance == null || string.IsNullOrEmpty(GlobalManager.Instance.SelectedMissionFile))
+        {
+            yield return null;
+        }
 
-    #if UNITY_WEBGL && !UNITY_EDITOR
+        string filename = GlobalManager.Instance.SelectedMissionFile;
+        string path = Path.Combine(Application.streamingAssetsPath, filename);
+
+#if UNITY_WEBGL && !UNITY_EDITOR
         UnityWebRequest www = UnityWebRequest.Get(path);
         yield return www.SendWebRequest();
 
         if (www.result != UnityWebRequest.Result.Success)
+        {
             Debug.LogError("JSON load error (WebGL): " + www.error);
+        }
         else
+        {
             ParseConfigs(www.downloadHandler.text);
-    #else
+        }
+#else
         if (File.Exists(path))
         {
             string json = File.ReadAllText(path);
@@ -42,13 +51,11 @@ public class ConfigLoader : MonoBehaviour
         {
             Debug.LogError("JSON file not found: " + path);
         }
-    #endif
+#endif
 
-        /* ---- make sure coroutine always yields once before exiting ---- */
         yield break;
     }
 
-    /* ---------- parse JSON ---------- */
     [System.Serializable] private class Wrapper
     {
         public MissionInfoSection MissionInfo;
@@ -65,11 +72,11 @@ public class ConfigLoader : MonoBehaviour
             MissionConfig = new MissionViewConfigRoot { MissionInfo = full.MissionInfo };
             EVAMapConfig  = new EVAMappingConfigRoot  { EVAMapping  = full.EVAMapping  };
 
-            // build IVA sample lookup
             IVASampleTasks = new IVASampleTaskRoot();
             foreach (var entry in full.EVATaskPlanning.IVA)
                 IVASampleTasks.Samples[entry.Name] = entry;
 
+            Debug.Log("[ConfigLoader] Loaded config from: " + GlobalManager.Instance.SelectedMissionFile);
             IsLoaded = true;
         }
         catch (System.Exception ex)
