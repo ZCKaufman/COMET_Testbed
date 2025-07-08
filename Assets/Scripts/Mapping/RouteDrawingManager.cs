@@ -231,10 +231,10 @@ public class RouteDrawingManager : MonoBehaviour
 
     public GameObject AddLineToScrollView(string routeType, Vector2 start, Vector2 end, float distance)
     {
-        var config = ConfigLoader.EVAMapConfig;
+        var config = ConfigLoader.MapConfig;
         GameObject entry = Instantiate(lineInfoTextPrefab, scrollViewContent);
 
-        float scale = config.EVAMapping.mapScale;
+        float scale = config.Mapping.mapScale;
         float scaledDistance = distance * scale;
         Vector2 scaledEnd = end * scale;
 
@@ -280,7 +280,7 @@ public class RouteDrawingManager : MonoBehaviour
                 Destroy(info.scrollEntry);
         }
 
-        float scale = ConfigLoader.EVAMapConfig.EVAMapping.mapScale;
+        float scale = ConfigLoader.MapConfig.Mapping.mapScale;
         Dictionary<string, float> runningTotals = new();
         int counter = 1;
 

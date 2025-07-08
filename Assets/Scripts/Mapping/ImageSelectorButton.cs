@@ -33,11 +33,11 @@ public class ImageSelectorButton : MonoBehaviour
 
     private IEnumerator Start()
     {
-        while (ConfigLoader.EVAMapConfig == null || ConfigLoader.EVAMapConfig.EVAMapping == null)
+        while (ConfigLoader.MapConfig == null || ConfigLoader.MapConfig.Mapping == null)
             yield return null;
 
-        var config = ConfigLoader.EVAMapConfig;
-        var match = config.EVAMapping.Maps.Find(entry => entry.key == imageKey);
+        var config = ConfigLoader.MapConfig;
+        var match = config.Mapping.Maps.Find(entry => entry.key == imageKey);
         if (match == null)
         {
             Debug.LogError($"No entry found in config for key: {imageKey}");

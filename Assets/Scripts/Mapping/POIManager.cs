@@ -38,7 +38,7 @@ public class POIManager : MonoBehaviour
     private IEnumerator InitializeAfterConfig()
     {
         // wait until the config is ready 
-        while (ConfigLoader.EVAMapConfig == null || ConfigLoader.EVAMapConfig.EVAMapping == null)
+        while (ConfigLoader.MapConfig == null || ConfigLoader.MapConfig.Mapping == null)
         {
             yield return null;
         }
@@ -74,14 +74,14 @@ public class POIManager : MonoBehaviour
 
         ClearPOIs();
 
-        var config = ConfigLoader.EVAMapConfig;
-        if (config?.EVAMapping?.POIs == null || poiPrefab == null || poiContainer == null)
+        var config = ConfigLoader.MapConfig;
+        if (config?.Mapping?.POIs == null || poiPrefab == null || poiContainer == null)
         {
             Debug.LogError("Missing config, POIs, prefab, or container.");
             return;
         }
 
-        foreach (var poi in config.EVAMapping.POIs)
+        foreach (var poi in config.Mapping.POIs)
         {
             GameObject instance = Instantiate(poiPrefab, poiContainer);
             instance.name = poi.description;
@@ -102,15 +102,15 @@ public class POIManager : MonoBehaviour
 
     public void ShowLandmarks()
     {
-        var config = ConfigLoader.EVAMapConfig;
-        if (config?.EVAMapping?.Landmarks == null || poiContainer == null)
+        var config = ConfigLoader.MapConfig;
+        if (config?.Mapping?.Landmarks == null || poiContainer == null)
         {
             Debug.LogError("Missing config, Landmarks, prefab, or container.");
             return;
         }
 
 
-        foreach (var landmark in config.EVAMapping.Landmarks)
+        foreach (var landmark in config.Mapping.Landmarks)
         {
             if (!landmarkPrefabMap.ContainsKey(landmark.type))
             {
@@ -150,14 +150,14 @@ public class POIManager : MonoBehaviour
 
         ClearRoutes();
 
-        var config = ConfigLoader.EVAMapConfig;
-        if (config?.EVAMapping?.PredefinedRoutes == null || uiLinePrefab == null || poiContainer == null)
+        var config = ConfigLoader.MapConfig;
+        if (config?.Mapping?.PredefinedRoutes == null || uiLinePrefab == null || poiContainer == null)
         {
             Debug.LogError("Missing config, prefab, or container.");
             return;
         }
 
-        foreach (var route in config.EVAMapping.PredefinedRoutes)
+        foreach (var route in config.Mapping.PredefinedRoutes)
         {
             for (int i = 0; i < route.points.Count - 1; i++)
             {

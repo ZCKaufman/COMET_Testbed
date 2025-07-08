@@ -19,6 +19,7 @@ public class POIEntry
     public string description;
     public float x; // normalized [0,1]
     public float y;
+    public string type;
 }
 
 
@@ -49,7 +50,7 @@ public class PredefinedRoute
 
 
 [Serializable]
-public class EVAMapping
+public class Mapping
 {
     public float mapScale;
     public List<MapEntry> Maps;
@@ -62,9 +63,9 @@ public class EVAMapping
 
 
 [Serializable]
-public class EVAMappingConfigRoot
+public class MappingConfigRoot
 {
-    public EVAMapping EVAMapping;
+    public Mapping Mapping;
 }
 
 

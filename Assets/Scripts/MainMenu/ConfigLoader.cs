@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.Networking;
+using Newtonsoft.Json;
 
 public class ConfigLoader : MonoBehaviour
 {
     /* ---------- public static configs ---------- */
     public static MissionViewConfigRoot MissionConfig;
-    public static EVAMappingConfigRoot  EVAMapConfig;
-    public static IVASampleTaskRoot     IVASampleTasks;
+    public static MappingConfigRoot  MapConfig;
+    public static TaskPlanningSection TaskPlanning;
+
 
     public static bool IsLoaded = false;
 
@@ -49,26 +51,23 @@ public class ConfigLoader : MonoBehaviour
     }
 
     /* ---------- parse JSON ---------- */
-    [System.Serializable] private class Wrapper
+    [System.Serializable]
+    private class Wrapper
     {
         public MissionInfoSection MissionInfo;
-        public EVAMapping         EVAMapping;
-        public IVATaskArray       EVATaskPlanning;
+        public Mapping Mapping;
+        public TaskPlanningSection TaskPlanning;
     }
 
     void ParseConfigs(string json)
     {
         try
         {
-            var full = JsonUtility.FromJson<Wrapper>(json);
+            var full = JsonConvert.DeserializeObject<Wrapper>(json);
 
             MissionConfig = new MissionViewConfigRoot { MissionInfo = full.MissionInfo };
-            EVAMapConfig  = new EVAMappingConfigRoot  { EVAMapping  = full.EVAMapping  };
-
-            // build IVA sample lookup
-            IVASampleTasks = new IVASampleTaskRoot();
-            foreach (var entry in full.EVATaskPlanning.IVA)
-                IVASampleTasks.Samples[entry.Name] = entry;
+            MapConfig = new MappingConfigRoot { Mapping = full.Mapping };
+            TaskPlanning = full.TaskPlanning;
 
             IsLoaded = true;
         }
@@ -77,4 +76,5 @@ public class ConfigLoader : MonoBehaviour
             Debug.LogError("Config parse error: " + ex.Message);
         }
     }
+
 }

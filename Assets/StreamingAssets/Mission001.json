@@ -4,7 +4,7 @@
       "MissionDescription": "<b>Mission Overview</b>\nThe purpose of this EVA is to traverse to points of interest (POIs) provided to the IVA team.\n\nIn this planning phase:\n• EVA must plan an order of POIs to visit using the <b>EVA Mapping</b> tab.\n• EVA will work with the IVA team to build a task list using the <b>EVA Task List</b> tab.\n\n<b>EVA Team</b>\n• Has access to multiple map overlays:\n  – Satellite\n  – Contours\n  – Solar\n  – Terrain\n• Uses a step-by-step blank task list for EVA planning.\n• May ask IVA teammates for guidance based on outlines they have access to.\n\n<b>IVA Team</b>\n• Has exclusive access to POI locations to assist EVA.\n• Has access to high-level step-by-step NASA EVA task lists.\n• May provide as much guidance as needed when queried by EVA."
     }
   },
-  "EVAMapping": {
+  "Mapping": {
     "mapScale": 0.2,
     "Maps": [
       { "key": "Satellite", "path": "Images/SatelliteExample" },
@@ -15,15 +15,26 @@
       { "key": "Routes", "path": "Images/SatelliteExample" }
     ],
     "POIs": [
-      { "description": "Soil Sample|Collect soil from trenches using scoops, rakes, and float sampling tools.", "x": 0.5, "y": 0.8 },
-      { "description": "Crater Exploration|Survey and analyze crater features using spectrometers and collect rock samples.","x": 0.88, "y": 0.46 },
-      { "description": "Lava Tube|Descend into lava tubes to deploy instruments, collect geological samples, and map interiors.", "x": 0.01, "y": 0.4 },
-      { "description": "Permanently Shadowed Region|Enter a dark crater zone to extract deep core samples and test ISRU systems.", "x": 0.52, "y": 0.48 }
+      { "description": "Haworth Crater|Survey and analyze crater features using spectrometers and collect rock samples.", "x": 0.88, "y": 0.46, "type": "Crater Exploration" },
+      { "description": "Shoemaker Crater|Contextual geological analysis of large-scale impact site.", "x": 0.92, "y": 0.52, "type": "Crater Exploration" },
+      { "description": "de Gerlache Rim|Multi-sensor survey of elevated rim with potential resources.", "x": 0.83, "y": 0.49, "type": "Crater Exploration" },
+
+      { "description": "Aristarchus Tube|Descend into lava tubes to deploy instruments and map interiors.", "x": 0.15, "y": 0.33, "type": "Lava Tube Exploration" },
+      { "description": "Marius Hills Cave|Enter and explore ancient volcanic structure.", "x": 0.12, "y": 0.41, "type": "Lava Tube Exploration" },
+      { "description": "Ina D|Conduct exploration and subsurface scanning.", "x": 0.18, "y": 0.29, "type": "Lava Tube Exploration" },
+
+      { "description": "Mare Tranquillitatis|Collect and analyze soil using standard sample tools.", "x": 0.5, "y": 0.8, "type": "Soil Sample" },
+      { "description": "Mare Serenitatis|Float and rake sampling of upper regolith layers.", "x": 0.48, "y": 0.77, "type": "Soil Sample" },
+      { "description": "Mare Imbrium|Detailed stratigraphic soil survey.", "x": 0.52, "y": 0.83, "type": "Soil Sample" },
+
+      { "description": "Cabeus Crater|Enter dark crater zone for volatile sampling.", "x": 0.52, "y": 0.48, "type": "Permanently Shadowed Region" },
+      { "description": "Faustini Basin|ISRU testing under extreme conditions.", "x": 0.55, "y": 0.45, "type": "Permanently Shadowed Region" },
+      { "description": "Shackleton Crater|Perform core extraction and sealed containment.", "x": 0.50, "y": 0.44, "type": "Permanently Shadowed Region" }
     ],
     "Landmarks": [
       { "type": "hab", "description": "Hab", "x": 0.1, "y": 0.1 },
       { "type": "antenna", "description": "Comm Tower", "x": 0.1, "y": 0.9 },
-      { "type": "greenhouse", "description": " Greenhouse", "x": 0.8, "y": 0.85 }
+      { "type": "greenhouse", "description": "Greenhouse", "x": 0.8, "y": 0.85 }
     ],
     "PredefinedRoutes": [
       {
@@ -45,25 +56,406 @@
       }
     ]
   },
-  "EVATaskPlanning": {
-    "IVA": [
+  "TaskPlanning": {
+    "POIs": [
       {
         "Name": "Crater Exploration",
-        "EVA": [ "Traverse to work site (2)", "Egress Rover (2)", "Context survey the work site (1)", "Collect equipment (1)", "Approach region of interest (2)", "Context survey region of interest (2)", "Contact spectrometer deployment (1)", "Image spectrometer deployment (1)", "Surface contact (1)", "Loose rock collection (1)", "Raking (1)", "Collect equipment (1)", "Trenching (1)", "Coring (2)", "Float sample collection (1)", "Rock chipping (1)", "Clean up (2)", "Science payload deployment (2)", "Clean up (2)", "Departure (2)" ]
+        "Tasks": [
+          {
+            "Description": "Traverse to work site",
+            "Personnel": 2,
+            "Required": true,
+            "Duration": 2
+          },
+          {
+            "Description": "Egress Rover",
+            "Personnel": 2,
+            "Required": true,
+            "Duration": 2
+          },
+          {
+            "Description": "Context survey the work site",
+            "Personnel": 1,
+            "Required": true,
+            "Duration": 1
+          },
+          {
+            "Description": "Collect equipment",
+            "Personnel": 1,
+            "Required": true,
+            "Duration": 1
+          },
+          {
+            "Description": "Approach region of interest",
+            "Personnel": 2,
+            "Required": true,
+            "Duration": 2
+          },
+          {
+            "Description": "Context survey region of interest",
+            "Personnel": 2,
+            "Required": true,
+            "Duration": 2
+          },
+          {
+            "Description": "Contact spectrometer deployment",
+            "Personnel": 1,
+            "Required": true,
+            "Duration": 1
+          },
+          {
+            "Description": "Image spectrometer deployment",
+            "Personnel": 1,
+            "Required": true,
+            "Duration": 1
+          },
+          {
+            "Description": "Surface contact",
+            "Personnel": 1,
+            "Required": true,
+            "Duration": 1
+          },
+          {
+            "Description": "Loose rock collection",
+            "Personnel": 1,
+            "Required": true,
+            "Duration": 1
+          },
+          {
+            "Description": "Raking",
+            "Personnel": 1,
+            "Required": true,
+            "Duration": 1
+          },
+          {
+            "Description": "Collect equipment",
+            "Personnel": 1,
+            "Required": true,
+            "Duration": 1
+          },
+          {
+            "Description": "Trenching",
+            "Personnel": 1,
+            "Required": true,
+            "Duration": 1
+          },
+          {
+            "Description": "Coring",
+            "Personnel": 2,
+            "Required": true,
+            "Duration": 2
+          },
+          {
+            "Description": "Float sample collection",
+            "Personnel": 1,
+            "Required": true,
+            "Duration": 1
+          },
+          {
+            "Description": "Rock chipping",
+            "Personnel": 1,
+            "Required": true,
+            "Duration": 1
+          },
+          {
+            "Description": "Clean up",
+            "Personnel": 2,
+            "Required": true,
+            "Duration": 2
+          },
+          {
+            "Description": "Science payload deployment",
+            "Personnel": 2,
+            "Required": true,
+            "Duration": 2
+          },
+          {
+            "Description": "Clean up",
+            "Personnel": 2,
+            "Required": true,
+            "Duration": 2
+          },
+          {
+            "Description": "Departure",
+            "Personnel": 2,
+            "Required": true,
+            "Duration": 2
+          }
+        ]
       },
       {
         "Name": "Lava Tube Exploration",
-        "EVA": [ "Traverse to work site (2)", "Egress Rover (2)", "Context survey the work site (1)", "Collect equipment (1)", "Offload lights (1)", "Approach region of interest (2)", "Deployment belaying equipment (2)", "Descend into lava tube (2)", "Set up communication relay (2)", "Set up free standing illumination (2)", "Contact spectrometer deployment (1)", "Context survey region of interest (1)", "Acquire geological sample (2)", "Weigh samples (2)", "Deployment seismic instrucments (2)", "Clean up (2)", "Ascend lava tube (2)", "Departure (2)"]
+        "Tasks": [
+          {
+            "Description": "Traverse to work site",
+            "Personnel": 2,
+            "Required": true,
+            "Duration": 2
+          },
+          {
+            "Description": "Egress Rover",
+            "Personnel": 2,
+            "Required": true,
+            "Duration": 2
+          },
+          {
+            "Description": "Context survey the work site",
+            "Personnel": 1,
+            "Required": true,
+            "Duration": 1
+          },
+          {
+            "Description": "Collect equipment",
+            "Personnel": 1,
+            "Required": true,
+            "Duration": 1
+          },
+          {
+            "Description": "Offload lights",
+            "Personnel": 1,
+            "Required": true,
+            "Duration": 1
+          },
+          {
+            "Description": "Approach region of interest",
+            "Personnel": 2,
+            "Required": true,
+            "Duration": 2
+          },
+          {
+            "Description": "Deployment belaying equipment",
+            "Personnel": 2,
+            "Required": true,
+            "Duration": 2
+          },
+          {
+            "Description": "Descend into lava tube",
+            "Personnel": 2,
+            "Required": true,
+            "Duration": 2
+          },
+          {
+            "Description": "Set up communication relay",
+            "Personnel": 2,
+            "Required": true,
+            "Duration": 2
+          },
+          {
+            "Description": "Set up free standing illumination",
+            "Personnel": 2,
+            "Required": true,
+            "Duration": 2
+          },
+          {
+            "Description": "Contact spectrometer deployment",
+            "Personnel": 1,
+            "Required": true,
+            "Duration": 1
+          },
+          {
+            "Description": "Context survey region of interest",
+            "Personnel": 1,
+            "Required": true,
+            "Duration": 1
+          },
+          {
+            "Description": "Acquire geological sample",
+            "Personnel": 2,
+            "Required": true,
+            "Duration": 2
+          },
+          {
+            "Description": "Weigh samples",
+            "Personnel": 2,
+            "Required": true,
+            "Duration": 2
+          },
+          {
+            "Description": "Deployment seismic instrucments",
+            "Personnel": 2,
+            "Required": true,
+            "Duration": 2
+          },
+          {
+            "Description": "Clean up",
+            "Personnel": 2,
+            "Required": true,
+            "Duration": 2
+          },
+          {
+            "Description": "Ascend lava tube",
+            "Personnel": 2,
+            "Required": true,
+            "Duration": 2
+          },
+          {
+            "Description": "Departure",
+            "Personnel": 2,
+            "Required": true,
+            "Duration": 2
+          }
+        ]
       },
       {
         "Name": "Soil Sample",
-        "EVA": ["Traverse to work site (2)", "Egress Rover (2)", "Context survey the work site (1)", "Collect equipment (1)", "Approach region of interest (2)", "Trench (1)", "Float Sample (1)", "Scoop (1)", "Rake (1)", "Trench (1)", "Clean up (2)", "Departure (2)" ]
+        "Tasks": [
+          {
+            "Description": "Traverse to work site",
+            "Personnel": 2,
+            "Required": true,
+            "Duration": 2
+          },
+          {
+            "Description": "Egress Rover",
+            "Personnel": 2,
+            "Required": true,
+            "Duration": 2
+          },
+          {
+            "Description": "Context survey the work site",
+            "Personnel": 1,
+            "Required": true,
+            "Duration": 1
+          },
+          {
+            "Description": "Collect equipment",
+            "Personnel": 1,
+            "Required": true,
+            "Duration": 1
+          },
+          {
+            "Description": "Approach region of interest",
+            "Personnel": 2,
+            "Required": true,
+            "Duration": 2
+          },
+          {
+            "Description": "Trench",
+            "Personnel": 1,
+            "Required": true,
+            "Duration": 1
+          },
+          {
+            "Description": "Float Sample",
+            "Personnel": 1,
+            "Required": true,
+            "Duration": 1
+          },
+          {
+            "Description": "Scoop",
+            "Personnel": 1,
+            "Required": true,
+            "Duration": 1
+          },
+          {
+            "Description": "Rake",
+            "Personnel": 1,
+            "Required": true,
+            "Duration": 1
+          },
+          {
+            "Description": "Trench",
+            "Personnel": 1,
+            "Required": true,
+            "Duration": 1
+          },
+          {
+            "Description": "Clean up",
+            "Personnel": 2,
+            "Required": true,
+            "Duration": 2
+          },
+          {
+            "Description": "Departure",
+            "Personnel": 2,
+            "Required": true,
+            "Duration": 2
+          }
+        ]
       },
       {
         "Name": "Permanently Shadowed Region",
-        "EVA": [ "Traverse to work site (2)", "Egress Rover (2)", "Context survey the work site (1)", "Collect equipment (1)", "Locate specific zone inside crater (1)", "Preconfigure suit thermal settings (2)", "Approach shadowed region (2)", "Operate handheld instruments (2)", "Perform deep core sampling (2)", "Deploy ISRU environment (2)", "Insert samples into sealed container (2)", "Clean up (2)", "Departure (2)" ]
+        "Tasks": [
+          {
+            "Description": "Traverse to work site",
+            "Personnel": 2,
+            "Required": true,
+            "Duration": 2
+          },
+          {
+            "Description": "Egress Rover",
+            "Personnel": 2,
+            "Required": true,
+            "Duration": 2
+          },
+          {
+            "Description": "Context survey the work site",
+            "Personnel": 1,
+            "Required": true,
+            "Duration": 1
+          },
+          {
+            "Description": "Collect equipment",
+            "Personnel": 1,
+            "Required": true,
+            "Duration": 1
+          },
+          {
+            "Description": "Locate specific zone inside crater",
+            "Personnel": 1,
+            "Required": true,
+            "Duration": 1
+          },
+          {
+            "Description": "Preconfigure suit thermal settings",
+            "Personnel": 2,
+            "Required": true,
+            "Duration": 2
+          },
+          {
+            "Description": "Approach shadowed region",
+            "Personnel": 2,
+            "Required": true,
+            "Duration": 2
+          },
+          {
+            "Description": "Operate handheld instruments",
+            "Personnel": 2,
+            "Required": false,
+            "Duration": 2
+          },
+          {
+            "Description": "Perform deep core sampling",
+            "Personnel": 2,
+            "Required": false,
+            "Duration": 2
+          },
+          {
+            "Description": "Deploy ISRU environment",
+            "Personnel": 2,
+            "Required": false,
+            "Duration": 2
+          },
+          {
+            "Description": "Insert samples into sealed container",
+            "Personnel": 2,
+            "Required": false,
+            "Duration": 2
+          },
+          {
+            "Description": "Clean up",
+            "Personnel": 2,
+            "Required": true,
+            "Duration": 2
+          },
+          {
+            "Description": "Departure",
+            "Personnel": 2,
+            "Required": true,
+            "Duration": 2
+          }
+        ]
       }
     ]
   }
-
 }
