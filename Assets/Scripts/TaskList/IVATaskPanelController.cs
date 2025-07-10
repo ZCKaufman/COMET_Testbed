@@ -8,6 +8,8 @@ public class IVATaskPanelController : MonoBehaviour
     [SerializeField] private TMP_Dropdown poiDropdown;
     [SerializeField] private GameObject taskItemPrefab;
     [SerializeField] private Transform taskContainer;
+    [SerializeField] private GameObject headerRow;
+    [SerializeField] private GameObject loadingText;
 
     private List<GameObject> currentTaskItems = new();
 
@@ -49,6 +51,12 @@ public class IVATaskPanelController : MonoBehaviour
         {
             Debug.LogWarning("No matching template found for type: " + templateType);
         }
+
+        if (headerRow != null)
+            headerRow.SetActive(true);
+
+        if (loadingText != null)
+            loadingText.SetActive(false);
     }
 
     private void ClearTaskList()
@@ -58,6 +66,12 @@ public class IVATaskPanelController : MonoBehaviour
             Destroy(item);
         }
         currentTaskItems.Clear();
+
+        if (headerRow != null)
+            headerRow.SetActive(false);
+
+        if (loadingText != null)
+            loadingText.SetActive(true);
     }
 
     private void LoadTaskList(List<TaskEntry> tasks)

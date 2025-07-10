@@ -16,6 +16,8 @@ public class EVATaskPanelController : MonoBehaviour
     [SerializeField] private Button submitButton;
     [SerializeField] private MissionInfoTabController missionInfoController;
     [SerializeField] private TMP_Text warningText;
+    [SerializeField] private GameObject EV1HeaderRow;
+    [SerializeField] private GameObject EV2HeaderRow;
 
     private List<TMP_InputField> ev1Tasks = new();
     private List<TMP_InputField> ev2Tasks = new();
@@ -86,12 +88,20 @@ public class EVATaskPanelController : MonoBehaviour
             RebuildTaskList(ev1Container, ev1Tasks, ev1Durations, template.Tasks);
             RebuildTaskList(ev2Container, ev2Tasks, ev2Durations, template.Tasks);
         }
+
+        if (EV1HeaderRow != null)
+            Debug.Log("Setting EV1HeaderRow to true");
+            EV1HeaderRow.SetActive(true);
+
+        if (EV2HeaderRow != null)
+            EV2HeaderRow.SetActive(true);
     }
 
     private void ClearTaskList(Transform container, List<TMP_InputField> taskList, List<TMP_InputField> durationList)
     {
         foreach (Transform child in container)
-            Destroy(child.gameObject);
+            if (child.name != "EV1HeaderRow")  // <-- Don't destroy the header!
+                Destroy(child.gameObject);
         taskList.Clear();
         durationList.Clear();
     }
@@ -127,6 +137,12 @@ public class EVATaskPanelController : MonoBehaviour
     private void RebuildTaskList(Transform container, List<TMP_InputField> taskList, List<TMP_InputField> durationList, List<TaskEntry> tasks)
     {
         ClearTaskList(container, taskList, durationList);
+        if (EV1HeaderRow != null)
+            Debug.Log("Setting EV1HeaderRow to true");
+            EV1HeaderRow.SetActive(true);
+
+        if (EV2HeaderRow != null)
+            EV2HeaderRow.SetActive(true);
         for (int i = 0; i < tasks.Count; i++)
         {
             CreateTask(container, taskList, durationList, tasks[i], i);
@@ -189,6 +205,13 @@ public class EVATaskPanelController : MonoBehaviour
         savedEv2Tasks[title] = ev2Final;
 
         TaskSyncResponder.Instance?.BroadcastTaskClear(title, ev1Body, ev2Body);
+
+        if (EV1HeaderRow != null)
+            Debug.Log("Setting EV1HeaderRow to false");
+            EV1HeaderRow.SetActive(false);
+
+        if (EV2HeaderRow != null)
+            EV2HeaderRow.SetActive(false);
     }
 
     public void ReceiveTaskTextUpdate(string containerName, int index, string newText)
