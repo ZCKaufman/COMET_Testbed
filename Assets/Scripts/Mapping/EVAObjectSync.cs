@@ -15,7 +15,7 @@ public class EVAObjectSync : MonoBehaviourPun, IPunObservable
     {
         if (!parented)
         {
-            Transform panel = GameObject.Find("EVAMapPanel")?.transform;
+            Transform panel = GameObject.Find("MappingPanel")?.transform;
             if (panel != null)
             {
                 rectTransform.SetParent(panel, false);

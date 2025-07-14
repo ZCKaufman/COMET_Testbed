@@ -56,6 +56,9 @@ public class MainMenuUI : MonoBehaviourPunCallbacks
             case 3:
                 JoinAsLLM();
                 break;
+            case 4:
+                JoinAsAdmin();
+                break;
             default:
                 Debug.LogError("Invalid role selected.");
                 break;
@@ -84,7 +87,7 @@ public class MainMenuUI : MonoBehaviourPunCallbacks
                 JoinAsMCC();
                 break;
             case 4:
-                JoinAsLLM();
+                JoinAsAdmin();
                 break;
             default:
                 Debug.LogError("Invalid role selected.");
@@ -96,6 +99,7 @@ public class MainMenuUI : MonoBehaviourPunCallbacks
     public void JoinAsIVA() => AssignRoleAndJoin("IVA");
     public void JoinAsMCC() => AssignRoleAndJoin("MCC");
     public void JoinAsLLM() => AssignRoleAndJoin("LLM");
+    public void JoinAsAdmin() => AssignRoleAndJoin("Admin");
 
     private void AssignRoleAndJoin(string role)
     {
@@ -106,7 +110,7 @@ public class MainMenuUI : MonoBehaviourPunCallbacks
     private void JoinRoom()
     {
         string enteredPassword = passwordInput.text.ToLower();
-        string requiredPassword = selectedRole.ToLower();
+        string requiredPassword = selectedRole == "Admin" ? "comet" : selectedRole.ToLower();
 
         if (enteredPassword != requiredPassword)
         {
@@ -149,7 +153,16 @@ public class MainMenuUI : MonoBehaviourPunCallbacks
             PhotonNetwork.CurrentRoom.SetCustomProperties(roomProps);
         }
 
-        string targetScene = selectedRole == "EVA" ? "EVA_Mission" : "IVA_Mission";
+        string targetScene = selectedRole switch
+        {
+            "EVA" => "EVA_Mission",
+            "IVA" => "IVA_Mission",
+            "MCC" => "IVA_Mission",
+            "LLM" => "IVA_Mission",
+            "Admin" => "Admin",
+            _ => "IVA_Mission"
+        };
+
         PhotonNetwork.LoadLevel(targetScene);
     }
 

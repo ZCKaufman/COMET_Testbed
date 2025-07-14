@@ -7,34 +7,53 @@ using Newtonsoft.Json;
 
 public class ConfigLoader : MonoBehaviour
 {
-    /* ---------- public static configs ---------- */
+    // ---------- Public static configs ----------
     public static MissionViewConfigRoot MissionConfig;
-    public static MappingConfigRoot  MapConfig;
+    public static MappingConfigRoot MapConfig;
     public static TaskPlanningSection TaskPlanning;
 
-
     public static bool IsLoaded = false;
+    public static ConfigLoader Instance;
 
-    /* ---------- load at startup ---------- */
     void Awake()
     {
-        DontDestroyOnLoad(gameObject);
-        StartCoroutine(LoadConfig());
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+            StartCoroutine(LoadConfig());
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
-    IEnumerator LoadConfig()
+    // ---------- Public method to load config manually ----------
+    public void LoadConfigFromFilename(string filename)
     {
-        string path = Path.Combine(Application.streamingAssetsPath, "Mission001.json");
+        StartCoroutine(LoadConfig(filename));
+    }
 
-    #if UNITY_WEBGL && !UNITY_EDITOR
+    // ---------- Load config by filename (default is Mission001.json) ----------
+    public IEnumerator LoadConfig(string filename = "Mission001.json")
+    {
+        IsLoaded = false;
+        string path = Path.Combine(Application.streamingAssetsPath, filename);
+
+#if UNITY_WEBGL && !UNITY_EDITOR
         UnityWebRequest www = UnityWebRequest.Get(path);
         yield return www.SendWebRequest();
 
         if (www.result != UnityWebRequest.Result.Success)
+        {
             Debug.LogError("JSON load error (WebGL): " + www.error);
+        }
         else
+        {
             ParseConfigs(www.downloadHandler.text);
-    #else
+        }
+#else
         if (File.Exists(path))
         {
             string json = File.ReadAllText(path);
@@ -44,13 +63,12 @@ public class ConfigLoader : MonoBehaviour
         {
             Debug.LogError("JSON file not found: " + path);
         }
-    #endif
+#endif
 
-        /* ---- make sure coroutine always yields once before exiting ---- */
         yield break;
     }
 
-    /* ---------- parse JSON ---------- */
+    // ---------- JSON parse wrapper ----------
     [System.Serializable]
     private class Wrapper
     {
@@ -70,11 +88,11 @@ public class ConfigLoader : MonoBehaviour
             TaskPlanning = full.TaskPlanning;
 
             IsLoaded = true;
+            Debug.Log("Config loaded successfully.");
         }
         catch (System.Exception ex)
         {
             Debug.LogError("Config parse error: " + ex.Message);
         }
     }
-
 }
