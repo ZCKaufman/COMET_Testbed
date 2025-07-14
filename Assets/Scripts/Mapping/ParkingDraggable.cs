@@ -15,10 +15,15 @@ public class ParkingDraggable : MonoBehaviour, IPointerClickHandler
     private List<GameObject> placedParkings = new List<GameObject>();
     private PhotonView photonView;
 
-    void Awake()
+ void Awake()
+{
+    photonView = GetComponent<PhotonView>();
+    if (photonView == null)
     {
-        photonView = GetComponent<PhotonView>();
+        Debug.LogError("Missing PhotonView on object with ParkingDraggable");
     }
+}
+
 
     void Update()
     {
@@ -70,7 +75,7 @@ public class ParkingDraggable : MonoBehaviour, IPointerClickHandler
 
                 RectTransform placedRect = placed.GetComponent<RectTransform>();
 
-                RectTransform parentPanel = GameObject.Find("EVAMapPanel")?.transform as RectTransform;
+                RectTransform parentPanel = GameObject.Find("MappingPanel")?.transform as RectTransform;
                 placedRect.SetParent(parentPanel, worldPositionStays: false);
 
                 Vector2 dropPos;

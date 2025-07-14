@@ -56,11 +56,12 @@ public class POIDraggable : MonoBehaviour, IPointerClickHandler
 
                 RectTransform placedRect = placed.GetComponent<RectTransform>();
 
-                // Parent under EVAMapPanel before positioning
-                RectTransform parentPanel = GameObject.Find("EVAMapPanel")?.transform as RectTransform;
+                // Parent under MappingPanel before positioning
+                RectTransform parentPanel = GameObject.Find("MappingPanel")?.transform as RectTransform;
+                
                 placedRect.SetParent(parentPanel, worldPositionStays: false);
 
-                // Get mouse pos relative to EVAMapPanel
+                // Get mouse pos relative to MappingPanel
                 Vector2 dropPos;
                 RectTransformUtility.ScreenPointToLocalPointInRectangle(
                     parentPanel,
