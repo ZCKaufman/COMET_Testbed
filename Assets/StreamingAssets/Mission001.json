@@ -1,7 +1,12 @@
 {
   "MissionInfo": {
     "All": {
-      "MissionDescription": "<b>Mission Overview</b>\nThe purpose of this EVA is to traverse to points of interest (POIs) provided to the IVA team.\n\nIn this planning phase:\n• EVA must plan an order of POIs to visit using the <b>EVA Mapping</b> tab.\n• EVA will work with the IVA team to build a task list using the <b>EVA Task List</b> tab.\n\n<b>EVA Team</b>\n• Has access to multiple map overlays:\n  – Satellite\n  – Contours\n  – Solar\n  – Terrain\n• Uses a step-by-step blank task list for EVA planning.\n• May ask IVA teammates for guidance based on outlines they have access to.\n\n<b>IVA Team</b>\n• Has exclusive access to POI locations to assist EVA.\n• Has access to high-level step-by-step NASA EVA task lists.\n• May provide as much guidance as needed when queried by EVA."
+      "MissionDescription": "<b>Mission Overview</b>\nThe purpose of this EVA is to traverse to points of interest (POIs) provided to the IVA team.\n\nIn this planning phase:\n• EVA must plan an order of POIs to visit using the <b>EVA Mapping</b> tab.\n• EVA will work with the IVA team to build a task list using the <b>EVA Task List</b> tab.\n\n<b>EVA Team</b>\n• Has access to multiple map overlays:\n  – Satellite\n  – Contours\n  – Solar\n  – Terrain\n• Uses a step-by-step blank task list for EVA planning.\n• May ask IVA teammates for guidance based on outlines they have access to.\n\n<b>IVA Team</b>\n• Has exclusive access to POI locations to assist EVA.\n• Has access to high-level step-by-step NASA EVA task lists.\n• May provide as much guidance as needed when queried by EVA.",
+      "Alerts": [
+        "This is an alert",
+        "This is another alert",
+        "This is a third alert"
+      ]
     }
   },
   "Mapping": {
@@ -457,5 +462,9 @@
         ]
       }
     ]
+  },
+  "ObjectiveVerification": {
+    "MaxDuration": 480,
+    "TargetROI": 100
   }
 }

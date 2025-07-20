@@ -11,6 +11,7 @@ public class ConfigLoader : MonoBehaviour
     public static MissionViewConfigRoot MissionConfig;
     public static MappingConfigRoot MapConfig;
     public static TaskPlanningSection TaskPlanning;
+    public static ObjectiveVerificationSection ObjectiveVerification;
 
     public static bool IsLoaded = false;
     public static ConfigLoader Instance;
@@ -75,6 +76,7 @@ public class ConfigLoader : MonoBehaviour
         public MissionInfoSection MissionInfo;
         public Mapping Mapping;
         public TaskPlanningSection TaskPlanning;
+        public ObjectiveVerificationSection ObjectiveVerification;
     }
 
     void ParseConfigs(string json)
@@ -86,6 +88,7 @@ public class ConfigLoader : MonoBehaviour
             MissionConfig = new MissionViewConfigRoot { MissionInfo = full.MissionInfo };
             MapConfig = new MappingConfigRoot { Mapping = full.Mapping };
             TaskPlanning = full.TaskPlanning;
+            ObjectiveVerification = full.ObjectiveVerification;
 
             IsLoaded = true;
             Debug.Log("Config loaded successfully.");

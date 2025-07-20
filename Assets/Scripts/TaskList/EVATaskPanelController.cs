@@ -37,9 +37,6 @@ public class EVATaskPanelController : MonoBehaviour
         if (submitButton != null)
             submitButton.onClick.AddListener(ClearAll);
 
-        if (taskListTitleInput != null)
-            taskListTitleInput.onValueChanged.AddListener(OnTitleChanged);
-
         if (PhotonNetwork.IsConnectedAndReady && PhotonNetwork.IsMasterClient)
             TaskSyncResponder.Instance?.BroadcastFullSyncRequest();
     }
@@ -67,8 +64,6 @@ public class EVATaskPanelController : MonoBehaviour
         var selectedPOI = ConfigLoader.MapConfig.Mapping.POIs[index - 1];
         string poiName = selectedPOI.description.Split('|')[0];
         string templateType = selectedPOI.type;
-
-        taskListTitleInput.text = poiName;
 
         if (savedEv1Tasks.TryGetValue(poiName, out var ev1ListToLoad) &&
             savedEv2Tasks.TryGetValue(poiName, out var ev2ListToLoad))
@@ -114,20 +109,39 @@ public class EVATaskPanelController : MonoBehaviour
         TMP_InputField durationField = item.transform.Find("DurationInputField")?.GetComponent<TMP_InputField>();
 
         if (numberLabel != null) numberLabel.text = (index + 1) + ".";
-        if (taskField != null) taskField.text = task.Description;
-        if (durationField != null) durationField.text = task.Duration.ToString();
-
-        bool isRequired = task.Required;
         if (taskField != null)
         {
-            taskField.interactable = !isRequired;
-            taskField.image.color = isRequired ? Color.white : new Color(0.9f, 0.95f, 1f);
+            taskField.text = task.Description;
+            taskField.interactable = false; // ✅ Always non-editable
+            taskField.caretWidth = 0;        // Optional: hide blinking cursor
+
+            // ✅ Color-code description field background
+            Color requiredColor = new Color(1f, 0.85f, 0.85f);     // Light red
+            Color optionalColor = new Color(0.85f, 0.95f, 1f);     // Light blue
+            taskField.image.color = task.Required ? requiredColor : optionalColor;
+
+            // Override disabled color behavior
+            var colors = taskField.colors;
+            colors.disabledColor = taskField.image.color;  // No dimming
+            taskField.colors = colors;
         }
 
         if (durationField != null)
         {
-            durationField.interactable = !isRequired;
-            durationField.image.color = isRequired ? Color.white : new Color(0.9f, 0.95f, 1f);
+            durationField.text = task.Duration.ToString();
+            durationField.interactable = true;
+            durationField.image.color = Color.white;
+
+            int taskIndex = index;
+            string role = container == ev1Container ? "EV1" : "EV2";
+
+            durationField.onValueChanged.AddListener((string newValue) =>
+            {
+                if (int.TryParse(newValue, out int parsed))
+                {
+                    TaskSyncResponder.Instance?.BroadcastDurationUpdate(role, taskIndex, parsed);
+                }
+            });
         }
 
         taskList.Insert(index, taskField);

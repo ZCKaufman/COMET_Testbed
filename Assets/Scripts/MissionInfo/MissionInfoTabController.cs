@@ -2,17 +2,19 @@ using System.Collections.Generic;
 using System.Text;
 using TMPro;
 using UnityEngine;
+using System.Linq;
 
 public class MissionInfoTabController : MonoBehaviour
 {
     [SerializeField] private TMP_Text missionDescriptionText;
+    [SerializeField] private TMP_Text alertsText;
     [SerializeField] private TMP_Text ev1TaskText;
     [SerializeField] private TMP_Text ev2TaskText;
 
     private Dictionary<string, string> ev1TaskLists = new();
     private Dictionary<string, string> ev2TaskLists = new();
-    private HashSet<string> taskTitles = new();         // use this to ensure sync
-    private List<string> listOrder = new();             // maintains submission order
+    private HashSet<string> taskTitles = new(); 
+    private List<string> listOrder = new();             
 
     public MissionViewConfigRoot config; 
     void Awake()
@@ -23,6 +25,7 @@ public class MissionInfoTabController : MonoBehaviour
         {
             Debug.Log("Loaded mission info: " + config.MissionInfo.All.MissionDescription);
             SetMissionDescription(config.MissionInfo.All.MissionDescription);
+            SetAlerts(config.MissionInfo.All.Alerts);
         }
         else
         {
@@ -33,6 +36,18 @@ public class MissionInfoTabController : MonoBehaviour
     public void SetMissionDescription(string text)
     {
         missionDescriptionText.text = text;
+    }
+
+    public void SetAlerts(List<string> alerts)
+    {
+        if (alerts == null || alerts.Count == 0)
+        {
+            alertsText.text = "No alerts for this mission.";
+        }
+        else
+        {
+            alertsText.text = string.Join("\n• ", new[] { "" }.Concat(alerts)); // Adds bullet point to each line
+        }
     }
 
     public void SetTaskLists(string title, string ev1List, string ev2List)

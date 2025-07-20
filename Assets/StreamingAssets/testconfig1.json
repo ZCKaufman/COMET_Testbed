@@ -1,7 +1,10 @@
 {
   "MissionInfo": {
     "All": {
-      "MissionDescription": "first test config"
+      "MissionDescription": "first test config",
+      "Alerts": [
+        "No alerts"
+      ]
     }
   },
   "Mapping": {

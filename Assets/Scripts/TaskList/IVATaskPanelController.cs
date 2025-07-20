@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Photon.Pun;
 
 public class IVATaskPanelController : MonoBehaviour
 {
@@ -12,6 +13,9 @@ public class IVATaskPanelController : MonoBehaviour
     [SerializeField] private GameObject loadingText;
 
     private List<GameObject> currentTaskItems = new();
+
+    private List<int> ev1Durations = new();
+    private List<int> ev2Durations = new();
 
     void Start()
     {
@@ -99,4 +103,29 @@ public class IVATaskPanelController : MonoBehaviour
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(taskContainer.GetComponent<RectTransform>());
     }
+
+    public void ReceiveDurationUpdate(string role, int index, int value)
+    {
+        EnsureListSize(ev1Durations, index + 1);
+        EnsureListSize(ev2Durations, index + 1);
+
+        if (role == "EV1")
+            ev1Durations[index] = value;
+        else if (role == "EV2")
+            ev2Durations[index] = value;
+
+        int merged = Mathf.Max(ev1Durations[index], ev2Durations[index]);
+
+        Transform item = taskContainer.GetChild(index);
+        TMP_InputField durationField = item.transform.Find("DurationField")?.GetComponent<TMP_InputField>();
+        if (durationField != null)
+            durationField.text = merged.ToString();
+    }
+
+    private void EnsureListSize(List<int> list, int size)
+    {
+        while (list.Count < size)
+            list.Add(0);
+    }
+
 }

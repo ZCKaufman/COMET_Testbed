@@ -16,6 +16,29 @@ public class TaskSyncResponder : MonoBehaviourPunCallbacks
         Instance = this;
     }
 
+    [PunRPC]
+    void RPC_UpdateDuration(string containerName, int index, int newDuration)
+    {
+        // Update EVA (optional)
+        var evaPanel = FindFirstObjectByType<EVATaskPanelController>();
+        if (evaPanel != null)
+        {
+            // Optionally forward the update to EVA
+        }
+
+        // Update IVA
+        var ivaPanel = FindFirstObjectByType<IVATaskPanelController>();
+        if (ivaPanel != null)
+        {
+            ivaPanel.ReceiveDurationUpdate(containerName, index, newDuration);
+        }
+    }
+
+    public void BroadcastDurationUpdate(string containerName, int index, int newDuration)
+    {
+        photonView.RPC("RPC_UpdateDuration", RpcTarget.All, containerName, index, newDuration);
+    }
+
     public void BroadcastTaskClear(string title, string ev1Body, string ev2Body)
     {
         photonView.RPC("RPC_PerformTaskClear", RpcTarget.All, title, ev1Body, ev2Body);

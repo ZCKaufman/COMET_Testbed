@@ -8,6 +8,7 @@ using System.Collections.Generic;
 public class MissionInfoAll
 {
     public string MissionDescription;
+    public List<string> Alerts;
 }
 
 [Serializable]
@@ -20,6 +21,6 @@ public class MissionInfoSection
 public class MissionViewConfigRoot
 {
     public MissionInfoSection MissionInfo;
-
+    public ObjectiveVerificationSection ObjectiveVerification;
 }
 
