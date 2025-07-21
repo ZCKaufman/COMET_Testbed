@@ -12,9 +12,9 @@ public class EVATaskPanelController : MonoBehaviour
     [SerializeField] private GameObject taskItemPrefab;
     [SerializeField] private Transform ev1Container;
     [SerializeField] private Transform ev2Container;
-    [SerializeField] private TMP_InputField taskListTitleInput;
     [SerializeField] private Button submitButton;
     [SerializeField] private MissionInfoTabController missionInfoController;
+    [SerializeField] private ObjectiveVerificationController objectiveVerificationController;
     [SerializeField] private TMP_Text warningText;
     [SerializeField] private GameObject EV1HeaderRow;
     [SerializeField] private GameObject EV2HeaderRow;
@@ -28,6 +28,8 @@ public class EVATaskPanelController : MonoBehaviour
     private Dictionary<string, List<TaskEntry>> savedEv2Tasks = new();
 
     private bool suppressChange = false;
+
+    private string currentPOIName = "";
 
     void Start()
     {
@@ -55,7 +57,6 @@ public class EVATaskPanelController : MonoBehaviour
     {
         if (index == 0)
         {
-            taskListTitleInput.text = "";
             ClearTaskList(ev1Container, ev1Tasks, ev1Durations);
             ClearTaskList(ev2Container, ev2Tasks, ev2Durations);
             return;
@@ -63,6 +64,7 @@ public class EVATaskPanelController : MonoBehaviour
 
         var selectedPOI = ConfigLoader.MapConfig.Mapping.POIs[index - 1];
         string poiName = selectedPOI.description.Split('|')[0];
+        currentPOIName = poiName;
         string templateType = selectedPOI.type;
 
         if (savedEv1Tasks.TryGetValue(poiName, out var ev1ListToLoad) &&
@@ -122,7 +124,7 @@ public class EVATaskPanelController : MonoBehaviour
 
             // Override disabled color behavior
             var colors = taskField.colors;
-            colors.disabledColor = taskField.image.color;  // No dimming
+            colors.disabledColor = taskField.image.color;  
             taskField.colors = colors;
         }
 
@@ -169,17 +171,14 @@ public class EVATaskPanelController : MonoBehaviour
         TaskSyncResponder.Instance?.BroadcastTaskListTitleUpdate(newTitle);
     }
 
-    public void SetTaskListTitle(string newTitle)
-    {
-        suppressChange = true;
-        taskListTitleInput.text = newTitle;
-        suppressChange = false;
-    }
-
     public void ClearAll()
     {
-        string title = taskListTitleInput.text.Trim();
-        if (string.IsNullOrEmpty(title)) { ShowWarning("Please provide a title for the task list."); return; }
+        string title = currentPOIName;
+        if (string.IsNullOrWhiteSpace(title) || title == "Select a Point of Interest")
+        {
+            ShowWarning("Please select a valid Point of Interest before submitting.");
+            return;
+        }
 
         List<TaskEntry> ev1Final = new(), ev2Final = new();
         string ev1Body = title + "\n", ev2Body = title + "\n";
@@ -219,6 +218,7 @@ public class EVATaskPanelController : MonoBehaviour
         savedEv2Tasks[title] = ev2Final;
 
         TaskSyncResponder.Instance?.BroadcastTaskClear(title, ev1Body, ev2Body);
+        objectiveVerificationController?.SetTaskLists(title, ev1Body, ev2Body);
 
         if (EV1HeaderRow != null)
             Debug.Log("Setting EV1HeaderRow to false");
@@ -226,6 +226,54 @@ public class EVATaskPanelController : MonoBehaviour
 
         if (EV2HeaderRow != null)
             EV2HeaderRow.SetActive(false);
+
+        var (durationTotal, roiTotal) = CalculateTotals();
+        TaskSyncResponder.Instance?.BroadcastObjectiveTotals(durationTotal, roiTotal);
+    }
+
+    private (int totalDuration, int totalROI) CalculateTotals()
+    {
+        int durationSum = 0;
+        int roiSum = 0;
+
+        var poiName = currentPOIName;
+        var poi = ConfigLoader.MapConfig.Mapping.POIs.Find(p => p.description.StartsWith(poiName));
+        if (poi == null) return (0, 0);
+
+        var poiType = poi.type;
+        var template = ConfigLoader.TaskPlanning.POIs.Find(p => p.Name == poiType);
+        if (template == null) return (0, 0);
+
+        for (int i = 0; i < template.Tasks.Count; i++)
+        {
+            int d1 = i < ev1Durations.Count && int.TryParse(ev1Durations[i].text, out var val1) ? val1 : 0;
+            int d2 = i < ev2Durations.Count && int.TryParse(ev2Durations[i].text, out var val2) ? val2 : 0;
+            int maxDur = Mathf.Max(d1, d2);
+            durationSum += maxDur;
+
+            string equation = template.Tasks[i].roiEquation ?? "0";
+            int roiVal = EvaluateEquationInt(equation, maxDur);
+            roiSum += roiVal;
+        }
+
+        return (durationSum, roiSum);
+    }
+
+    private int EvaluateEquationInt(string expr, int x)
+    {
+        expr = System.Text.RegularExpressions.Regex.Replace(expr, @"(\d)(x)", "$1*$2");
+        expr = expr.Replace("x", x.ToString());
+
+        try
+        {
+            System.Data.DataTable table = new System.Data.DataTable();
+            object result = table.Compute(expr, "");
+            return int.TryParse(result.ToString(), out int val) ? val : 0;
+        }
+        catch
+        {
+            return 0;
+        }
     }
 
     public void ReceiveTaskTextUpdate(string containerName, int index, string newText)
@@ -304,10 +352,9 @@ public class EVATaskPanelController : MonoBehaviour
         suppressChange = true;
         ClearTaskList(ev1Container, ev1Tasks, ev1Durations);
         ClearTaskList(ev2Container, ev2Tasks, ev2Durations);
-        taskListTitleInput.text = title;
-        missionInfoController?.SetTaskLists(title, ev1Body, ev2Body);
         if (poiDropdown != null)
             poiDropdown.value = 0;
+            currentPOIName = "";
         suppressChange = false;
         ShowWarning("");
     }

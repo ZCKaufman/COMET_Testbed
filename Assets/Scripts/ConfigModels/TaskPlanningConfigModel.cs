@@ -8,6 +8,7 @@ public class TaskEntry
     public int Personnel;
     public bool Required;
     public int Duration; 
+    public string roiEquation;
 }
 
 [Serializable]

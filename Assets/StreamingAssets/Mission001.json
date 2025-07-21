@@ -1,7 +1,7 @@
 {
   "MissionInfo": {
     "All": {
-      "MissionDescription": "<b>Mission Overview</b>\nThe purpose of this EVA is to traverse to points of interest (POIs) provided to the IVA team.\n\nIn this planning phase:\n• EVA must plan an order of POIs to visit using the <b>EVA Mapping</b> tab.\n• EVA will work with the IVA team to build a task list using the <b>EVA Task List</b> tab.\n\n<b>EVA Team</b>\n• Has access to multiple map overlays:\n  – Satellite\n  – Contours\n  – Solar\n  – Terrain\n• Uses a step-by-step blank task list for EVA planning.\n• May ask IVA teammates for guidance based on outlines they have access to.\n\n<b>IVA Team</b>\n• Has exclusive access to POI locations to assist EVA.\n• Has access to high-level step-by-step NASA EVA task lists.\n• May provide as much guidance as needed when queried by EVA.",
+      "MissionDescription": "<b>Mission Overview</b>\nThe purpose of this EVA is to traverse to points of interest (POIs) provided to the IVA team.\n\nIn this planning phase:\n\u2022 EVA must plan an order of POIs to visit using the <b>EVA Mapping</b> tab.\n\u2022 EVA will work with the IVA team to build a task list using the <b>EVA Task List</b> tab.\n\n<b>EVA Team</b>\n\u2022 Has access to multiple map overlays:\n  \u2013 Satellite\n  \u2013 Contours\n  \u2013 Solar\n  \u2013 Terrain\n\u2022 Uses a step-by-step blank task list for EVA planning.\n\u2022 May ask IVA teammates for guidance based on outlines they have access to.\n\n<b>IVA Team</b>\n\u2022 Has exclusive access to POI locations to assist EVA.\n\u2022 Has access to high-level step-by-step NASA EVA task lists.\n\u2022 May provide as much guidance as needed when queried by EVA.",
       "Alerts": [
         "This is an alert",
         "This is another alert",
@@ -12,51 +12,162 @@
   "Mapping": {
     "mapScale": 0.2,
     "Maps": [
-      { "key": "Satellite", "path": "Images/SatelliteExample" },
-      { "key": "Contours", "path": "Images/ContoursExample" },
-      { "key": "Solar", "path": "Images/SolarExample" },
-      { "key": "Terrain", "path": "Images/TerrainExample" },
-      { "key": "POIs", "path": "Images/SatelliteExample" },
-      { "key": "Routes", "path": "Images/SatelliteExample" }
+      {
+        "key": "Satellite",
+        "path": "Images/SatelliteExample"
+      },
+      {
+        "key": "Contours",
+        "path": "Images/ContoursExample"
+      },
+      {
+        "key": "Solar",
+        "path": "Images/SolarExample"
+      },
+      {
+        "key": "Terrain",
+        "path": "Images/TerrainExample"
+      },
+      {
+        "key": "POIs",
+        "path": "Images/SatelliteExample"
+      },
+      {
+        "key": "Routes",
+        "path": "Images/SatelliteExample"
+      }
     ],
     "POIs": [
-      { "description": "Haworth Crater|Survey and analyze crater features using spectrometers and collect rock samples.", "x": 0.88, "y": 0.46, "type": "Crater Exploration" },
-      { "description": "Shoemaker Crater|Contextual geological analysis of large-scale impact site.", "x": 0.92, "y": 0.52, "type": "Crater Exploration" },
-      { "description": "de Gerlache Rim|Multi-sensor survey of elevated rim with potential resources.", "x": 0.83, "y": 0.49, "type": "Crater Exploration" },
-
-      { "description": "Aristarchus Tube|Descend into lava tubes to deploy instruments and map interiors.", "x": 0.15, "y": 0.33, "type": "Lava Tube Exploration" },
-      { "description": "Marius Hills Cave|Enter and explore ancient volcanic structure.", "x": 0.12, "y": 0.41, "type": "Lava Tube Exploration" },
-      { "description": "Ina D|Conduct exploration and subsurface scanning.", "x": 0.18, "y": 0.29, "type": "Lava Tube Exploration" },
-
-      { "description": "Mare Tranquillitatis|Collect and analyze soil using standard sample tools.", "x": 0.5, "y": 0.8, "type": "Soil Sample" },
-      { "description": "Mare Serenitatis|Float and rake sampling of upper regolith layers.", "x": 0.48, "y": 0.77, "type": "Soil Sample" },
-      { "description": "Mare Imbrium|Detailed stratigraphic soil survey.", "x": 0.52, "y": 0.83, "type": "Soil Sample" },
-
-      { "description": "Cabeus Crater|Enter dark crater zone for volatile sampling.", "x": 0.52, "y": 0.48, "type": "Permanently Shadowed Region" },
-      { "description": "Faustini Basin|ISRU testing under extreme conditions.", "x": 0.55, "y": 0.45, "type": "Permanently Shadowed Region" },
-      { "description": "Shackleton Crater|Perform core extraction and sealed containment.", "x": 0.50, "y": 0.44, "type": "Permanently Shadowed Region" }
+      {
+        "description": "Haworth Crater|Survey and analyze crater features using spectrometers and collect rock samples.",
+        "x": 0.88,
+        "y": 0.46,
+        "type": "Crater Exploration"
+      },
+      {
+        "description": "Shoemaker Crater|Contextual geological analysis of large-scale impact site.",
+        "x": 0.92,
+        "y": 0.52,
+        "type": "Crater Exploration"
+      },
+      {
+        "description": "de Gerlache Rim|Multi-sensor survey of elevated rim with potential resources.",
+        "x": 0.83,
+        "y": 0.49,
+        "type": "Crater Exploration"
+      },
+      {
+        "description": "Aristarchus Tube|Descend into lava tubes to deploy instruments and map interiors.",
+        "x": 0.15,
+        "y": 0.33,
+        "type": "Lava Tube Exploration"
+      },
+      {
+        "description": "Marius Hills Cave|Enter and explore ancient volcanic structure.",
+        "x": 0.12,
+        "y": 0.41,
+        "type": "Lava Tube Exploration"
+      },
+      {
+        "description": "Ina D|Conduct exploration and subsurface scanning.",
+        "x": 0.18,
+        "y": 0.29,
+        "type": "Lava Tube Exploration"
+      },
+      {
+        "description": "Mare Tranquillitatis|Collect and analyze soil using standard sample tools.",
+        "x": 0.5,
+        "y": 0.8,
+        "type": "Soil Sample"
+      },
+      {
+        "description": "Mare Serenitatis|Float and rake sampling of upper regolith layers.",
+        "x": 0.48,
+        "y": 0.77,
+        "type": "Soil Sample"
+      },
+      {
+        "description": "Mare Imbrium|Detailed stratigraphic soil survey.",
+        "x": 0.52,
+        "y": 0.83,
+        "type": "Soil Sample"
+      },
+      {
+        "description": "Cabeus Crater|Enter dark crater zone for volatile sampling.",
+        "x": 0.52,
+        "y": 0.48,
+        "type": "Permanently Shadowed Region"
+      },
+      {
+        "description": "Faustini Basin|ISRU testing under extreme conditions.",
+        "x": 0.55,
+        "y": 0.45,
+        "type": "Permanently Shadowed Region"
+      },
+      {
+        "description": "Shackleton Crater|Perform core extraction and sealed containment.",
+        "x": 0.5,
+        "y": 0.44,
+        "type": "Permanently Shadowed Region"
+      }
     ],
     "Landmarks": [
-      { "type": "hab", "description": "Hab", "x": 0.1, "y": 0.1 },
-      { "type": "antenna", "description": "Comm Tower", "x": 0.1, "y": 0.9 },
-      { "type": "greenhouse", "description": "Greenhouse", "x": 0.8, "y": 0.85 }
+      {
+        "type": "hab",
+        "description": "Hab",
+        "x": 0.1,
+        "y": 0.1
+      },
+      {
+        "type": "antenna",
+        "description": "Comm Tower",
+        "x": 0.1,
+        "y": 0.9
+      },
+      {
+        "type": "greenhouse",
+        "description": "Greenhouse",
+        "x": 0.8,
+        "y": 0.85
+      }
     ],
     "PredefinedRoutes": [
       {
         "type": "walk",
         "points": [
-          { "x": 0.25, "y": 0.75 },
-          { "x": 0.25, "y": 0.85 }
+          {
+            "x": 0.25,
+            "y": 0.75
+          },
+          {
+            "x": 0.25,
+            "y": 0.85
+          }
         ]
       },
       {
         "type": "drive",
         "points": [
-          { "x": 0.1, "y": 0.1 },
-          { "x": 0.1, "y": 0.9 },
-          { "x": 0.25, "y": 0.75 },
-          { "x": 0.8, "y": 0.85 },
-          { "x": 0.1, "y": 0.1 }
+          {
+            "x": 0.1,
+            "y": 0.1
+          },
+          {
+            "x": 0.1,
+            "y": 0.9
+          },
+          {
+            "x": 0.25,
+            "y": 0.75
+          },
+          {
+            "x": 0.8,
+            "y": 0.85
+          },
+          {
+            "x": 0.1,
+            "y": 0.1
+          }
         ]
       }
     ]
@@ -70,121 +181,141 @@
             "Description": "Traverse to work site",
             "Personnel": 2,
             "Required": true,
-            "Duration": 2
+            "Duration": 2,
+            "roiEquation": "0"
           },
           {
             "Description": "Egress Rover",
             "Personnel": 2,
             "Required": true,
-            "Duration": 2
+            "Duration": 2,
+            "roiEquation": "0"
           },
           {
             "Description": "Context survey the work site",
             "Personnel": 1,
             "Required": true,
-            "Duration": 1
+            "Duration": 1,
+            "roiEquation": "0"
           },
           {
             "Description": "Collect equipment",
             "Personnel": 1,
             "Required": true,
-            "Duration": 1
+            "Duration": 1,
+            "roiEquation": "0"
           },
           {
             "Description": "Approach region of interest",
             "Personnel": 2,
             "Required": true,
-            "Duration": 2
+            "Duration": 2,
+            "roiEquation": "0"
           },
           {
             "Description": "Context survey region of interest",
             "Personnel": 2,
             "Required": true,
-            "Duration": 2
+            "Duration": 2,
+            "roiEquation": "0"
           },
           {
             "Description": "Contact spectrometer deployment",
             "Personnel": 1,
             "Required": true,
-            "Duration": 1
+            "Duration": 1,
+            "roiEquation": "0"
           },
           {
             "Description": "Image spectrometer deployment",
             "Personnel": 1,
             "Required": true,
-            "Duration": 1
+            "Duration": 1,
+            "roiEquation": "0"
           },
           {
             "Description": "Surface contact",
             "Personnel": 1,
             "Required": true,
-            "Duration": 1
+            "Duration": 1,
+            "roiEquation": "0"
           },
           {
             "Description": "Loose rock collection",
             "Personnel": 1,
             "Required": true,
-            "Duration": 1
+            "Duration": 1,
+            "roiEquation": "0"
           },
           {
             "Description": "Raking",
             "Personnel": 1,
             "Required": true,
-            "Duration": 1
+            "Duration": 1,
+            "roiEquation": "0"
           },
           {
             "Description": "Collect equipment",
             "Personnel": 1,
             "Required": true,
-            "Duration": 1
+            "Duration": 1,
+            "roiEquation": "0"
           },
           {
             "Description": "Trenching",
             "Personnel": 1,
             "Required": true,
-            "Duration": 1
+            "Duration": 1,
+            "roiEquation": "0"
           },
           {
             "Description": "Coring",
             "Personnel": 2,
             "Required": true,
-            "Duration": 2
+            "Duration": 2,
+            "roiEquation": "0"
           },
           {
             "Description": "Float sample collection",
             "Personnel": 1,
             "Required": true,
-            "Duration": 1
+            "Duration": 1,
+            "roiEquation": "0"
           },
           {
             "Description": "Rock chipping",
             "Personnel": 1,
             "Required": true,
-            "Duration": 1
+            "Duration": 1,
+            "roiEquation": "0"
           },
           {
             "Description": "Clean up",
             "Personnel": 2,
             "Required": true,
-            "Duration": 2
+            "Duration": 2,
+            "roiEquation": "0"
           },
           {
             "Description": "Science payload deployment",
             "Personnel": 2,
             "Required": true,
-            "Duration": 2
+            "Duration": 2,
+            "roiEquation": "0"
           },
           {
             "Description": "Clean up",
             "Personnel": 2,
             "Required": true,
-            "Duration": 2
+            "Duration": 2,
+            "roiEquation": "0"
           },
           {
             "Description": "Departure",
             "Personnel": 2,
             "Required": true,
-            "Duration": 2
+            "Duration": 2,
+            "roiEquation": "0"
           }
         ]
       },
@@ -195,109 +326,127 @@
             "Description": "Traverse to work site",
             "Personnel": 2,
             "Required": true,
-            "Duration": 2
+            "Duration": 2,
+            "roiEquation": "0"
           },
           {
             "Description": "Egress Rover",
             "Personnel": 2,
             "Required": true,
-            "Duration": 2
+            "Duration": 2,
+            "roiEquation": "0"
           },
           {
             "Description": "Context survey the work site",
             "Personnel": 1,
             "Required": true,
-            "Duration": 1
+            "Duration": 1,
+            "roiEquation": "0"
           },
           {
             "Description": "Collect equipment",
             "Personnel": 1,
             "Required": true,
-            "Duration": 1
+            "Duration": 1,
+            "roiEquation": "0"
           },
           {
             "Description": "Offload lights",
             "Personnel": 1,
             "Required": true,
-            "Duration": 1
+            "Duration": 1,
+            "roiEquation": "0"
           },
           {
             "Description": "Approach region of interest",
             "Personnel": 2,
             "Required": true,
-            "Duration": 2
+            "Duration": 2,
+            "roiEquation": "0"
           },
           {
             "Description": "Deployment belaying equipment",
             "Personnel": 2,
             "Required": true,
-            "Duration": 2
+            "Duration": 2,
+            "roiEquation": "0"
           },
           {
             "Description": "Descend into lava tube",
             "Personnel": 2,
             "Required": true,
-            "Duration": 2
+            "Duration": 2,
+            "roiEquation": "0"
           },
           {
             "Description": "Set up communication relay",
             "Personnel": 2,
             "Required": true,
-            "Duration": 2
+            "Duration": 2,
+            "roiEquation": "0"
           },
           {
             "Description": "Set up free standing illumination",
             "Personnel": 2,
             "Required": true,
-            "Duration": 2
+            "Duration": 2,
+            "roiEquation": "0"
           },
           {
             "Description": "Contact spectrometer deployment",
             "Personnel": 1,
             "Required": true,
-            "Duration": 1
+            "Duration": 1,
+            "roiEquation": "0"
           },
           {
             "Description": "Context survey region of interest",
             "Personnel": 1,
             "Required": true,
-            "Duration": 1
+            "Duration": 1,
+            "roiEquation": "0"
           },
           {
             "Description": "Acquire geological sample",
             "Personnel": 2,
             "Required": true,
-            "Duration": 2
+            "Duration": 2,
+            "roiEquation": "0"
           },
           {
             "Description": "Weigh samples",
             "Personnel": 2,
             "Required": true,
-            "Duration": 2
+            "Duration": 2,
+            "roiEquation": "0"
           },
           {
             "Description": "Deployment seismic instrucments",
             "Personnel": 2,
             "Required": true,
-            "Duration": 2
+            "Duration": 2,
+            "roiEquation": "0"
           },
           {
             "Description": "Clean up",
             "Personnel": 2,
             "Required": true,
-            "Duration": 2
+            "Duration": 2,
+            "roiEquation": "0"
           },
           {
             "Description": "Ascend lava tube",
             "Personnel": 2,
             "Required": true,
-            "Duration": 2
+            "Duration": 2,
+            "roiEquation": "0"
           },
           {
             "Description": "Departure",
             "Personnel": 2,
             "Required": true,
-            "Duration": 2
+            "Duration": 2,
+            "roiEquation": "0"
           }
         ]
       },
@@ -308,73 +457,85 @@
             "Description": "Traverse to work site",
             "Personnel": 2,
             "Required": true,
-            "Duration": 2
+            "Duration": 2,
+            "roiEquation": "0"
           },
           {
             "Description": "Egress Rover",
             "Personnel": 2,
             "Required": true,
-            "Duration": 2
+            "Duration": 2,
+            "roiEquation": "0"
           },
           {
             "Description": "Context survey the work site",
             "Personnel": 1,
             "Required": true,
-            "Duration": 1
+            "Duration": 1,
+            "roiEquation": "0"
           },
           {
             "Description": "Collect equipment",
             "Personnel": 1,
             "Required": true,
-            "Duration": 1
+            "Duration": 1,
+            "roiEquation": "0"
           },
           {
             "Description": "Approach region of interest",
             "Personnel": 2,
             "Required": true,
-            "Duration": 2
+            "Duration": 2,
+            "roiEquation": "0"
           },
           {
             "Description": "Trench",
             "Personnel": 1,
             "Required": true,
-            "Duration": 1
+            "Duration": 1,
+            "roiEquation": "0"
           },
           {
             "Description": "Float Sample",
             "Personnel": 1,
             "Required": true,
-            "Duration": 1
+            "Duration": 1,
+            "roiEquation": "0"
           },
           {
             "Description": "Scoop",
             "Personnel": 1,
             "Required": true,
-            "Duration": 1
+            "Duration": 1,
+            "roiEquation": "0"
           },
           {
             "Description": "Rake",
             "Personnel": 1,
             "Required": true,
-            "Duration": 1
+            "Duration": 1,
+            "roiEquation": "0"
           },
           {
             "Description": "Trench",
             "Personnel": 1,
             "Required": true,
-            "Duration": 1
+            "Duration": 1,
+            "roiEquation": "0"
           },
           {
             "Description": "Clean up",
             "Personnel": 2,
             "Required": true,
-            "Duration": 2
+            "Duration": 2,
+            "roiEquation": "0"
           },
           {
             "Description": "Departure",
             "Personnel": 2,
             "Required": true,
-            "Duration": 2
+            "Duration": 2,
+            "roiEquation": "0"
           }
         ]
       },
@@ -385,79 +546,92 @@
             "Description": "Traverse to work site",
             "Personnel": 2,
             "Required": true,
-            "Duration": 2
+            "Duration": 2,
+            "roiEquation": "0"
           },
           {
             "Description": "Egress Rover",
             "Personnel": 2,
             "Required": true,
-            "Duration": 2
+            "Duration": 2,
+            "roiEquation": "0"
           },
           {
             "Description": "Context survey the work site",
             "Personnel": 1,
             "Required": true,
-            "Duration": 1
+            "Duration": 1,
+            "roiEquation": "0"
           },
           {
             "Description": "Collect equipment",
             "Personnel": 1,
             "Required": true,
-            "Duration": 1
+            "Duration": 1,
+            "roiEquation": "0"
           },
           {
             "Description": "Locate specific zone inside crater",
             "Personnel": 1,
             "Required": true,
-            "Duration": 1
+            "Duration": 1,
+            "roiEquation": "0"
           },
           {
             "Description": "Preconfigure suit thermal settings",
             "Personnel": 2,
             "Required": true,
-            "Duration": 2
+            "Duration": 2,
+            "roiEquation": "0"
           },
           {
             "Description": "Approach shadowed region",
             "Personnel": 2,
             "Required": true,
-            "Duration": 2
+            "Duration": 2,
+            "roiEquation": "0"
           },
           {
             "Description": "Operate handheld instruments",
             "Personnel": 2,
             "Required": false,
-            "Duration": 2
+            "Duration": 2,
+            "roiEquation": "5x"
           },
           {
             "Description": "Perform deep core sampling",
             "Personnel": 2,
             "Required": false,
-            "Duration": 2
+            "Duration": 2,
+            "roiEquation": "5x"
           },
           {
             "Description": "Deploy ISRU environment",
             "Personnel": 2,
             "Required": false,
-            "Duration": 2
+            "Duration": 2,
+            "roiEquation": "5x"
           },
           {
             "Description": "Insert samples into sealed container",
             "Personnel": 2,
             "Required": false,
-            "Duration": 2
+            "Duration": 2,
+            "roiEquation": "5x"
           },
           {
             "Description": "Clean up",
             "Personnel": 2,
             "Required": true,
-            "Duration": 2
+            "Duration": 2,
+            "roiEquation": "0"
           },
           {
             "Description": "Departure",
             "Personnel": 2,
             "Required": true,
-            "Duration": 2
+            "Duration": 2,
+            "roiEquation": "0"
           }
         ]
       }

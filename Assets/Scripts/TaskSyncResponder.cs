@@ -47,27 +47,15 @@ public class TaskSyncResponder : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_PerformTaskClear(string title, string ev1Body, string ev2Body)
     {
-        var panel = FindFirstObjectByType<EVATaskPanelController>();
-        if (panel != null)
-        {
-            panel.PerformClearAll(title, ev1Body, ev2Body);
-        }
+        var ovController = FindFirstObjectByType<ObjectiveVerificationController>();
+        if (ovController != null)
+            ovController.SetTaskLists(title, ev1Body, ev2Body);
         GlobalManager.Instance?.UpdateTaskList(title, ev1Body, ev2Body);
     }
 
     public void BroadcastTaskListTitleUpdate(string newTitle)
     {
         photonView.RPC("RPC_UpdateTaskListTitle", RpcTarget.All, newTitle);
-    }
-
-    [PunRPC]
-    void RPC_UpdateTaskListTitle(string newTitle)
-    {
-        var panel = FindFirstObjectByType<EVATaskPanelController>();
-        if (panel != null)
-        {
-            panel.SetTaskListTitle(newTitle);
-        }
     }
 
     public void BroadcastTaskTextUpdate(string containerName, int index, string newText)
@@ -142,4 +130,20 @@ public class TaskSyncResponder : MonoBehaviourPunCallbacks
             panel.ReceiveFullTaskSync(ev1Texts, ev2Texts);
         }
     }
+
+    [PunRPC]
+    void RPC_UpdateObjectiveVerificationTotals(int durationTotal, int roiTotal)
+    {
+        var controller = FindFirstObjectByType<ObjectiveVerificationController>();
+        if (controller != null)
+        {
+            controller.SetTotals(durationTotal, roiTotal);
+        }
+    }
+
+    public void BroadcastObjectiveTotals(int durationTotal, int roiTotal)
+    {
+        photonView.RPC("RPC_UpdateObjectiveVerificationTotals", RpcTarget.All, durationTotal, roiTotal);
+    }
+
 }

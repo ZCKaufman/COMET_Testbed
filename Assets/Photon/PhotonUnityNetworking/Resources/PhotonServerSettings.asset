@@ -60,6 +60,7 @@ MonoBehaviour:
   - RPC_PerformTaskClear
   - ReceiveDurationUpdate
   - RPC_UpdateDuration
+  - RPC_UpdateObjectiveVerificationTotals
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0
