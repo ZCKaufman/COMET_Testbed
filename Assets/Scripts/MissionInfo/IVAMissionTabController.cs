@@ -26,6 +26,7 @@ public class IVAMissionInfoTabController : MonoBehaviour
         {
             Debug.Log("Loaded mission info: " + config.MissionInfo.All.MissionDescription);
             SetMissionDescription(config.MissionInfo.All.MissionDescription);
+            GlobalManager.Instance.InitializeGlobalDurationsFromConfig(ConfigLoader.TaskPlanning);
         }
         else
         {

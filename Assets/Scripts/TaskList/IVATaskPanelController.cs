@@ -22,12 +22,55 @@ public class IVATaskPanelController : MonoBehaviour
 
     private List<int> ev1Durations = new();
     private List<int> ev2Durations = new();
+    private Dictionary<string, List<int>> storedEV1Durations = new();
+    private Dictionary<string, List<int>> storedEV2Durations = new();
+
 
     void Start()
     {
         PopulateDropdown();
         poiDropdown.onValueChanged.AddListener(OnDropdownChanged);
     }
+
+    private void OnEnable()
+    {
+        if (poiDropdown != null && poiDropdown.value > 0)
+        {
+            RefreshTaskDurationsFromGlobal();
+        }
+    }
+
+    private void RefreshTaskDurationsFromGlobal()
+    {
+        string poiName = GetCurrentPOIName();
+        var globalDurations = GlobalManager.Instance.GetDurationsForPOI(poiName);
+
+        for (int i = 0; i < currentTaskItems.Count - 1; i++)
+        {
+            if (i >= globalDurations.Count)
+                continue;
+
+            var taskObj = currentTaskItems[i].transform;
+
+            var durationField = taskObj.Find("DurationField")?.GetComponent<TMP_InputField>();
+            var roiField = taskObj.Find("ROIField")?.GetComponent<TMP_InputField>();
+
+            int duration = globalDurations[i];
+            if (durationField != null)
+                durationField.text = duration.ToString();
+
+            if (roiField != null)
+            {
+                string roiEq = ConfigLoader.TaskPlanning.POIs
+                    .Find(p => p.Name == currentTemplateType)?.Tasks[i].roiEquation ?? "0";
+                float roiVal = EvaluateEquation(roiEq, duration);
+                roiField.text = roiVal.ToString("0");
+            }
+        }
+
+        UpdateLocalTotals();
+    }
+
 
     private void PopulateDropdown()
     {
@@ -88,6 +131,10 @@ public class IVATaskPanelController : MonoBehaviour
     {
         ClearTaskList();
 
+        // Determine the current POI name
+        string poiName = poiDropdown.options[poiDropdown.value].text;
+        List<int> globalDurations = GlobalManager.Instance.GetDurationsForPOI(poiName);
+
         for (int i = 0; i < tasks.Count; i++)
         {
             TaskEntry task = tasks[i];
@@ -103,25 +150,32 @@ public class IVATaskPanelController : MonoBehaviour
             if (numberLabel != null) numberLabel.text = (i + 1).ToString();
             if (description != null) description.text = task.Description;
             if (personnel != null) personnel.text = task.Personnel.ToString();
-            if (duration != null) duration.text = task.Duration.ToString();
-            if (roi != null && duration != null)
+
+            int durationVal = task.Duration;
+            if (i < globalDurations.Count && globalDurations[i] > 0)
             {
-                float roiValue = EvaluateEquation(task.roiEquation ?? "0", task.Duration);
+                durationVal = globalDurations[i];
+            }
+            if (duration != null) duration.text = durationVal.ToString();
+
+            if (roi != null)
+            {
+                float roiValue = EvaluateEquation(task.roiEquation ?? "0", durationVal);
                 roi.text = roiValue.ToString("0");
             }
 
             // Override disabled color behavior
             var colors = description.colors;
-            colors.disabledColor = description.image.color;  
+            colors.disabledColor = description.image.color;
             description.colors = colors;
 
-            colors.disabledColor = personnel.image.color;  
+            colors.disabledColor = personnel.image.color;
             personnel.colors = colors;
 
-            colors.disabledColor = duration.image.color;  
+            colors.disabledColor = duration.image.color;
             duration.colors = colors;
 
-            colors.disabledColor = roi.image.color;  
+            colors.disabledColor = roi.image.color;
             roi.colors = colors;
         }
 
@@ -133,6 +187,7 @@ public class IVATaskPanelController : MonoBehaviour
         Canvas.ForceUpdateCanvases();
         StartCoroutine(ScrollToBottomNextFrame());
     }
+
 
     private IEnumerator ScrollToBottomNextFrame()
     {
@@ -243,15 +298,23 @@ public class IVATaskPanelController : MonoBehaviour
 
     public void ReceiveDurationUpdate(string role, int index, int value)
     {
-        EnsureListSize(ev1Durations, index + 1);
-        EnsureListSize(ev2Durations, index + 1);
+        if (poiDropdown == null || poiDropdown.value == 0) return;
 
-        if (role == "EV1")
-            ev1Durations[index] = value;
-        else if (role == "EV2")
-            ev2Durations[index] = value;
+        string poiName = poiDropdown.options[poiDropdown.value].text;
+        var targetDict = role == "EV1" ? storedEV1Durations : storedEV2Durations;
 
-        int merged = Mathf.Max(ev1Durations[index], ev2Durations[index]);
+        if (!targetDict.ContainsKey(poiName))
+            targetDict[poiName] = new List<int>();
+
+        EnsureListSize(targetDict[poiName], index + 1);
+        targetDict[poiName][index] = value;
+
+        // Only update UI if currently viewing the active POI
+        if (poiName != GetCurrentPOIName()) return;
+
+        int val1 = GetStoredDuration(storedEV1Durations, poiName, index);
+        int val2 = GetStoredDuration(storedEV2Durations, poiName, index);
+        int merged = Mathf.Max(val1, val2);
 
         if (index < 0 || index >= currentTaskItems.Count)
         {
@@ -259,11 +322,12 @@ public class IVATaskPanelController : MonoBehaviour
             return;
         }
 
-        TMP_InputField durationField = currentTaskItems[index].transform.Find("DurationField")?.GetComponent<TMP_InputField>();
+        var durationField = currentTaskItems[index].transform.Find("DurationField")?.GetComponent<TMP_InputField>();
+        var roiField = currentTaskItems[index].transform.Find("ROIField")?.GetComponent<TMP_InputField>();
+
         if (durationField != null)
             durationField.text = merged.ToString();
 
-        TMP_InputField roiField = currentTaskItems[index].transform.Find("ROIField")?.GetComponent<TMP_InputField>();
         if (roiField != null)
         {
             string roiEq = ConfigLoader.TaskPlanning.POIs
@@ -273,7 +337,18 @@ public class IVATaskPanelController : MonoBehaviour
         }
 
         UpdateLocalTotals();
+    }
 
+    private int GetStoredDuration(Dictionary<string, List<int>> store, string poi, int index)
+    {
+        if (store.TryGetValue(poi, out var list) && index < list.Count)
+            return list[index];
+        return 0;
+    }
+
+    private string GetCurrentPOIName()
+    {
+        return poiDropdown.options[poiDropdown.value].text;
     }
 
     private void EnsureListSize(List<int> list, int size)

@@ -34,9 +34,16 @@ public class TaskSyncResponder : MonoBehaviourPunCallbacks
         }
     }
 
-    public void BroadcastDurationUpdate(string containerName, int index, int newDuration)
+    public void BroadcastDurationUpdate(string poiName, string containerName, int index, int newDuration)
     {
         photonView.RPC("RPC_UpdateDuration", RpcTarget.All, containerName, index, newDuration);
+        photonView.RPC("RPC_ReceiveDurationUpdate", RpcTarget.Others, poiName, containerName, index, newDuration);
+    }
+    [PunRPC]
+    public void RPC_ReceiveDurationUpdate(string poiName, string containerName, int index, int duration)
+    {
+        var controller = UnityEngine.Object.FindFirstObjectByType<EVATaskPanelController>();
+        controller?.ReceiveDurationUpdate(poiName, containerName, index, duration);
     }
 
     public void BroadcastTaskClear(string title, string ev1Body, string ev2Body)
@@ -132,7 +139,7 @@ public class TaskSyncResponder : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    void RPC_UpdateObjectiveVerificationTotals(string title,int durationTotal, int roiTotal)
+    void RPC_UpdateObjectiveVerificationTotals(string title, int durationTotal, int roiTotal)
     {
         GlobalManager.Instance?.UpdateTaskListSummary(title, durationTotal, roiTotal);
 
@@ -143,4 +150,25 @@ public class TaskSyncResponder : MonoBehaviourPunCallbacks
         photonView.RPC("RPC_UpdateObjectiveVerificationTotals", RpcTarget.All, title, durationTotal, roiTotal);
     }
 
+    [PunRPC]
+    public void RPC_UpdateDurationForPOI(string poi, int index, int value)
+    {
+        GlobalManager.Instance?.UpdateGlobalDuration(poi, index, value);
+    }
+
+    public void BroadcastDurationForPOI(string poi, int index, int value)
+    {
+        photonView.RPC("RPC_UpdateDurationForPOI", RpcTarget.All, poi, index, value);
+    }
+    [PunRPC]
+    public void RPC_UpdateIndividualDuration(string poiName, int taskIndex, string role, int parsed)
+    {
+        GlobalManager.Instance?.UpdateIndividualDuration(poiName, taskIndex, role, parsed);
+
+    }
+
+    public void BroadcastIndividualDuration(string poiName, int taskIndex, string role, int parsed)
+    {
+        photonView.RPC("RPC_UpdateIndividualDuration", RpcTarget.All, poiName, taskIndex, role, parsed);
+    }
 }

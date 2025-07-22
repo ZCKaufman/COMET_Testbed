@@ -1,4 +1,3 @@
-
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -42,6 +41,78 @@ public class EVATaskPanelController : MonoBehaviour
         if (PhotonNetwork.IsConnectedAndReady && PhotonNetwork.IsMasterClient)
             TaskSyncResponder.Instance?.BroadcastFullSyncRequest();
     }
+
+    void OnEnable()
+    {
+        if (poiDropdown != null && poiDropdown.value > 0)
+        {
+            Debug.Log("[EVATaskPanelController] Rebuilding task list on enable");
+            OnDropdownChanged(poiDropdown.value);
+        }
+
+        if (GlobalManager.Instance != null)
+        {
+            GlobalManager.Instance.OnTaskListSummaryUpdated += HandleGlobalDurationUpdate;
+        }
+    }
+
+    void OnDisable()
+    {
+        if (GlobalManager.Instance != null)
+        {
+            GlobalManager.Instance.OnTaskListSummaryUpdated -= HandleGlobalDurationUpdate;
+        }
+    }
+    public void ReceiveDurationUpdate(string poiName, string containerName, int index, int newDuration)
+    {
+        if (poiName != currentPOIName) return;
+
+        List<TMP_InputField> list = containerName == "EV1" ? ev1Durations : ev2Durations;
+        if (index < 0 || index >= list.Count) return;
+
+        TMP_InputField targetField = list[index];
+        if (targetField != null)
+        {
+            suppressChange = true;
+            targetField.SetTextWithoutNotify(newDuration.ToString());
+            suppressChange = false;
+        }
+    }
+
+
+    private void HandleGlobalDurationUpdate(string title, int _, int __)
+    {
+        if (GlobalManager.Instance.PlayerRole != "EVA") return;
+        if (title != currentPOIName) return;
+
+        RefreshDurationsFromGlobalManager();
+    }
+    public void RefreshDurationsFromGlobalManager()
+    {
+        if (string.IsNullOrWhiteSpace(currentPOIName)) return;
+
+        for (int i = 0; i < ev1Durations.Count; i++)
+        {
+            if (GlobalManager.Instance.IndividualDurations.TryGetValue(currentPOIName, out var taskDict) &&
+                taskDict.TryGetValue(i, out var roleDict) &&
+                roleDict.TryGetValue("EV1", out var ev1Val))
+            {
+                ev1Durations[i].SetTextWithoutNotify(ev1Val.ToString());
+            }
+        }
+
+        for (int i = 0; i < ev2Durations.Count; i++)
+        {
+            if (GlobalManager.Instance.IndividualDurations.TryGetValue(currentPOIName, out var taskDict) &&
+                taskDict.TryGetValue(i, out var roleDict) &&
+                roleDict.TryGetValue("EV2", out var ev2Val))
+            {
+                ev2Durations[i].SetTextWithoutNotify(ev2Val.ToString());
+            }
+        }
+    }
+
+
 
     private void PopulateDropdown()
     {
@@ -110,38 +181,50 @@ public class EVATaskPanelController : MonoBehaviour
         TMP_InputField taskField = item.transform.Find("TaskInputField")?.GetComponent<TMP_InputField>();
         TMP_InputField durationField = item.transform.Find("DurationInputField")?.GetComponent<TMP_InputField>();
 
-        if (numberLabel != null) numberLabel.text = (index + 1) + ".";
+        if (numberLabel != null)
+            numberLabel.text = (index + 1) + ".";
+
         if (taskField != null)
         {
             taskField.text = task.Description;
-            taskField.interactable = false; // ✅ Always non-editable
-            taskField.caretWidth = 0;        // Optional: hide blinking cursor
+            taskField.interactable = false;
+            taskField.caretWidth = 0;
 
-            // ✅ Color-code description field background
-            Color requiredColor = new Color(1f, 0.85f, 0.85f);     // Light red
-            Color optionalColor = new Color(0.85f, 0.95f, 1f);     // Light blue
+            Color requiredColor = new Color(1f, 0.85f, 0.85f);
+            Color optionalColor = new Color(0.85f, 0.95f, 1f);
             taskField.image.color = task.Required ? requiredColor : optionalColor;
 
-            // Override disabled color behavior
             var colors = taskField.colors;
-            colors.disabledColor = taskField.image.color;  
+            colors.disabledColor = taskField.image.color;
             taskField.colors = colors;
         }
 
         if (durationField != null)
         {
-            durationField.text = task.Duration.ToString();
+            string poiName = currentPOIName;
+            string role = container == ev1Container ? "EV1" : "EV2";
+            int taskIndex = index;
+
+            // === Get individual duration from GlobalManager.Instance.IndividualDurations ===
+            int durationValue = task.Duration;
+            if (GlobalManager.Instance.IndividualDurations.TryGetValue(poiName, out var poiDict) &&
+                poiDict.TryGetValue(taskIndex, out var roleDict) &&
+                roleDict.TryGetValue(role, out int individualValue))
+            {
+                durationValue = individualValue;
+            }
+
+            durationField.text = durationValue.ToString();
             durationField.interactable = true;
             durationField.image.color = Color.white;
-
-            int taskIndex = index;
-            string role = container == ev1Container ? "EV1" : "EV2";
 
             durationField.onValueChanged.AddListener((string newValue) =>
             {
                 if (int.TryParse(newValue, out int parsed))
                 {
-                    TaskSyncResponder.Instance?.BroadcastDurationUpdate(role, taskIndex, parsed);
+                    TaskSyncResponder.Instance?.BroadcastDurationUpdate(poiName,role, taskIndex, parsed);
+                    TaskSyncResponder.Instance?.BroadcastDurationForPOI(poiName, taskIndex, parsed);
+                    TaskSyncResponder.Instance?.BroadcastIndividualDuration(poiName, taskIndex, role, parsed);
                 }
             });
         }
@@ -149,6 +232,7 @@ public class EVATaskPanelController : MonoBehaviour
         taskList.Insert(index, taskField);
         durationList.Insert(index, durationField);
     }
+
 
     private void RebuildTaskList(Transform container, List<TMP_InputField> taskList, List<TMP_InputField> durationList, List<TaskEntry> tasks)
     {
@@ -222,13 +306,14 @@ public class EVATaskPanelController : MonoBehaviour
 
         if (EV1HeaderRow != null)
             Debug.Log("Setting EV1HeaderRow to false");
-            EV1HeaderRow.SetActive(false);
+        EV1HeaderRow.SetActive(false);
 
         if (EV2HeaderRow != null)
             EV2HeaderRow.SetActive(false);
 
         var (durationTotal, roiTotal) = CalculateTotals();
         TaskSyncResponder.Instance?.BroadcastObjectiveTotals(title, durationTotal, roiTotal);
+
     }
 
     private (int totalDuration, int totalROI) CalculateTotals()
