@@ -132,18 +132,15 @@ public class TaskSyncResponder : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    void RPC_UpdateObjectiveVerificationTotals(int durationTotal, int roiTotal)
+    void RPC_UpdateObjectiveVerificationTotals(string title,int durationTotal, int roiTotal)
     {
-        var controller = FindFirstObjectByType<ObjectiveVerificationController>();
-        if (controller != null)
-        {
-            controller.SetTotals(durationTotal, roiTotal);
-        }
+        GlobalManager.Instance?.UpdateTaskListSummary(title, durationTotal, roiTotal);
+
     }
 
-    public void BroadcastObjectiveTotals(int durationTotal, int roiTotal)
+    public void BroadcastObjectiveTotals(string title, int durationTotal, int roiTotal)
     {
-        photonView.RPC("RPC_UpdateObjectiveVerificationTotals", RpcTarget.All, durationTotal, roiTotal);
+        photonView.RPC("RPC_UpdateObjectiveVerificationTotals", RpcTarget.All, title, durationTotal, roiTotal);
     }
 
 }

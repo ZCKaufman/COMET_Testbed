@@ -29,6 +29,81 @@ public class ObjectiveVerificationController : MonoBehaviour
     [SerializeField] private TMP_Text ev1TaskText;
     [SerializeField] private TMP_Text ev2TaskText;
 
+    void OnEnable()
+    {
+        Debug.Log("[IVA] OnEnable() called");
+
+        if (GlobalManager.Instance != null)
+        {
+            Debug.Log("[IVA] Subscribing to OnTaskListUpdated");
+            GlobalManager.Instance.OnTaskListUpdated -= HandleGlobalTaskListUpdate;
+            GlobalManager.Instance.OnTaskListUpdated += HandleGlobalTaskListUpdate;
+
+            GlobalManager.Instance.OnTaskListSummaryUpdated -= HandleGlobalTaskListSummaryUpdated;
+            GlobalManager.Instance.OnTaskListSummaryUpdated += HandleGlobalTaskListSummaryUpdated;
+
+
+            UpdateTotalsFromSummaries();
+
+            string latestTitle = GlobalManager.Instance.LatestTaskListTitle;
+            if (!string.IsNullOrEmpty(latestTitle) && !taskTitles.Contains(latestTitle))
+            {
+                Debug.Log("[IVA] Applying latest task list: " + latestTitle);
+                HandleGlobalTaskListUpdate(
+                    latestTitle,
+                    GlobalManager.Instance.LatestEv1Tasks,
+                    GlobalManager.Instance.LatestEv2Tasks
+                );
+            }
+            else
+            {
+                Debug.Log("[IVA] Skipping duplicate task list load");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("[IVA] GlobalManager.Instance is null on enable");
+        }
+    }
+    private void HandleGlobalTaskListSummaryUpdated(string title, int duration, int roi)
+    {
+        Debug.Log($"[IVA] Received summary update for {title}: Duration={duration}, ROI={roi}");
+        UpdateTotalsFromSummaries();
+    }
+
+    private void UpdateTotalsFromSummaries()
+    {
+        if (GlobalManager.Instance.TaskListSummaries != null)
+        {
+            int totalDuration = 0;
+            int totalROI = 0;
+
+            foreach (var kvp in GlobalManager.Instance.TaskListSummaries)
+            {
+                totalDuration += kvp.Value.Duration;
+                totalROI += kvp.Value.ROI;
+            }
+
+            SetTotals(totalDuration, totalROI);
+        }
+    }
+
+    void OnDisable()
+    {
+        if (GlobalManager.Instance != null)
+        {
+            GlobalManager.Instance.OnTaskListUpdated -= HandleGlobalTaskListUpdate;
+            GlobalManager.Instance.OnTaskListSummaryUpdated -= HandleGlobalTaskListSummaryUpdated;
+        }
+    }
+
+
+    private void HandleGlobalTaskListUpdate(string title, string ev1List, string ev2List)
+    {
+        Debug.Log("Global update received in IVA: " + title);
+        SetTaskLists(title, ev1List, ev2List);
+    }
+
     void Start()
     {
         ShowCompletedTaskLists();

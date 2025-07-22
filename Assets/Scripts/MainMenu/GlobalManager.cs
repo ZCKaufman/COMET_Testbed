@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class GlobalManager : MonoBehaviour
 {
@@ -45,10 +47,28 @@ public class GlobalManager : MonoBehaviour
 
     public void UpdateTaskList(string title, string ev1, string ev2)
     {
-        Debug.Log("[RPC_GlobalTaskUpdate] Called with title: " + title +  ev1 + ev2);
+        Debug.Log("[RPC_GlobalTaskUpdate] Called with title: " + title + ev1 + ev2);
         LatestTaskListTitle = title;
         LatestEv1Tasks = ev1;
         LatestEv2Tasks = ev2;
         OnTaskListUpdated?.Invoke(title, ev1, ev2);
     }
+    public Dictionary<string, (int Duration, int ROI)> TaskListSummaries { get; private set; } = new();
+
+    public delegate void TaskListSummaryUpdated(string title, int duration, int roi);
+    public event TaskListSummaryUpdated OnTaskListSummaryUpdated;
+
+    public void UpdateTaskListSummary(string title, int duration, int roi)
+    {
+        title = title.Trim();
+
+        TaskListSummaries[title] = (duration, roi);
+
+        Debug.Log($"[GlobalManager] TaskList Summary Updated: {title} => Duration={duration}, ROI={roi}");
+
+        OnTaskListSummaryUpdated?.Invoke(title, duration, roi);
+
+    }
+
+
 }

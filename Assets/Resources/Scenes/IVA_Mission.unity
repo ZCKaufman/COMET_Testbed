@@ -2108,6 +2108,7 @@ GameObject:
   - component: {fileID: 125520933}
   - component: {fileID: 125520932}
   - component: {fileID: 125520931}
+  - component: {fileID: 125520934}
   m_Layer: 6
   m_Name: POIPlacer
   m_TagString: Untagged
@@ -2187,6 +2188,28 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 125520929}
   m_CullTransparentMesh: 1
+--- !u!114 &125520934
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 125520929}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 997
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &126057687
 GameObject:
   m_ObjectHideFlags: 0
@@ -10017,7 +10040,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8521167656373007912, guid: e144faafd59284e0f802091153b29e52, type: 3}
       propertyPath: sceneViewId
-      value: 4
+      value: 994
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -14990,6 +15013,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1136285941}
   - component: {fileID: 1136285940}
+  - component: {fileID: 1136285942}
   m_Layer: 0
   m_Name: MissionUIManager
   m_TagString: Untagged
@@ -15032,6 +15056,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1136285942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1136285939}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d062c8853a20d574282879f1fc70c431, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  delayInSeconds: 0.2
 --- !u!1 &1158328611
 GameObject:
   m_ObjectHideFlags: 0
@@ -17523,7 +17560,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents: []
-  sceneViewId: 5
+  sceneViewId: 996
   InstantiationId: 0
   isRuntimeInstantiated: 0
 --- !u!1 &1454070961
@@ -22988,6 +23025,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1893714995}
   - component: {fileID: 1893714994}
+  - component: {fileID: 1893714996}
   m_Layer: 0
   m_Name: RouteManager
   m_TagString: Untagged
@@ -23026,6 +23064,28 @@ Transform:
   m_Children: []
   m_Father: {fileID: 221998948}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1893714996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1893714993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 998
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &1894273014
 GameObject:
   m_ObjectHideFlags: 0
@@ -24484,7 +24544,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8521167656373007912, guid: 37ada6990c79e402aa43af3733295305, type: 3}
       propertyPath: sceneViewId
-      value: 2
+      value: 995
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

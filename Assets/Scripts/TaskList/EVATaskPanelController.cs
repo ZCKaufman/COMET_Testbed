@@ -154,7 +154,7 @@ public class EVATaskPanelController : MonoBehaviour
     {
         ClearTaskList(container, taskList, durationList);
         if (EV1HeaderRow != null)
-            Debug.Log("Setting EV1HeaderRow to true");
+            //Debug.Log("Setting EV1HeaderRow to true");
             EV1HeaderRow.SetActive(true);
 
         if (EV2HeaderRow != null)
@@ -228,7 +228,7 @@ public class EVATaskPanelController : MonoBehaviour
             EV2HeaderRow.SetActive(false);
 
         var (durationTotal, roiTotal) = CalculateTotals();
-        TaskSyncResponder.Instance?.BroadcastObjectiveTotals(durationTotal, roiTotal);
+        TaskSyncResponder.Instance?.BroadcastObjectiveTotals(title, durationTotal, roiTotal);
     }
 
     private (int totalDuration, int totalROI) CalculateTotals()
