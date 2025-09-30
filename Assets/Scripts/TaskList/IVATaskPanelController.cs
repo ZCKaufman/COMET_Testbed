@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 using System.Collections;
+using System;
 
 public class IVATaskPanelController : MonoBehaviour
 {
@@ -360,22 +361,134 @@ public class IVATaskPanelController : MonoBehaviour
     private float EvaluateEquation(string expression, float x)
     {
         // Insert explicit multiplication between number and 'x' (e.g., 5x → 5*x)
-        expression = System.Text.RegularExpressions.Regex.Replace(expression, @"(\d)(x)", "$1*$2");
-
-        // Now replace x with the actual value
-        expression = expression.Replace("x", x.ToString());
-
+        expression = System.Text.RegularExpressions.Regex.Replace(expression, @"(\d)(x)", "$1*$2", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+        
+        // Replace x with the actual value (case insensitive)
+        expression = System.Text.RegularExpressions.Regex.Replace(expression, @"\bx\b", x.ToString(), System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+        
+        // Pre-process log functions
+        expression = ProcessLogFunctions(expression);
+        
+        // Pre-process exponential functions (e^...)
+        expression = ProcessExponentialFunctions(expression);
+        
         try
         {
             System.Data.DataTable table = new System.Data.DataTable();
             object result = table.Compute(expression, "");
             return float.TryParse(result.ToString(), out float val) ? val : 0;
         }
-        catch
+        catch (System.Exception ex)
         {
-            Debug.LogWarning("Invalid ROI equation: " + expression);
+            Debug.LogWarning("Invalid ROI equation: " + expression + " | Error: " + ex.Message);
             return 0;
         }
+    }
+
+    private string ProcessExponentialFunctions(string expression)
+    {
+        int startIndex = 0;
+        while (true)
+        {
+            int eIndex = expression.IndexOf("e^", startIndex);
+            if (eIndex == -1) break;
+            
+            int parenStart = eIndex + 2;
+            if (parenStart >= expression.Length || expression[parenStart] != '(')
+            {
+                startIndex = eIndex + 2;
+                continue;
+            }
+            
+            // Find matching closing parenthesis
+            int depth = 1;
+            int parenEnd = parenStart + 1;
+            while (parenEnd < expression.Length && depth > 0)
+            {
+                if (expression[parenEnd] == '(') depth++;
+                else if (expression[parenEnd] == ')') depth--;
+                parenEnd++;
+            }
+            
+            if (depth != 0)
+            {
+                // Unmatched parentheses
+                startIndex = eIndex + 2;
+                continue;
+            }
+            
+            // Extract the exponent (without outer parens)
+            string exponent = expression.Substring(parenStart + 1, parenEnd - parenStart - 2);
+            
+            try
+            {
+                System.Data.DataTable table = new System.Data.DataTable();
+                object exponentResult = table.Compute(exponent, "");
+                double exponentVal = Convert.ToDouble(exponentResult);
+                double expResult = Math.Exp(exponentVal);
+                
+                // Replace e^(...) with the result
+                string replacement = expResult.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                expression = expression.Substring(0, eIndex) + replacement + expression.Substring(parenEnd);
+                
+                // Continue from where we replaced
+                startIndex = eIndex + replacement.Length;
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogWarning($"Exponential evaluation failed for: {exponent} | Error: {ex.Message}");
+                startIndex = eIndex + 2;
+            }
+        }
+        
+        return expression;
+    }
+
+    private string ProcessLogFunctions(string expression)
+    {
+        // Handle log10(...)
+        expression = System.Text.RegularExpressions.Regex.Replace(
+            expression,
+            @"log10\(([^)]+)\)",
+            match => {
+                string inner = match.Groups[1].Value;
+                try
+                {
+                    System.Data.DataTable table = new System.Data.DataTable();
+                    object innerResult = table.Compute(inner, "");
+                    double innerVal = Convert.ToDouble(innerResult);
+                    double logResult = Math.Log10(innerVal);
+                    return logResult.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                }
+                catch
+                {
+                    return "0";
+                }
+            }
+        );
+        
+        // Handle log(...) - natural log
+        expression = System.Text.RegularExpressions.Regex.Replace(
+            expression,
+            @"log\(([^)]+)\)",
+            match => {
+                string inner = match.Groups[1].Value;
+                try
+                {
+                    System.Data.DataTable table = new System.Data.DataTable();
+                    object innerResult = table.Compute(inner, "");
+                    double innerVal = Convert.ToDouble(innerResult);
+                    double logResult = Math.Log(innerVal);
+                    return logResult.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                }
+                catch
+                {
+                    return "0";
+                }
+            }
+        );
+        
+        return expression;
     }
 
 }

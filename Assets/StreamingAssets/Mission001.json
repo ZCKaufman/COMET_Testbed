@@ -230,35 +230,35 @@
             "Personnel": 1,
             "Required": false,
             "Duration": 0,
-            "roiEquation": "2 / (1 + e^(.6*(X-5))"
+            "roiEquation": "2 / (1 + e^(.6*(X-5)))"
           },
           {
             "Description": "Image spectrometer deployment",
             "Personnel": 1,
             "Required": false,
             "Duration": 0,
-            "roiEquation": "1 / (1 + e^(.6*(X-10))"
+            "roiEquation": "1 / (1 + e^(.6*(X-10)))"
           },
           {
             "Description": "Surface contact",
             "Personnel": 1,
             "Required": false,
             "Duration": 0,
-            "roiEquation": "5 / (1 + e^(.6*(X-10))"
+            "roiEquation": "5 / (1 + e^(.6*(X-10)))"
           },
           {
             "Description": "Loose rock collection",
             "Personnel": 1,
             "Required": false,
             "Duration": 0,
-            "roiEquation": "5 / (1 + e^(.6*(X-5))"
+            "roiEquation": "5 / (1 + e^(.6*(X-5)))"
           },
           {
             "Description": "Raking",
             "Personnel": 1,
             "Required": false,
             "Duration": 0,
-            "roiEquation": "5 / (1 + e^(.6*(X-11))"
+            "roiEquation": "5 / (1 + e^(.6*(X-11)))"
           },
           {
             "Description": "Collect equipment",
@@ -272,28 +272,28 @@
             "Personnel": 1,
             "Required": false,
             "Duration": 0,
-            "roiEquation": "17 / (1 + e^(.6*(X-30))"
+            "roiEquation": "17 / (1 + e^(.6*(X-30)))"
           },
           {
             "Description": "Coring",
             "Personnel": 1,
             "Required": false,
             "Duration": 0,
-            "roiEquation": "24 / (1 + e^(.6*(X-25))"
+            "roiEquation": "24 / (1 + e^(.6*(X-25)))"
           },
           {
             "Description": "Float sample collection",
             "Personnel": 1,
             "Required": false,
             "Duration": 0,
-            "roiEquation": "7 / (1 + e^(.6*(X-10))"
+            "roiEquation": "7 / (1 + e^(.6*(X-10)))"
           },
           {
             "Description": "Rock chipping",
             "Personnel": 1,
             "Required": false,
             "Duration": 0,
-            "roiEquation": "10 / (1 + e^(.6*(X-10))"
+            "roiEquation": "10 / (1 + e^(.6*(X-10)))"
           },
           {
             "Description": "Clean up",
@@ -307,7 +307,7 @@
             "Personnel": 2,
             "Required": true,
             "Duration": 15,
-            "roiEquation": "29 / (1 + e^(.6*(X-35))"
+            "roiEquation": "29 / (1 + e^(.6*(X-35)))"
           },
           {
             "Description": "Clean up",
@@ -403,35 +403,35 @@
             "Personnel": 1,
             "Required": false,
             "Duration": 0,
-            "roiEquation": "10 / (1 + e^(.6*(X-7))"
+            "roiEquation": "10 / (1 + e^(.6*(X-7)))"
           },
           {
             "Description": "Context survey region of interest",
             "Personnel": 2,
             "Required": true,
             "Duration": 5,
-            "roiEquation": "10 / (1 + e^(.6*(X-7))"
+            "roiEquation": "10 / (1 + e^(.6*(X-7)))"
           },
           {
             "Description": "Acquire geological sample",
             "Personnel": 2,
             "Required": false,
             "Duration": 0,
-            "roiEquation": "23 / (1 + e^(.6*(X-5))"
+            "roiEquation": "23 / (1 + e^(.6*(X-5)))"
           },
           {
             "Description": "Weigh samples",
             "Personnel": 2,
             "Required": false,
             "Duration": 0,
-            "roiEquation": "1 / (1 + e^(.6*(X-3))"
+            "roiEquation": "1 / (1 + e^(.6*(X-3)))"
           },
           {
             "Description": "Deployment seismic instruments",
             "Personnel": 2,
             "Required": true,
             "Duration": 20,
-            "roiEquation": "30 / (1 + e^(.6*(X-20))"
+            "roiEquation": "30 / (1 + e^(.6*(X-20)))"
           },
           {
             "Description": "Clean up",
@@ -499,35 +499,35 @@
             "Personnel": 1,
             "Required": false,
             "Duration": 0,
-            "roiEquation": "12 / (1 + e^(.6*(X-10))"
+            "roiEquation": "12 / (1 + e^(.6*(X-10)))"
           },
           {
             "Description": "Float Sample",
             "Personnel": 1,
             "Required": false,
             "Duration": 0,
-            "roiEquation": "4 / (1 + e^(.6*(X-10))"
+            "roiEquation": "4 / (1 + e^(.6*(X-10)))"
           },
           {
             "Description": "Scoop",
             "Personnel": 1,
             "Required": false,
             "Duration": 0,
-            "roiEquation": "5 / (1 + e^(.6*(X-14))"
+            "roiEquation": "5 / (1 + e^(.6*(X-14)))"
           },
           {
             "Description": "Rake",
             "Personnel": 1,
             "Required": false,
             "Duration": 0,
-            "roiEquation": "9 / (1 + e^(.6*(X-13))"
+            "roiEquation": "9 / (1 + e^(.6*(X-13)))"
           },
           {
             "Description": "Trench",
             "Personnel": 1,
             "Required": false,
             "Duration": 0,
-            "roiEquation": "12 / (1 + e^(.6*(X-13))"
+            "roiEquation": "12 / (1 + e^(.6*(X-13)))"
           },
           {
             "Description": "Clean up",
@@ -602,21 +602,21 @@
             "Personnel": 2,
             "Required": false,
             "Duration": 0,
-            "roiEquation": "5 / (1 + e^(.6*(X-10))"
+            "roiEquation": "5 / (1 + e^(.6*(X-10)))"
           },
           {
             "Description": "Perform deep core sampling",
             "Personnel": 2,
             "Required": false,
             "Duration": 0,
-            "roiEquation": "20 / (1 + e^(.6*(X-40))"
+            "roiEquation": "20 / (1 + e^(.6*(X-40)))"
           },
           {
             "Description": "Deploy ISRU environmental equipment",
             "Personnel": 2,
             "Required": true,
             "Duration": 13,
-            "roiEquation": "30 / (1 + e^(.6*(X-13))"
+            "roiEquation": "30 / (1 + e^(.6*(X-13)))"
           },
           {
             "Description": "Clean up",
