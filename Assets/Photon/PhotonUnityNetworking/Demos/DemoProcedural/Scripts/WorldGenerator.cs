@@ -120,14 +120,19 @@ namespace Photon.Pun.Demo.Procedural
         /// </summary>
         private void DestroyWorld()
         {
+            Hashtable clusterPropertyUpdates = new Hashtable();
+
             foreach (GameObject cluster in clusterList.Values)
             {
                 Cluster clusterComponent = cluster.GetComponent<Cluster>();
-                clusterComponent.DestroyCluster();
 
+                clusterPropertyUpdates.Add(clusterComponent.ClusterPropKey, null);  // collect all room property changes in one place, send once
+                
+                clusterComponent.DestroyCluster(removeClusterFromRoomProperties: false);
                 Destroy(cluster);
             }
 
+            PhotonNetwork.CurrentRoom.SetCustomProperties(clusterPropertyUpdates);  // all cluster changes done in one SetProps call
             clusterList.Clear();
         }
 
